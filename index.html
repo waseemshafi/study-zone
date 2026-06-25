@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Khirad's Study Zone ✨</title>
+<!-- PWA / installable app -->
+<meta name="theme-color" content="#7c5cff" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Study Zone" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/png" href="icon-192.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<style>
+  :root{
+    --bg1:#7c5cff; --bg2:#ff6ec7; --bg3:#36d1dc;
+    --card:#ffffff; --ink:#2b2b4a; --muted:#7a7a9d;
+    --good:#27d07f; --bad:#ff5b7a; --gold:#ffcf3f;
+    --shadow:0 14px 40px rgba(40,20,90,.25);
+    --radius:26px;
+    --font:'Comic Sans MS','Trebuchet MS','Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%}
+  body{
+    font-family:var(--font); color:var(--ink);
+    background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+    background-size:300% 300%; animation:flow 18s ease infinite;
+    min-height:100%; overflow-x:hidden;
+  }
+  @keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .blob{position:fixed;border-radius:50%;filter:blur(8px);opacity:.25;pointer-events:none;z-index:0}
+  .b1{width:240px;height:240px;background:#fff;top:-60px;left:-40px;animation:bob 9s ease-in-out infinite}
+  .b2{width:180px;height:180px;background:#ffe27a;bottom:-50px;right:-30px;animation:bob 11s ease-in-out infinite reverse}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(26px)}}
+  .wrap{position:relative;z-index:2;max-width:780px;margin:0 auto;padding:18px 16px 60px}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:rgba(255,255,255,.18);backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,.35);
+    border-radius:20px;padding:10px 14px;color:#fff;margin-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:bold;font-size:20px}
+  .brand .logo{font-size:28px;animation:spin 6s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .stats{display:flex;gap:8px}
+  .pill{background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.4);
+    border-radius:14px;padding:6px 12px;font-weight:bold;font-size:15px;white-space:nowrap}
+
+  .screen{animation:pop .35s ease both}
+  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+  .hero{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px 22px;text-align:center;margin-bottom:18px;}
+  .hero h1{margin:6px 0 4px;font-size:30px}
+  .hero p{margin:0;color:var(--muted);font-size:16px}
+  .mascot{font-size:64px;animation:bob 3.5s ease-in-out infinite;display:inline-block}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:520px){.grid{grid-template-columns:1fr}}
+  .tile{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;cursor:pointer;border:0;
+    text-align:left;font-family:inherit;color:inherit;transition:transform .15s ease, box-shadow .15s ease;position:relative;overflow:hidden;}
+  .tile:hover{transform:translateY(-5px) scale(1.02)}
+  .tile:active{transform:scale(.98)}
+  .tile .emoji{font-size:44px;display:block;margin-bottom:6px}
+  .tile h3{margin:0 0 4px;font-size:20px}
+  .tile small{color:var(--muted);font-size:14px}
+  .tile .ribbon{position:absolute;top:12px;right:-30px;background:var(--gold);color:#5a4500;font-size:12px;font-weight:bold;padding:4px 34px;transform:rotate(40deg)}
+  .tile.locked{opacity:.55;cursor:not-allowed}
+  .tile.comp{background:linear-gradient(135deg,#e0ecff,#fff)}
+  .tile.math{background:linear-gradient(135deg,#ffe6f3,#fff)}
+  .tile.sci{background:linear-gradient(135deg,#e3fff0,#fff)}
+  .barwrap{height:12px;background:#eee;border-radius:99px;overflow:hidden;margin-top:10px}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,var(--good),#7be0a8);border-radius:99px;transition:width .6s ease}
+
+  .modegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+  .btn{font-family:inherit;font-weight:bold;border:0;cursor:pointer;border-radius:16px;padding:12px 18px;font-size:16px;transition:transform .12s ease, filter .12s ease;}
+  .btn:active{transform:scale(.96)}
+  .btn:hover{filter:brightness(1.05)}
+  .btn-primary{background:linear-gradient(135deg,#7c5cff,#a07bff);color:#fff;box-shadow:0 8px 20px rgba(124,92,255,.4)}
+  .btn-ghost{background:#f1f0fb;color:var(--ink)}
+  .btn-good{background:linear-gradient(135deg,var(--good),#5fe6a3);color:#fff}
+  .btn-full{width:100%}
+  .backbtn{background:rgba(255,255,255,.25);color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:14px;padding:8px 14px;font-weight:bold;cursor:pointer;font-family:inherit;font-size:15px;margin-bottom:14px}
+
+  /* flashcards */
+  .flashstage{perspective:1400px;margin:10px 0}
+  .flashcard{position:relative;width:100%;min-height:300px;cursor:pointer;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.3,1);}
+  .flashcard.flipped{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .face.front{background:linear-gradient(135deg,#fff,#f3f0ff)}
+  .face.back{background:linear-gradient(135deg,#fffaf0,#fff);transform:rotateY(180deg)}
+  .face .label{position:absolute;top:14px;left:18px;font-size:13px;font-weight:bold;letter-spacing:1px;color:var(--muted)}
+  .face .big{font-size:30px;font-weight:bold;margin:8px 0}
+  .face .def{font-size:19px;line-height:1.5;color:#444}
+  .face .tap{position:absolute;bottom:14px;font-size:13px;color:var(--muted)}
+  .face .ic{font-size:54px;margin-bottom:8px}
+  .navrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+  .counter{background:#fff;border-radius:14px;padding:8px 16px;font-weight:bold;box-shadow:var(--shadow)}
+
+  /* quiz */
+  .qcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px 22px}
+  .qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;color:var(--muted);font-weight:bold;font-size:14px}
+  .qprog{height:10px;background:#eee;border-radius:99px;overflow:hidden;margin-bottom:18px}
+  .qprog>div{height:100%;background:linear-gradient(90deg,var(--bg1),var(--bg2));transition:width .4s ease}
+  .qtext{font-size:23px;font-weight:bold;margin:0 0 18px;line-height:1.35}
+  .opts{display:grid;gap:12px}
+  .opt{text-align:left;font-family:inherit;font-size:17px;font-weight:bold;color:var(--ink);background:#f6f5fd;border:3px solid transparent;border-radius:16px;padding:14px 16px;cursor:pointer;transition:transform .1s ease, background .2s ease, border-color .2s ease;display:flex;gap:12px;align-items:center;}
+  .opt .key{width:30px;height:30px;flex:0 0 30px;border-radius:50%;background:#e3e0f7;display:grid;place-items:center;font-size:15px}
+  .opt:hover:not(.done){transform:translateX(4px)}
+  .opt.correct{background:#e4fbef;border-color:var(--good)}
+  .opt.correct .key{background:var(--good);color:#fff}
+  .opt.wrong{background:#ffeaef;border-color:var(--bad)}
+  .opt.wrong .key{background:var(--bad);color:#fff}
+  .opt.dim{opacity:.5}
+  .feedback{margin-top:16px;font-size:17px;font-weight:bold;min-height:26px;text-align:center}
+  .explain{margin-top:6px;background:#fff8e6;border:2px dashed var(--gold);border-radius:14px;padding:12px;font-size:15px;color:#6b5a00;display:none}
+
+  /* written */
+  textarea.wbox{width:100%;min-height:120px;border:3px solid #e3e0f7;border-radius:16px;padding:14px;font-family:inherit;font-size:17px;color:var(--ink);resize:vertical}
+  textarea.wbox:focus{outline:none;border-color:var(--bg1)}
+  .model{margin-top:14px;background:#eef9ff;border:2px dashed #36d1dc;border-radius:14px;padding:14px;font-size:16px;line-height:1.5;display:none}
+  .model b{color:#0a7ea4}
+  .keyrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chipk{background:#e7e3fb;border-radius:99px;padding:4px 10px;font-size:13px;font-weight:bold;color:#5a47b0}
+  .chipk.hit{background:#cdeedd;color:#127a4b}
+
+  /* picture lessons */
+  .learnwrap{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .learnwrap h3{margin:0 0 4px;font-size:22px;text-align:center}
+  .learnwrap .intro{color:var(--muted);text-align:center;margin:0 0 12px;font-size:15px}
+  .stage{background:linear-gradient(135deg,#fbfaff,#eef6ff);border-radius:18px;padding:10px;display:flex;justify-content:center}
+  .stage svg{max-width:100%;height:auto}
+  .hot{cursor:pointer;transition:all .2s ease}
+  .hot.active{filter:drop-shadow(0 0 6px #ff5b7a)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+  .chip{font-family:inherit;font-weight:bold;font-size:15px;border:2px solid #d9d4f5;background:#f6f4ff;color:#5a47b0;border-radius:99px;padding:8px 14px;cursor:pointer;transition:all .15s ease}
+  .chip:hover{transform:translateY(-2px)}
+  .chip.active{background:linear-gradient(135deg,#7c5cff,#a07bff);color:#fff;border-color:transparent}
+  .factbox{margin-top:14px;min-height:60px;background:#fff8e6;border:2px dashed var(--gold);border-radius:16px;padding:14px;font-size:17px;line-height:1.5;color:#6b5a00;text-align:center}
+  .factbox .ph{color:#b6a96a}
+
+  /* learn tables */
+  .pvtable{width:100%;border-collapse:collapse;margin:6px 0;font-size:15px}
+  .pvtable th,.pvtable td{border:2px solid #e0d9f7;padding:8px 6px;text-align:center}
+  .pvtable th{background:#efeaff;color:#5a47b0}
+  .pvtable .num{font-size:22px;font-weight:bold;color:var(--bg1)}
+  .rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px;margin-top:8px}
+  .rg .rcell{background:#f6f4ff;border:2px solid #e0d9f7;border-radius:12px;padding:8px;text-align:center}
+  .rg .rcell b{font-size:18px;color:var(--bg1);display:block}
+  .ladder{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+  .rung{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#f0ecff,#fff);border-left:6px solid var(--bg1);border-radius:10px;padding:10px 14px;font-weight:bold}
+  .rung small{color:var(--muted);font-weight:normal}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  @media(max-width:520px){.twocol{grid-template-columns:1fr}}
+  .infocard{background:#f6f4ff;border-radius:14px;padding:12px;font-size:15px}
+  .infocard h4{margin:0 0 6px;color:var(--bg1)}
+
+  /* results / badges */
+  .result{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px 22px;text-align:center}
+  .result .score{font-size:60px;font-weight:bold;margin:6px 0}
+  .stars{font-size:44px;letter-spacing:6px;margin:10px 0}
+  .badgewrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:10px}
+  .badge{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:16px 10px;text-align:center}
+  .badge .bi{font-size:40px;filter:grayscale(1);opacity:.35}
+  .badge.unlocked .bi{filter:none;opacity:1;animation:bob 3s ease-in-out infinite}
+  .badge small{display:block;color:var(--muted);margin-top:4px;font-size:12px}
+  .badge b{font-size:14px}
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+  .hint{color:#fff;text-align:center;opacity:.85;margin:8px 0 0;font-size:14px}
+  .center{text-align:center}
+  h2.sec{color:#fff;margin:6px 0 12px;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+  .subtitle{color:#fff;opacity:.92;margin:-6px 0 14px;text-align:center}
+
+  /* language helpers (Hindi / Telugu) */
+  .tile.hin{background:linear-gradient(135deg,#ffe9d6,#fff)}
+  .tile.tel{background:linear-gradient(135deg,#fde2ff,#fff)}
+  .lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:10px 0}
+  .lcell{background:linear-gradient(135deg,#fff,#f3f0ff);border:2px solid #e0d9f7;border-radius:14px;padding:8px 6px;text-align:center}
+  .lcell .ch{font-size:30px;font-weight:bold;color:var(--bg1);line-height:1.15}
+  .lcell .rom{font-size:13px;color:#a07bff;font-weight:bold}
+  .lcell .ex{font-size:14px;color:#444;margin-top:3px;display:block}
+  .lcell .mn{font-size:12px;color:var(--muted);display:block}
+  .romline{font-size:18px;color:#a07bff;font-weight:bold;margin:2px 0 6px}
+  .startnote{background:#fff3d6;border:2px dashed var(--gold);border-radius:14px;padding:10px 14px;color:#6b5a00;font-size:14px;margin:0 0 12px;text-align:center;line-height:1.5}
+  .bara{border-collapse:collapse;margin:8px auto;font-size:15px}
+  .bara td{border:2px solid #e8e2fb;padding:6px 5px;text-align:center;white-space:nowrap}
+  .bara .base{background:#efeaff;color:#5a47b0;font-weight:bold;font-size:19px}
+  .bara .rom{color:#a07bff;font-size:10px;display:block;font-weight:bold}
+
+  /* write on paper (photo upload + AI check) */
+  #ppreview{margin-top:12px;text-align:center}
+  #ppreview img{max-width:100%;max-height:320px;border-radius:16px;border:3px solid #e3e0f7;box-shadow:var(--shadow)}
+  .evalcard{margin-top:14px;background:linear-gradient(135deg,#fffaf0,#fff);border:2px solid var(--gold);border-radius:18px;padding:16px}
+  .evalcard .er{margin:8px 0;font-size:16px;line-height:1.5}
+  .evalcard .er b{color:#0a7ea4}
+  .readbox{background:#f6f4ff;border-radius:12px;padding:10px;font-size:18px;margin:6px 0;line-height:1.5}
+  .spin{width:36px;height:36px;border:4px solid #e3e0f7;border-top-color:var(--bg1);border-radius:50%;animation:sp 1s linear infinite;margin:12px auto}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .keyinput{width:100%;border:3px solid #e3e0f7;border-radius:14px;padding:12px;font-family:inherit;font-size:15px;color:var(--ink)}
+  .keyinput:focus{outline:none;border-color:var(--bg1)}
+  .notebox{background:#eef9ff;border:2px dashed #36d1dc;border-radius:14px;padding:12px;font-size:14px;color:#0a7ea4;line-height:1.55;text-align:left}
+  .notebox b{color:#086a8c}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<canvas id="confetti"></canvas>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><span class="logo">🌟</span><span>Khirad's Study Zone</span></div>
+    <div class="stats"><span class="pill" id="starPill">⭐ 0</span><span class="pill" id="badgePill">🏅 0</span></div>
+  </div>
+  <div id="app"></div>
+  <p class="hint">Made with ❤️ for Khirad · Your progress saves automatically</p>
+</div>
+
+<script>
+/* =======================================================================
+   PICTURE LESSON DIAGRAMS  (each returns {body, parts})
+   ======================================================================= */
+const arrowDef = '<defs><marker id="ah" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="currentColor"/></marker></defs>';
+
+function dot(id,x,y){ return `<circle id="dot-${id}" class="hot" cx="${x}" cy="${y}" r="11" fill="#fff" stroke="#7c5cff" stroke-width="3"/>`; }
+
+/* letter chart helpers (used by Hindi / Telugu alphabet lessons) */
+function lgrid(arr){ return '<div class="lgrid">'+arr.map(L=>
+  '<div class="lcell"><div class="ch">'+L.ch+'</div><div class="rom">'+L.rom+'</div>'+
+  (L.ex?'<span class="ex">'+L.ex+'</span>':'')+
+  (L.mn?'<span class="mn">'+L.mn+'</span>':'')+'</div>').join('')+'</div>'; }
+function baraTable(rows){ return '<div style="overflow-x:auto"><table class="bara"><tbody>'+rows.map(r=>
+  '<tr><td class="base">'+r.base+'<span class="rom">'+r.brom+'</span></td>'+
+  r.cells.map(c=>'<td>'+c[0]+'<span class="rom">'+c[1]+'</span></td>').join('')+'</tr>').join('')+'</tbody></table></div>'; }
+
+const DIAGRAMS = {
+  hindiSwar(){
+    const v=[
+      {ch:'अ',rom:'a',ex:'अनार',mn:'pomegranate'},{ch:'आ',rom:'aa',ex:'आम',mn:'mango'},
+      {ch:'इ',rom:'i',ex:'इमली',mn:'tamarind'},{ch:'ई',rom:'ee',ex:'ईख',mn:'sugarcane'},
+      {ch:'उ',rom:'u',ex:'उल्लू',mn:'owl'},{ch:'ऊ',rom:'oo',ex:'ऊन',mn:'wool'},
+      {ch:'ऋ',rom:'ri',ex:'ऋषि',mn:'sage'},{ch:'ए',rom:'e',ex:'एड़ी',mn:'heel'},
+      {ch:'ऐ',rom:'ai',ex:'ऐनक',mn:'glasses'},{ch:'ओ',rom:'o',ex:'ओखली',mn:'mortar'},
+      {ch:'औ',rom:'au',ex:'औरत',mn:'woman'},{ch:'अं',rom:'an',ex:'अंगूर',mn:'grapes'},
+      {ch:'अः',rom:'ah',ex:'नमः',mn:'salute'}
+    ];
+    return {body:'<p style="text-align:center;margin:0 0 4px;color:#555">हिंदी के <b>स्वर</b> (Vowels) — sounds you can say on their own.</p>'+lgrid(v),
+     parts:[
+      {id:'',label:'What are स्वर?',desc:'🔤 <b>स्वर (swar)</b> = vowels. We can speak them alone, without help. Hindi has 11 main vowels (13 with अं and अः).'},
+      {id:'',label:'Say them out loud',desc:'🗣️ Every Hindi word is built from these. Say slowly: "a, aa, i, ee, u, oo, ri, e, ai, o, au". This is step 1! ⭐'}
+     ]};
+  },
+  hindiVyanjan(){
+    const c=[
+      {ch:'क',rom:'ka',ex:'कनक',mn:'gold'},{ch:'ख',rom:'kha',ex:'खत',mn:'letter'},{ch:'ग',rom:'ga',ex:'गज',mn:'elephant'},{ch:'घ',rom:'gha',ex:'घास',mn:'grass'},{ch:'ङ',rom:'nga',ex:'',mn:''},
+      {ch:'च',rom:'cha',ex:'चार',mn:'four'},{ch:'छ',rom:'chha',ex:'छत',mn:'roof'},{ch:'ज',rom:'ja',ex:'जल',mn:'water'},{ch:'झ',rom:'jha',ex:'झंडा',mn:'flag'},{ch:'ञ',rom:'nya',ex:'',mn:''},
+      {ch:'ट',rom:'ta',ex:'टोपी',mn:'cap'},{ch:'ठ',rom:'tha',ex:'ठोस',mn:'solid'},{ch:'ड',rom:'da',ex:'डाल',mn:'branch'},{ch:'ढ',rom:'dha',ex:'ढोल',mn:'drum'},{ch:'ण',rom:'na',ex:'',mn:''},
+      {ch:'त',rom:'ta',ex:'ताल',mn:'pond'},{ch:'थ',rom:'tha',ex:'थल',mn:'land'},{ch:'द',rom:'da',ex:'दिन',mn:'day'},{ch:'ध',rom:'dha',ex:'धाम',mn:'home'},{ch:'न',rom:'na',ex:'नल',mn:'tap'},
+      {ch:'प',rom:'pa',ex:'पल',mn:'moment'},{ch:'फ',rom:'pha',ex:'फूल',mn:'flower'},{ch:'ब',rom:'ba',ex:'बस',mn:'bus'},{ch:'भ',rom:'bha',ex:'भालू',mn:'bear'},{ch:'म',rom:'ma',ex:'मोर',mn:'peacock'},
+      {ch:'य',rom:'ya',ex:'यश',mn:'fame'},{ch:'र',rom:'ra',ex:'रंग',mn:'colour'},{ch:'ल',rom:'la',ex:'लता',mn:'vine'},{ch:'व',rom:'va',ex:'वन',mn:'forest'},
+      {ch:'श',rom:'sha',ex:'शेर',mn:'lion'},{ch:'ष',rom:'shha',ex:'',mn:''},{ch:'स',rom:'sa',ex:'सूरज',mn:'sun'},{ch:'ह',rom:'ha',ex:'हाथी',mn:'elephant'},
+      {ch:'क्ष',rom:'ksha',ex:'क्षमा',mn:'forgive'},{ch:'त्र',rom:'tra',ex:'त्रिशूल',mn:'trident'},{ch:'ज्ञ',rom:'gya',ex:'ज्ञान',mn:'knowledge'},{ch:'श्र',rom:'shra',ex:'श्रम',mn:'effort'}
+    ];
+    return {body:'<p style="text-align:center;margin:0 0 4px;color:#555">हिंदी के <b>व्यंजन</b> (Consonants) — they need a vowel to be spoken.</p>'+lgrid(c),
+     parts:[
+      {id:'',label:'What are व्यंजन?',desc:'🔤 <b>व्यंजन (vyanjan)</b> = consonants. They use a vowel sound to be spoken. There are 33+, written in groups (वर्ग).'},
+      {id:'',label:'अल्पप्राण vs महाप्राण',desc:'💨 <b>अल्पप्राण</b> = soft, little breath (क, ग, च, ज, ट…). <b>महाप्राण</b> = strong puff of air (ख, घ, छ, झ, ठ…). The extra curve adds the puff.'},
+      {id:'',label:'संयुक्त अक्षर',desc:'🔗 Joined letters: क्+ष=<b>क्ष</b>, त्+र=<b>त्र</b>, ज्+ञ=<b>ज्ञ</b>, श्+र=<b>श्र</b>.'}
+     ]};
+  },
+  hindiMatra(){
+    const m=[
+      {ch:'ा',rom:'aa (आ)',ex:'क+ा=का',mn:'काम = work'},{ch:'ि',rom:'i (इ)',ex:'क+ि=कि',mn:'चित्र = picture'},
+      {ch:'ी',rom:'ee (ई)',ex:'क+ी=की',mn:'नीला = blue'},{ch:'ु',rom:'u (उ)',ex:'क+ु=कु',mn:'गुलाब = rose'},
+      {ch:'ू',rom:'oo (ऊ)',ex:'क+ू=कू',mn:'पूजा = prayer'},{ch:'ृ',rom:'ri (ऋ)',ex:'क+ृ=कृ',mn:'वृक्ष = tree'},
+      {ch:'े',rom:'e (ए)',ex:'क+े=के',mn:'बेल = vine'},{ch:'ै',rom:'ai (ऐ)',ex:'क+ै=कै',mn:'मैना = myna'},
+      {ch:'ो',rom:'o (ओ)',ex:'क+ो=को',mn:'सोना = gold'},{ch:'ौ',rom:'au (औ)',ex:'क+ौ=कौ',mn:'नौ = nine'},
+      {ch:'ं',rom:'an (अं)',ex:'क+ं=कं',mn:'जंगल = forest'},{ch:'ः',rom:'ah (अः)',ex:'क+ः=कः',mn:'नमः = salute'}
+    ];
+    return {body:'<p style="text-align:center;margin:0 0 4px;color:#555">हिंदी की <b>मात्राएँ</b> — the little signs that add a vowel sound to a letter.</p>'+lgrid(m),
+     parts:[
+      {id:'',label:'What is a मात्रा?',desc:'✍️ A <b>मात्रा (matra)</b> is a small mark added to a consonant to give it a vowel sound. क (ka) + ा = का (kaa)!'},
+      {id:'',label:'अ has NO मात्रा',desc:'🙂 The vowel अ (a) already hides inside every consonant, so it has no sign. क already says "ka".'}
+     ]};
+  },
+  hindiBara(){
+    const rows=[
+      {base:'क',brom:'ka',cells:[['का','kaa'],['कि','ki'],['की','kee'],['कु','ku'],['कू','koo'],['के','ke'],['कै','kai'],['को','ko'],['कौ','kau'],['कं','kan'],['कः','kah']]},
+      {base:'ग',brom:'ga',cells:[['गा','gaa'],['गि','gi'],['गी','gee'],['गु','gu'],['गू','goo'],['गे','ge'],['गै','gai'],['गो','go'],['गौ','gau'],['गं','gan'],['गः','gah']]},
+      {base:'न',brom:'na',cells:[['ना','naa'],['नि','ni'],['नी','nee'],['नु','nu'],['नू','noo'],['ने','ne'],['नै','nai'],['नो','no'],['नौ','nau'],['नं','nan'],['नः','nah']]},
+      {base:'र',brom:'ra',cells:[['रा','raa'],['रि','ri'],['री','ree'],['रु','ru'],['रू','roo'],['रे','re'],['रै','rai'],['रो','ro'],['रौ','rau'],['रं','ran'],['रः','rah']]},
+      {base:'ह',brom:'ha',cells:[['हा','haa'],['हि','hi'],['ही','hee'],['हु','hu'],['हू','hoo'],['हे','he'],['है','hai'],['हो','ho'],['हौ','hau'],['हं','han'],['हः','hah']]}
+    ];
+    return {body:'<p style="text-align:center;margin:0 0 4px;color:#555"><b>बारहखड़ी</b> — one letter + all 12 मात्राएँ. Read each row across! →</p>'+baraTable(rows),
+     parts:[
+      {id:'',label:'What is बारहखड़ी?',desc:'📚 <b>बारहखड़ी (barahkhadi)</b> means "the twelve". It joins one consonant with every vowel sign, one by one. This is how reading & spelling click!'},
+      {id:'',label:'Read it like a song',desc:'🎵 क, का, कि, की, कु, कू, के, कै, को, कौ, कं, कः — sing it every day and reading becomes easy!'}
+     ]};
+  },
+  teluguAchu(){
+    const v=[
+      {ch:'అ',rom:'a',ex:'అమ్మ',mn:'mother'},{ch:'ఆ',rom:'aa',ex:'ఆట',mn:'game'},
+      {ch:'ఇ',rom:'i',ex:'ఇల్లు',mn:'house'},{ch:'ఈ',rom:'ee',ex:'ఈక',mn:'feather'},
+      {ch:'ఉ',rom:'u',ex:'ఉడుత',mn:'squirrel'},{ch:'ఊ',rom:'oo',ex:'ఊయల',mn:'swing'},
+      {ch:'ఋ',rom:'ru',ex:'ఋషి',mn:'sage'},{ch:'ౠ',rom:'ruu',ex:'',mn:''},
+      {ch:'ఎ',rom:'e',ex:'ఎలుక',mn:'mouse'},{ch:'ఏ',rom:'ae',ex:'ఏనుగు',mn:'elephant'},
+      {ch:'ఐ',rom:'ai',ex:'ఐదు',mn:'five'},{ch:'ఒ',rom:'o',ex:'ఒంటె',mn:'camel'},
+      {ch:'ఓ',rom:'oh',ex:'ఓడ',mn:'ship'},{ch:'ఔ',rom:'au',ex:'',mn:''},
+      {ch:'అం',rom:'am',ex:'అంగడి',mn:'shop'},{ch:'అః',rom:'ah',ex:'',mn:''}
+    ];
+    return {body:'<p style="text-align:center;margin:0 0 4px;color:#555">తెలుగు <b>అచ్చులు</b> (Vowels) — sounds you can say on their own.</p>'+lgrid(v),
+     parts:[
+      {id:'',label:'What are అచ్చులు?',desc:'🔤 <b>అచ్చులు (achulu)</b> = vowels. They can be spoken alone. Telugu has 16 of them.'},
+      {id:'',label:'హ్రస్వ & దీర్ఘ',desc:'⏱️ <b>హ్రస్వాలు</b> = short sounds: అ ఇ ఉ ఋ ఎ ఒ. <b>దీర్ఘాలు</b> = long sounds: ఆ ఈ ఊ ౠ ఏ ఐ ఓ ఔ. Long ones are held a little longer.'}
+     ]};
+  },
+  teluguHallu(){
+    const c=[
+      {ch:'క',rom:'ka',ex:'కమల',mn:'lotus'},{ch:'ఖ',rom:'kha',ex:'',mn:''},{ch:'గ',rom:'ga',ex:'గడప',mn:'doorstep'},{ch:'ఘ',rom:'gha',ex:'ఘటం',mn:'pot'},{ch:'ఙ',rom:'nga',ex:'',mn:''},
+      {ch:'చ',rom:'cha',ex:'చెట్టు',mn:'tree'},{ch:'ఛ',rom:'chha',ex:'',mn:''},{ch:'జ',rom:'ja',ex:'జాతర',mn:'fair'},{ch:'ఝ',rom:'jha',ex:'',mn:''},{ch:'ఞ',rom:'nya',ex:'',mn:''},
+      {ch:'ట',rom:'ta',ex:'తబల',mn:'tabla'},{ch:'ఠ',rom:'tha',ex:'',mn:''},{ch:'డ',rom:'da',ex:'డబ్బు',mn:'money'},{ch:'ఢ',rom:'dha',ex:'',mn:''},{ch:'ణ',rom:'na',ex:'',mn:''},
+      {ch:'త',rom:'ta',ex:'తల',mn:'head'},{ch:'థ',rom:'tha',ex:'',mn:''},{ch:'ద',rom:'da',ex:'దీపం',mn:'lamp'},{ch:'ధ',rom:'dha',ex:'ధనం',mn:'wealth'},{ch:'న',rom:'na',ex:'నది',mn:'river'},
+      {ch:'ప',rom:'pa',ex:'పండు',mn:'fruit'},{ch:'ఫ',rom:'pha',ex:'ఫలం',mn:'fruit'},{ch:'బ',rom:'ba',ex:'బడి',mn:'school'},{ch:'భ',rom:'bha',ex:'భవనం',mn:'building'},{ch:'మ',rom:'ma',ex:'మమత',mn:'love'},
+      {ch:'య',rom:'ya',ex:'',mn:''},{ch:'ర',rom:'ra',ex:'రవి',mn:'sun'},{ch:'ల',rom:'la',ex:'లత',mn:'vine'},{ch:'వ',rom:'va',ex:'వాన',mn:'rain'},{ch:'శ',rom:'sha',ex:'',mn:''},
+      {ch:'ష',rom:'shha',ex:'',mn:''},{ch:'స',rom:'sa',ex:'సరళ',mn:'simple'},{ch:'హ',rom:'ha',ex:'హంస',mn:'swan'},{ch:'ళ',rom:'lla',ex:'',mn:''},{ch:'క్ష',rom:'ksha',ex:'',mn:''},{ch:'ఱ',rom:'rra',ex:'',mn:''}
+    ];
+    return {body:'<p style="text-align:center;margin:0 0 4px;color:#555">తెలుగు <b>హల్లులు</b> (Consonants) — they need a vowel to be spoken.</p>'+lgrid(c),
+     parts:[
+      {id:'',label:'What are హల్లులు?',desc:'🔤 <b>హల్లులు (hallulu)</b> = consonants. They need a vowel to be spoken fully. Telugu has about 36.'},
+      {id:'',label:'అల్ప & మహా ప్రాణం',desc:'💨 <b>అల్పప్రాణాలు</b> = soft, little breath: క గ చ జ ట డ త ద ప బ. <b>మహాప్రాణాలు</b> = strong puff: ఖ ఘ ఛ ఝ ఠ ఢ థ ధ ఫ భ.'}
+     ]};
+  },
+  teluguGuninth(){
+    const g=[
+      {ch:'ా',rom:'aa (ఆ)',ex:'క+ా=కా',mn:''},{ch:'ి',rom:'i (ఇ)',ex:'క+ి=కి',mn:''},
+      {ch:'ీ',rom:'ee (ఈ)',ex:'క+ీ=కీ',mn:''},{ch:'ు',rom:'u (ఉ)',ex:'క+ు=కు',mn:''},
+      {ch:'ూ',rom:'oo (ఊ)',ex:'క+ూ=కూ',mn:''},{ch:'ృ',rom:'ru (ఋ)',ex:'క+ృ=కృ',mn:''},
+      {ch:'ె',rom:'e (ఎ)',ex:'క+ె=కె',mn:''},{ch:'ే',rom:'ae (ఏ)',ex:'క+ే=కే',mn:''},
+      {ch:'ై',rom:'ai (ఐ)',ex:'క+ై=కై',mn:''},{ch:'ొ',rom:'o (ఒ)',ex:'క+ొ=కొ',mn:''},
+      {ch:'ో',rom:'oh (ఓ)',ex:'క+ో=కో',mn:''},{ch:'ౌ',rom:'au (ఔ)',ex:'క+ౌ=కౌ',mn:''},
+      {ch:'ం',rom:'am (అం)',ex:'క+ం=కం',mn:''},{ch:'ః',rom:'ah (అః)',ex:'క+ః=కః',mn:''}
+    ];
+    return {body:'<p style="text-align:center;margin:0 0 4px;color:#555">తెలుగు <b>గుణింతపు గుర్తులు</b> — signs that add a vowel sound to a letter.</p>'+lgrid(g),
+     parts:[
+      {id:'',label:'What is గుణింతం?',desc:'✍️ A <b>గుణింతం (guninth)</b> sign joins a vowel to a consonant. క (ka) + ా = కా (kaa). Each vowel has its own mark.'},
+      {id:'',label:'Practise with one letter',desc:'🗣️ Take క and add every sign: క కా కి కీ కు కూ … This is the Telugu way to learn reading!'}
+     ]};
+  },
+  teluguPada(){
+    const w=[
+      {ch:'ఆట',rom:'aata',ex:'',mn:'game'},{ch:'ఈక',rom:'eeka',ex:'',mn:'feather'},
+      {ch:'ఊయల',rom:'ooyala',ex:'',mn:'swing'},{ch:'కమల',rom:'kamala',ex:'',mn:'lotus'},
+      {ch:'గడప',rom:'gadapa',ex:'',mn:'doorstep'},{ch:'తబల',rom:'tabala',ex:'',mn:'tabla'},
+      {ch:'మమత',rom:'mamata',ex:'',mn:'affection'},{ch:'సరళ',rom:'sarala',ex:'',mn:'simple'},
+      {ch:'వాన',rom:'vaana',ex:'',mn:'rain'},{ch:'జాతర',rom:'jaatara',ex:'',mn:'fair'},
+      {ch:'వారం',rom:'vaaram',ex:'',mn:'week'},{ch:'పాఠశాల',rom:'paathashaala',ex:'',mn:'school'},
+      {ch:'ఆకాశం',rom:'aakaasham',ex:'',mn:'sky'},{ch:'మందారం',rom:'mandaaram',ex:'',mn:'hibiscus'},
+      {ch:'ధనం',rom:'dhanam',ex:'',mn:'wealth'},{ch:'ఫలం',rom:'phalam',ex:'',mn:'fruit'},
+      {ch:'భవనం',rom:'bhavanam',ex:'',mn:'building'},{ch:'కంఠం',rom:'kantham',ex:'',mn:'throat'}
+    ];
+    return {body:'<p style="text-align:center;margin:0 0 4px;color:#555">తెలుగు <b>సరళ పదాలు</b> — easy first words. Sound them out!</p>'+lgrid(w),
+     parts:[
+      {id:'',label:'How to read a word',desc:'🧩 Break it into letters. ఆట = ఆ + ట = "aa" + "ta" = "aata" (game). Slow and steady!'},
+      {id:'',label:'You can do it! 🌟',desc:'💛 Read one word a day, out loud. Soon you will read full Telugu sentences. మీరు చేయగలరు! (You can do it!)'}
+     ]};
+  },
+  leaf(){
+    const svg = `<svg viewBox="0 0 430 360" role="img">
+      <g stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round">
+        <path d="M210,250 C150,235 138,110 210,45 C282,110 270,235 210,250 Z" fill="url(#lg)"/>
+      </g>
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bff09a"/><stop offset="1" stop-color="#7fd45a"/></linearGradient></defs>
+      <line x1="210" y1="250" x2="210" y2="55" stroke="#2e7d32" stroke-width="3"/>
+      <g stroke="#3c9a3c" stroke-width="2">
+        <line x1="210" y1="200" x2="162" y2="205"/><line x1="210" y1="160" x2="158" y2="150"/><line x1="210" y1="120" x2="172" y2="105"/>
+        <line x1="210" y1="200" x2="258" y2="205"/><line x1="210" y1="160" x2="262" y2="150"/><line x1="210" y1="120" x2="248" y2="105"/>
+      </g>
+      <line x1="210" y1="250" x2="214" y2="335" stroke="#2e7d32" stroke-width="9" stroke-linecap="round"/>
+      <g font-size="14" font-family="Trebuchet MS" fill="#2b2b4a" font-weight="bold">
+        <text x="232" y="52">Leaf apex</text>
+        <text x="95"  y="150" text-anchor="end">Side vein</text>
+        <text x="232" y="158">Midrib</text>
+        <text x="300" y="210">Lamina (blade)</text>
+        <text x="232" y="330">Petiole</text>
+      </g>
+      ${dot('apex',210,50)}${dot('vein',160,150)}${dot('midrib',210,150)}${dot('lamina',270,205)}${dot('petiole',213,300)}
+    </svg>`;
+    return {body:svg, parts:[
+      {id:'apex',label:'Leaf apex',desc:'🍃 The pointed tip at the top of the leaf.'},
+      {id:'vein',label:'Side vein',desc:'➖ Small veins that branch out and carry water & food around the leaf.'},
+      {id:'midrib',label:'Midrib',desc:'📏 The thick main vein in the middle of the leaf. (Scientific name for "main vein".)'},
+      {id:'lamina',label:'Lamina',desc:'🟢 The flat green part of the leaf, also called the leaf blade.'},
+      {id:'petiole',label:'Petiole',desc:'🪢 The stalk that joins the leaf to the stem.'},
+    ]};
+  },
+
+  photosynthesis(){
+    const svg = `<svg viewBox="0 0 470 430" role="img" style="color:#ff8c1a">
+      ${arrowDef}
+      <g><circle cx="70" cy="72" r="34" fill="#ffd23f" stroke="#ff8c1a" stroke-width="3"/>
+        <g stroke="#ff8c1a" stroke-width="3" stroke-linecap="round">
+          <line x1="70" y1="18" x2="70" y2="2"/><line x1="70" y1="126" x2="70" y2="142"/>
+          <line x1="16" y1="72" x2="0" y2="72"/><line x1="124" y1="72" x2="140" y2="72"/>
+          <line x1="32" y1="34" x2="20" y2="22"/><line x1="108" y1="34" x2="120" y2="22"/>
+          <line x1="32" y1="110" x2="20" y2="122"/></g></g>
+      <line x1="0" y1="305" x2="470" y2="305" stroke="#caa46a" stroke-width="4"/>
+      <rect x="0" y="305" width="470" height="14" fill="#e7cfa3"/>
+      <line x1="235" y1="305" x2="235" y2="150" stroke="#9c6b3f" stroke-width="10" stroke-linecap="round"/>
+      <ellipse cx="180" cy="205" rx="46" ry="26" fill="#7fd45a" stroke="#2e7d32" stroke-width="3" transform="rotate(-18 180 205)"/>
+      <ellipse cx="292" cy="190" rx="50" ry="28" fill="#8fe06a" stroke="#2e7d32" stroke-width="3" transform="rotate(16 292 190)"/>
+      <g stroke="#9c6b3f" stroke-width="3" fill="none" stroke-linecap="round">
+        <path d="M235,319 C200,350 175,360 150,395"/><path d="M235,319 C270,350 295,360 320,395"/><path d="M235,319 L235,400"/></g>
+      <g stroke-width="4" fill="none" stroke-linecap="round">
+        <line x1="100" y1="100" x2="160" y2="180" stroke="#ff8c1a" marker-end="url(#ah)"/>
+        <g style="color:#8e44ad"><line x1="420" y1="200" x2="338" y2="190" stroke="#8e44ad" marker-end="url(#ah)"/></g>
+        <g style="color:#2e86de"><line x1="300" y1="150" x2="360" y2="95" stroke="#2e86de" marker-end="url(#ah)"/></g>
+        <g style="color:#2e86de"><line x1="120" y1="380" x2="200" y2="320" stroke="#2e86de" marker-end="url(#ah)"/></g>
+      </g>
+      <g font-size="14" font-family="Trebuchet MS" font-weight="bold" fill="#2b2b4a">
+        <text x="60" y="150">Sunlight</text>
+        <text x="345" y="205">Carbon dioxide</text>
+        <text x="360" y="90">Oxygen</text>
+        <text x="60" y="395">Water + Minerals</text>
+        <text x="150" y="200" fill="#1b5e20" font-style="italic">chlorophyll</text>
+      </g>
+      ${dot('sun',70,72)}${dot('co2',338,190)}${dot('o2',360,95)}${dot('water',150,380)}${dot('chl',180,205)}
+      <rect x="20" y="408" width="430" height="0" fill="none"/>
+    </svg>
+    <div style="text-align:center;margin-top:10px;font-weight:bold;background:#eef9ff;border-radius:12px;padding:10px;font-size:15px">
+      Carbon dioxide + Water <span style="color:var(--muted)">— sunlight + chlorophyll →</span> <span style="color:#127a4b">Glucose</span> + <span style="color:#2e86de">Oxygen</span></div>`;
+    return {body:svg, parts:[
+      {id:'sun',label:'☀️ Sunlight',desc:'The Sun gives the energy the plant needs to cook its food. No sunlight = no food!'},
+      {id:'co2',label:'Carbon dioxide',desc:'A gas the leaf takes IN from the air through tiny holes called stomata.'},
+      {id:'water',label:'Water',desc:'Roots drink water (and minerals) from the soil and send it up to the leaves.'},
+      {id:'chl',label:'Chlorophyll',desc:'The green colour in leaves. It catches sunlight to help make food.'},
+      {id:'o2',label:'Oxygen',desc:'The gas plants give OUT — the same gas we breathe in. Thank you, plants! 🌬️'},
+    ]};
+  },
+
+  roots(){
+    const svg = `<svg viewBox="0 0 440 320" role="img">
+      <line x1="10" y1="120" x2="430" y2="120" stroke="#caa46a" stroke-width="3"/>
+      <rect x="10" y="120" width="420" height="10" fill="#e7cfa3"/>
+      <!-- tap root -->
+      <line x1="110" y1="70" x2="110" y2="120" stroke="#3c9a3c" stroke-width="8" stroke-linecap="round"/>
+      <g stroke="#9c6b3f" fill="none" stroke-linecap="round">
+        <path d="M110,120 L110,250" stroke-width="7"/>
+        <path d="M110,150 C90,165 80,175 70,200" stroke-width="3"/>
+        <path d="M110,175 C130,190 140,200 150,225" stroke-width="3"/>
+        <path d="M110,205 C92,218 86,228 80,250" stroke-width="3"/>
+        <path d="M110,205 C128,218 134,228 140,250" stroke-width="3"/></g>
+      <g font-size="13" font-family="Trebuchet MS" font-weight="bold" fill="#2b2b4a" text-anchor="middle">
+        <text x="110" y="60">Tap root</text></g>
+      <!-- fibrous root -->
+      <line x1="320" y1="70" x2="320" y2="120" stroke="#3c9a3c" stroke-width="8" stroke-linecap="round"/>
+      <g stroke="#9c6b3f" fill="none" stroke-linecap="round" stroke-width="3">
+        <path d="M320,120 C300,160 290,200 285,245"/><path d="M320,120 C310,165 305,205 305,250"/>
+        <path d="M320,120 C320,165 322,205 322,250"/><path d="M320,120 C330,165 338,205 345,248"/>
+        <path d="M320,120 C342,160 352,200 360,242"/></g>
+      <g font-size="13" font-family="Trebuchet MS" font-weight="bold" fill="#2b2b4a" text-anchor="middle">
+        <text x="320" y="60">Fibrous root</text></g>
+      ${dot('tap',110,200)}${dot('fib',320,200)}
+    </svg>`;
+    return {body:svg, parts:[
+      {id:'tap',label:'Tap root',desc:'🥕 Has ONE thick main root growing down, with smaller side roots. Example: carrot, mango tree.'},
+      {id:'fib',label:'Fibrous root',desc:'🌾 A bunch of thin, small roots with NO main root. Example: grass, wheat, rice.'},
+    ]};
+  },
+
+  stomata(){
+    const svg = `<svg viewBox="0 0 360 300" role="img">
+      <circle cx="180" cy="150" r="120" fill="#cdeeb0" stroke="#7fd45a" stroke-width="4"/>
+      <g>
+        <ellipse cx="130" cy="110" rx="20" ry="11" fill="#3c9a3c"/><ellipse cx="130" cy="110" rx="7" ry="9" fill="#1b5e20"/>
+        <ellipse cx="225" cy="135" rx="20" ry="11" fill="#3c9a3c"/><ellipse cx="225" cy="135" rx="7" ry="9" fill="#1b5e20"/>
+        <ellipse cx="160" cy="200" rx="20" ry="11" fill="#3c9a3c"/><ellipse cx="160" cy="200" rx="7" ry="9" fill="#1b5e20"/>
+        <ellipse cx="235" cy="205" rx="20" ry="11" fill="#3c9a3c"/><ellipse cx="235" cy="205" rx="7" ry="9" fill="#1b5e20"/>
+      </g>
+      <text x="180" y="285" text-anchor="middle" font-size="13" font-family="Trebuchet MS" font-weight="bold" fill="#2b2b4a">Surface of a leaf (zoomed in! 🔬)</text>
+      ${dot('stoma',225,135)}${dot('guard',130,110)}
+    </svg>`;
+    return {body:svg, parts:[
+      {id:'stoma',label:'Stomata',desc:'🕳️ Tiny pores (holes) mostly on the LOWER surface of a leaf. They let gases go in and out.'},
+      {id:'guard',label:'Guard cells',desc:'🟢 Two bean-shaped cells that open and close the pore. Stomata help in photosynthesis, transpiration and breathing.'},
+    ]};
+  },
+
+  planttypes(){
+    const svg = `<svg viewBox="0 0 480 200" role="img">
+      <g font-size="12" font-family="Trebuchet MS" font-weight="bold" fill="#2b2b4a" text-anchor="middle">
+        <!-- herb -->
+        <line x1="50" y1="160" x2="50" y2="120" stroke="#3c9a3c" stroke-width="4"/><circle cx="50" cy="115" r="14" fill="#7fd45a"/><text x="50" y="185">Herb</text>
+        <!-- shrub -->
+        <circle cx="140" cy="130" r="26" fill="#7fd45a"/><line x1="140" y1="160" x2="140" y2="150" stroke="#9c6b3f" stroke-width="5"/><text x="140" y="185">Shrub</text>
+        <!-- tree -->
+        <rect x="232" y="120" width="10" height="42" fill="#9c6b3f"/><circle cx="237" cy="110" r="34" fill="#5cb85c"/><text x="237" y="185">Tree</text>
+        <!-- creeper -->
+        <path d="M300,162 q20,-14 40,0 q20,14 40,0" fill="none" stroke="#3c9a3c" stroke-width="4"/><circle cx="320" cy="150" r="7" fill="#7fd45a"/><circle cx="360" cy="162" r="7" fill="#7fd45a"/><text x="340" y="185">Creeper</text>
+        <!-- climber -->
+        <line x1="445" y1="162" x2="445" y2="105" stroke="#bbb" stroke-width="4"/><path d="M445,160 q-14,-10 0,-20 q14,-10 0,-20 q-14,-10 0,-20" fill="none" stroke="#3c9a3c" stroke-width="4"/><text x="445" y="185">Climber</text>
+      </g>
+      ${dot('herb',50,115)}${dot('shrub',140,130)}${dot('tree',237,110)}${dot('creeper',340,158)}${dot('climber',445,120)}
+    </svg>`;
+    return {body:svg, parts:[
+      {id:'herb',label:'Herb',desc:'🌱 Small, soft, green stem. Example: mint, tomato, grass.'},
+      {id:'shrub',label:'Shrub',desc:'🌳 Medium, bushy, with woody stems near the ground. Example: rose, hibiscus.'},
+      {id:'tree',label:'Tree',desc:'🌲 Big and tall with one thick woody stem called a TRUNK. Example: mango, neem.'},
+      {id:'creeper',label:'Creeper',desc:'🍉 Weak stem that creeps along the ground. Example: pumpkin, watermelon.'},
+      {id:'climber',label:'Climber',desc:'🫛 Weak stem that needs support to grow up (vertically). Example: money plant, grapes.'},
+    ]};
+  },
+
+  /* ---------- MATHS ---------- */
+  placevalue(){
+    const body = `
+      <h4 style="text-align:center;color:var(--bg1);margin:4px 0">🇮🇳 Indian System — number 97,64,352</h4>
+      <table class="pvtable">
+        <tr><th colspan="2">Lakhs</th><th colspan="2">Thousands</th><th colspan="3">Ones</th></tr>
+        <tr><th>TL</th><th>L</th><th>TTh</th><th>Th</th><th>H</th><th>T</th><th>O</th></tr>
+        <tr><td class="num">9</td><td class="num">7</td><td class="num">6</td><td class="num">4</td><td class="num">3</td><td class="num">5</td><td class="num">2</td></tr>
+      </table>
+      <p style="text-align:center;font-size:14px;color:var(--muted);margin:4px 0 14px">= Ninety-seven lakh sixty-four thousand three hundred fifty-two</p>
+      <h4 style="text-align:center;color:var(--bg1);margin:4px 0">🌍 International System — number 358,641</h4>
+      <table class="pvtable">
+        <tr><th colspan="3">Thousands</th><th colspan="3">Ones</th></tr>
+        <tr><th>HTh</th><th>TTh</th><th>Th</th><th>H</th><th>T</th><th>O</th></tr>
+        <tr><td class="num">3</td><td class="num">5</td><td class="num">8</td><td class="num">6</td><td class="num">4</td><td class="num">1</td></tr>
+      </table>
+      <p style="text-align:center;font-size:14px;color:var(--muted);margin:4px 0 0">= Three hundred fifty-eight thousand six hundred forty-one</p>`;
+    return {body, parts:[
+      {id:'',label:'📍 Place value',desc:'Place value = the digit × the value of its place. In 76498 the 4 is in hundreds → 4×100 = 400.'},
+      {id:'',label:'🙂 Face value',desc:'Face value = just the digit itself. In 27896 the face value of 7 is 7.'},
+      {id:'',label:'🇮🇳 Indian commas',desc:'Put the first comma after 3 digits from the right, then after every 2 digits: 97,64,352.'},
+      {id:'',label:'🌍 International commas',desc:'Put a comma after every 3 digits from the right: 358,641.'},
+    ]};
+  },
+
+  roman(){
+    const cells = [['I','1'],['V','5'],['X','10'],['L','50'],['C','100'],['D','500'],['M','1000']];
+    const grid = cells.map(c=>`<div class="rcell"><b>${c[0]}</b>${c[1]}</div>`).join('');
+    const body = `
+      <h4 style="text-align:center;color:var(--bg1)">🏛️ The 7 Roman symbols</h4>
+      <div class="rg">${grid}</div>
+      <div class="twocol" style="margin-top:14px">
+        <div class="infocard"><h4>➖ Smaller BEFORE bigger = subtract</h4>IV = 5−1 = <b>4</b><br>IX = 10−1 = <b>9</b><br>XL = 50−10 = <b>40</b></div>
+        <div class="infocard"><h4>➕ Smaller AFTER bigger = add</h4>VI = 5+1 = <b>6</b><br>XI = 10+1 = <b>11</b><br>LX = 50+10 = <b>60</b></div>
+      </div>`;
+    return {body, parts:[
+      {id:'',label:'🔁 Repeat rule',desc:'I, X, C and M can be repeated up to 3 times (III = 3). But V, L and D are NEVER repeated.'},
+      {id:'',label:'Example: 73',desc:'73 = 70 + 3 = LXX + III = LXXIII.'},
+      {id:'',label:'Example: 96',desc:'96 = 90 + 6 = XC + VI = XCVI. (90 = XC because 100−10.)'},
+    ]};
+  },
+
+  /* ---------- COMPUTERS ---------- */
+  memory(){
+    const body = `
+      <div class="twocol">
+        <div class="infocard" style="border:2px solid #7c5cff"><h4>🏠 Primary memory</h4>Inside the computer. Works only while the computer is <b>ON</b>.<br>Examples: <b>RAM, Cache</b></div>
+        <div class="infocard" style="border:2px solid #ff6ec7"><h4>🗄️ Secondary memory</h4>Stores data for a long time, even when the computer is <b>OFF</b>.<br>Examples: <b>CD, DVD, Pen drive, Hard disk</b></div>
+      </div>
+      <div class="twocol" style="margin-top:12px">
+        <div class="infocard"><h4>📝 RAM</h4><b>R</b>andom <b>A</b>ccess <b>M</b>emory.<br>Temporary · Volatile (forgets when power is off).</div>
+        <div class="infocard"><h4>🔒 ROM</h4><b>R</b>ead <b>O</b>nly <b>M</b>emory.<br>Permanent · You can only read from it.</div>
+      </div>`;
+    return {body, parts:[
+      {id:'',label:'🧠 Memory',desc:'A place where the computer stores data and information.'},
+      {id:'',label:'⚡ Volatile',desc:'Volatile memory (like RAM) LOSES everything when the power goes off.'},
+      {id:'',label:'🔢 Binary',desc:'Computers store everything using only two digits: 0 and 1. That is called binary.'},
+    ]};
+  },
+
+  units(){
+    const rungs = [
+      ['Bit','the smallest unit — a 0 or a 1'],
+      ['Byte','8 bits = 1 Byte'],
+      ['Kilobyte (KB)','1024 Bytes = 1 KB'],
+      ['Megabyte (MB)','1024 KB = 1 MB'],
+      ['Gigabyte (GB)','1024 MB = 1 GB'],
+      ['Terabyte (TB)','1024 GB = 1 TB'],
+    ];
+    const body = `<h4 style="text-align:center;color:var(--bg1)">Climb the storage ladder! 🪜</h4>
+      <div class="ladder">${rungs.map(r=>`<div class="rung"><span>${r[0]}</span><small>${r[1]}</small></div>`).reverse().join('')}</div>
+      <p style="text-align:center;color:var(--muted);font-size:14px">Each step is 1024 times bigger than the one below it.</p>`;
+    return {body, parts:[
+      {id:'',label:'How big is a byte?',desc:'1 Byte = 8 bits. One letter like "A" takes about 1 byte to store.'},
+      {id:'',label:'Smallest to biggest',desc:'Bit → Byte → KB → MB → GB → TB. A movie is a few GB!'},
+    ]};
+  },
+};
+
+/* =======================================================================
+   DATA  — built from the Grade 4 homework PDFs
+   ======================================================================= */
+const DATA = {
+  computers: {
+    name:"Computers", emoji:"💻", color:"comp", blurb:"Storage & Memory Devices",
+    lessons:[
+      {key:'memory', title:'Types of Memory', intro:'Tap a word to learn it!'},
+      {key:'units',  title:'Storage Units', intro:'From tiny bits to huge terabytes.'},
+    ],
+    flashcards:[
+      {ic:"🧠",term:"Memory",def:"A storage location where the computer stores data and information."},
+      {ic:"📦",term:"Data",def:"A collection of raw facts like letters, numbers or pictures."},
+      {ic:"💡",term:"Information",def:"Processed data that is meaningful and useful."},
+      {ic:"⚡",term:"Volatile memory",def:"Memory that LOSES its data when the power is turned off (like RAM)."},
+      {ic:"🔢",term:"Binary",def:"The number system computers use, made of only 0 and 1."},
+      {ic:"💽",term:"Hard Disk",def:"The main storage device used to store all your work for a long time."},
+      {ic:"🔌",term:"Pen Drive",def:"A small, portable device used to store and transfer data."},
+      {ic:"🏠",term:"Primary memory",def:"Inside the computer; works while the computer is ON. Eg: RAM, Cache."},
+      {ic:"🗄️",term:"Secondary memory",def:"Stores data a long time even after the computer is OFF. Eg: CD, DVD, Pen drive."},
+      {ic:"📝",term:"RAM",def:"Random Access Memory — a temporary, read/write memory. It is volatile."},
+      {ic:"🔒",term:"ROM",def:"Read Only Memory — a permanent memory you can only read from."},
+      {ic:"🔗",term:"USB",def:"Universal Serial Bus."},
+      {ic:"💾",term:"HDD",def:"Hard Disk Drive."},
+      {ic:"⚙️",term:"SSD",def:"Solid State Drive."},
+      {ic:"🏢",term:"Data Center",def:"A place where many servers are kept together (where online videos are stored!)."},
+    ],
+    quiz:[
+      {q:"What does RAM stand for?",o:["Random Access Memory","Read Always Memory","Run And Move","Ready Access Mode"],a:0,e:"RAM = Random Access Memory. It is temporary and volatile."},
+      {q:"What does ROM stand for?",o:["Read Only Memory","Run On Machine","Random Out Memory","Read Or Move"],a:0,e:"ROM = Read Only Memory. It is permanent."},
+      {q:"Which memory loses its data when the power goes off?",o:["ROM","Hard Disk","RAM","Pen Drive"],a:2,e:"RAM is volatile, so it loses data when power is off."},
+      {q:"Processed data that is meaningful and useful is called…",o:["Binary","Information","A bit","A byte"],a:1,e:"Information is processed, useful data."},
+      {q:"A collection of raw facts like letters and numbers is called…",o:["Information","Knowledge","Data","Memory"],a:2,e:"Data = raw facts. When processed it becomes information."},
+      {q:"USB stands for…",o:["Universal Serial Bus","United System Box","Ultra Speed Byte","Universal Storage Bank"],a:0,e:"USB = Universal Serial Bus."},
+      {q:"HDD stands for…",o:["High Data Disk","Hard Disk Drive","Hidden Data Drive","Hot Disk Device"],a:1,e:"HDD = Hard Disk Drive."},
+      {q:"SSD stands for…",o:["Super Speed Disk","Solid State Drive","Small Storage Disk","Single Sided Drive"],a:1,e:"SSD = Solid State Drive."},
+      {q:"Which is an example of PRIMARY memory?",o:["CD","DVD","RAM","Pen Drive"],a:2,e:"RAM and Cache are primary memory (inside the computer)."},
+      {q:"Which is an example of SECONDARY memory?",o:["RAM","Cache","Pen Drive","None"],a:2,e:"CD, DVD and Pen Drive are secondary memory."},
+      {q:"The number system computers use has only…",o:["0 and 1","1 to 9","A to Z","0 to 100"],a:0,e:"Computers use binary: only 0 and 1."},
+      {q:"ROM is a ______ memory.",o:["temporary","volatile","permanent","broken"],a:2,e:"ROM is permanent; RAM is temporary."},
+      {q:"A small portable device to store and transfer data is a…",o:["Hard Disk","Pen Drive","Monitor","Keyboard"],a:1,e:"A pen drive is small and portable."},
+    ],
+    units:[
+      {q:"1 Bit equals…",o:["0 or 1","8 numbers","2 bytes","10"],a:0,e:"A bit is the smallest unit: 0 or 1."},
+      {q:"How many bits make 1 Byte?",o:["2","4","8","16"],a:2,e:"8 bits = 1 Byte."},
+      {q:"1024 Bytes = ?",o:["1 KB","1 MB","1 GB","1 Bit"],a:0,e:"1024 Bytes = 1 Kilobyte (KB)."},
+      {q:"1024 KB = ?",o:["1 GB","1 MB","1 TB","1 Byte"],a:1,e:"1024 KB = 1 Megabyte (MB)."},
+      {q:"1024 MB = ?",o:["1 KB","1 TB","1 GB","1 PB"],a:2,e:"1024 MB = 1 Gigabyte (GB)."},
+      {q:"1024 GB = ?",o:["1 TB","1 MB","1 EB","1 KB"],a:0,e:"1024 GB = 1 Terabyte (TB)."},
+      {q:"Put in order from smallest: KB, GB, MB",o:["GB, MB, KB","KB, MB, GB","MB, KB, GB","KB, GB, MB"],a:1,e:"KB < MB < GB."},
+    ],
+    written:[
+      {q:"What is the difference between data and information?",keywords:["data","raw|facts","information","processed|meaningful|useful"],
+        model:"Data is a collection of raw facts like letters and numbers. Information is processed data that is meaningful and useful."},
+      {q:"What is the difference between RAM and ROM?",keywords:["ram","rom","temporary|volatile","permanent"],
+        model:"RAM (Random Access Memory) is temporary and volatile — it loses data when power is off. ROM (Read Only Memory) is permanent and can only be read."},
+      {q:"What is the difference between primary and secondary memory? Give an example of each.",keywords:["primary","secondary","inside|on","off|long","ram|cache","cd|dvd|pen"],
+        model:"Primary memory is inside the computer and works while it is ON (e.g. RAM, Cache). Secondary memory stores data for a long time even when the computer is OFF (e.g. CD, DVD, Pen drive)."},
+    ],
+  },
+
+  maths: {
+    name:"Maths", emoji:"🔢", color:"math", blurb:"Chapter 1 — Large Numbers",
+    lessons:[
+      {key:'placevalue', title:'Place Value Charts', intro:'Tap an idea to learn it!'},
+      {key:'roman',      title:'Roman Numerals', intro:'Tap an idea to learn it!'},
+    ],
+    flashcards:[
+      {ic:"📍",term:"Place value",def:"The digit × the value of its place. In 76498, the place value of 4 is 400."},
+      {ic:"🙂",term:"Face value",def:"The digit itself. In 27896, the face value of 7 is just 7."},
+      {ic:"➡️",term:"Successor",def:"The number that comes just AFTER. Successor of 89,645 is 89,646 (add 1)."},
+      {ic:"⬅️",term:"Predecessor",def:"The number that comes just BEFORE. Predecessor of 12,388 is 12,387 (take away 1)."},
+      {ic:"🇮🇳",term:"Indian System",def:"Periods: Ones, Thousands, Lakhs, Crores. Commas after 3, then every 2 digits."},
+      {ic:"🌍",term:"International System",def:"Periods: Ones, Thousands, Millions. Commas after every 3 digits."},
+      {ic:"➕",term:"Expanded notation",def:"Writing a number as the sum of its place values. 95,002 = 90,000 + 5,000 + 2."},
+      {ic:"🔼",term:"Ascending order",def:"Arranging numbers from SMALLEST to largest."},
+      {ic:"🔽",term:"Descending order",def:"Arranging numbers from LARGEST to smallest."},
+      {ic:"🏛️",term:"Roman: I V X",def:"I = 1, V = 5, X = 10."},
+      {ic:"🏛️",term:"Roman: L C D M",def:"L = 50, C = 100, D = 500, M = 1000."},
+      {ic:"➖",term:"Roman subtraction",def:"A smaller symbol BEFORE a bigger one means subtract. IV = 4, IX = 9."},
+      {ic:"➕",term:"Roman addition",def:"A smaller symbol AFTER a bigger one means add. VI = 6, XI = 11."},
+      {ic:"🔁",term:"Roman repeat rule",def:"I, X, C, M can repeat up to 3 times. V, L, D are NEVER repeated."},
+    ],
+    quiz:[
+      {q:"In 76498, what is the PLACE VALUE of 4?",o:["4","40","400","4000"],a:2,e:"4 is in the hundreds place → 4 × 100 = 400."},
+      {q:"In 27896, what is the FACE VALUE of 7?",o:["7","700","7000","70"],a:0,e:"Face value is always the digit itself → 7."},
+      {q:"What is the successor of 89,645?",o:["89,644","89,646","90,645","89,655"],a:1,e:"Successor = number + 1 = 89,646."},
+      {q:"What is the predecessor of 12,388?",o:["12,389","12,387","12,288","11,388"],a:1,e:"Predecessor = number − 1 = 12,387."},
+      {q:"What is the successor of 49,900?",o:["49,800","49,901","49,999","50,900"],a:1,e:"49,900 + 1 = 49,901."},
+      {q:"What is the predecessor of 57,000?",o:["56,999","57,001","56,000","57,100"],a:0,e:"57,000 − 1 = 56,999."},
+      {q:"How do you write 35,017 in words?",o:["Three thousand fifty","Thirty-five thousand seventeen","Thirty-five hundred seventeen","Three lakh seventeen"],a:1,e:"35,017 = Thirty-five thousand seventeen."},
+      {q:"Arrange in ASCENDING order: 10,583 · 10,345 · 11,256",o:["11,256 · 10,583 · 10,345","10,345 · 10,583 · 11,256","10,583 · 10,345 · 11,256","10,345 · 11,256 · 10,583"],a:1,e:"Smallest to largest: 10,345 < 10,583 < 11,256."},
+      {q:"Arrange in DESCENDING order: 15,239 · 18,297 · 12,987",o:["12,987 · 15,239 · 18,297","18,297 · 15,239 · 12,987","15,239 · 18,297 · 12,987","18,297 · 12,987 · 15,239"],a:1,e:"Largest to smallest: 18,297 > 15,239 > 12,987."},
+      {q:"Form the GREATEST 5-digit number from 3, 6, 5, 4, 2",o:["23456","65432","63542","64532"],a:1,e:"Biggest digits first: 65432."},
+      {q:"Form the SMALLEST 5-digit number from 3, 6, 5, 4, 2",o:["23456","24356","32456","26543"],a:0,e:"Smallest digits first: 23456."},
+      {q:"Expanded notation of 86,945 is…",o:["8000+6000+900+40+5","80000+6000+900+40+5","80000+600+90+4+5","8+6+9+4+5"],a:1,e:"80,000 + 6,000 + 900 + 40 + 5."},
+    ],
+    roman:[
+      {q:"What is 4 in Roman numerals?",o:["IIII","IV","VI","XIV"],a:1,e:"IV = 5 − 1 = 4 (smaller before bigger = subtract)."},
+      {q:"What is 9 in Roman numerals?",o:["XI","VIIII","IX","Xe"],a:2,e:"IX = 10 − 1 = 9."},
+      {q:"What is 6 in Roman numerals?",o:["IV","VI","IX","XV"],a:1,e:"VI = 5 + 1 = 6 (smaller after bigger = add)."},
+      {q:"The Roman symbol L stands for…",o:["5","50","100","500"],a:1,e:"L = 50."},
+      {q:"The Roman symbol C stands for…",o:["100","50","1000","10"],a:0,e:"C = 100."},
+      {q:"The Roman symbol M stands for…",o:["100","500","1000","50"],a:2,e:"M = 1000."},
+      {q:"What is 73 in Roman numerals?",o:["LXXIII","LXIII","XXIII","LXXVII"],a:0,e:"73 = 70 + 3 = LXX + III = LXXIII."},
+      {q:"LXIX equals…",o:["59","69","79","61"],a:1,e:"LX + IX = 60 + 9 = 69."},
+      {q:"XCVIII equals…",o:["88","108","98","78"],a:2,e:"XC + VIII = 90 + 8 = 98."},
+      {q:"Which symbols can NEVER be repeated?",o:["I, X, C","V, L, D","X, M, I","C, M, X"],a:1,e:"V, L and D are never repeated."},
+      {q:"96 in Roman numerals is…",o:["XCVI","IXVI","LXXXXVI","XCIV"],a:0,e:"96 = 90 + 6 = XC + VI = XCVI."},
+      {q:"How many times can I, X, C or M be repeated?",o:["Once","Twice","Up to 3 times","Up to 5 times"],a:2,e:"They can repeat up to 3 times."},
+    ],
+    written:[
+      {q:"What is the difference between place value and face value?",keywords:["place","face","digit","value|itself|place"],
+        model:"Place value is the digit multiplied by the value of its place (in 76498, place value of 4 = 400). Face value is just the digit itself (face value of 4 = 4)."},
+      {q:"Explain successor and predecessor with one example each.",keywords:["successor|after","predecessor|before","add|+1|plus","subtract|minus|-1|before"],
+        model:"Successor is the number just AFTER (add 1): successor of 89,645 is 89,646. Predecessor is the number just BEFORE (subtract 1): predecessor of 12,388 is 12,387."},
+      {q:"Write the rules for Roman numerals.",keywords:["repeat|three|3","subtract|smaller before","add|smaller after","v|l|d"],
+        model:"I, X, C and M can be repeated up to 3 times; V, L and D are never repeated. A smaller symbol written before a bigger one is subtracted (IV=4); written after a bigger one it is added (VI=6)."},
+    ],
+  },
+
+  science: {
+    name:"Science", emoji:"🌿", color:"sci", blurb:"Ch-6 — Plants in our Surroundings",
+    lessons:[
+      {key:'leaf',           title:'Structure of a Leaf', intro:'Tap each part to learn its name!'},
+      {key:'photosynthesis', title:'Photosynthesis', intro:'How plants cook their own food. Tap each label!'},
+      {key:'roots',          title:'Types of Roots', intro:'Tap each root to compare them.'},
+      {key:'stomata',        title:'Stomata', intro:'The tiny holes on a leaf. Tap to learn!'},
+      {key:'planttypes',     title:'Types of Plants', intro:'Tap each plant to see what it is.'},
+    ],
+    flashcards:[
+      {ic:"🌿",term:"Chlorophyll",def:"The green pigment in leaves that absorbs sunlight and helps make food."},
+      {ic:"🍳",term:"Photosynthesis",def:"How green plants make their own food using carbon dioxide + water + sunlight + chlorophyll. 'Photo' = light, 'synthesis' = combine."},
+      {ic:"💧",term:"Transpiration",def:"The loss of extra water from plants, mainly through leaves, as water vapour. It keeps the plant cool."},
+      {ic:"🍬",term:"Glucose",def:"The simple sugar (food) that plants make."},
+      {ic:"🥔",term:"Starch",def:"The stored form of food. Glucose is changed into starch to store it."},
+      {ic:"🧪",term:"Iodine test",def:"Iodine solution tests for starch. It turns blue-black if starch is present."},
+      {ic:"🕳️",term:"Stomata",def:"Tiny pores mostly on the lower surface of a leaf. Help in photosynthesis, transpiration and breathing."},
+      {ic:"🪢",term:"Petiole",def:"The stalk of a leaf (joins the leaf to the stem)."},
+      {ic:"🟢",term:"Lamina",def:"The leaf blade — the flat green part of the leaf."},
+      {ic:"📏",term:"Midrib",def:"The main vein in the middle of a leaf."},
+      {ic:"🥕",term:"Tap root",def:"One main root growing down, with smaller side roots. Eg: carrot, mango."},
+      {ic:"🌾",term:"Fibrous root",def:"A bunch of thin, small roots with no main root. Eg: grass, wheat."},
+      {ic:"🌪️",term:"Soil erosion",def:"Washing away of the top layer of soil by wind, water or human activities. Roots help stop it."},
+      {ic:"🪵",term:"Trunk",def:"The thick, hard, woody stem of a tree."},
+      {ic:"🫛",term:"Climber",def:"A plant with a weak stem that needs support and grows vertically (upwards)."},
+      {ic:"🌱",term:"Edible seeds",def:"Seeds we can eat, like rice and wheat. Seeds we cannot eat are inedible."},
+      {ic:"🍃",term:"Functions of leaves",def:"Make food, give out extra water, store food, and exchange gases."},
+      {ic:"📄",term:"Plant products",def:"Plants give us food, paper (bamboo, pampas grass), rubber, furniture, medicine and fibres."},
+    ],
+    quiz:[
+      {q:"The green pigment present in a leaf is called…",o:["Glucose","Chlorophyll","Starch","Iodine"],a:1,e:"Chlorophyll is the green pigment that traps sunlight."},
+      {q:"Plants that need support and grow vertically are…",o:["Herbs","Shrubs","Climbers","Trees"],a:2,e:"Climbers have weak stems and need support to grow up."},
+      {q:"The thick, hard, woody stem of a tree is called the…",o:["Petiole","Trunk","Midrib","Root"],a:1,e:"The trunk is the strong woody stem of a tree."},
+      {q:"The stalk of a leaf is called the…",o:["Lamina","Midrib","Petiole","Apex"],a:2,e:"Petiole = the stalk that joins the leaf to the stem."},
+      {q:"The leaf blade (flat green part) is called the…",o:["Lamina","Petiole","Midrib","Vein"],a:0,e:"Lamina = the leaf blade."},
+      {q:"The main vein of a leaf is called the…",o:["Petiole","Side vein","Midrib","Apex"],a:2,e:"Midrib = the main vein down the middle."},
+      {q:"The food made by a plant is a simple sugar called…",o:["Starch","Glucose","Iodine","Fibre"],a:1,e:"Plants make glucose, a simple sugar."},
+      {q:"Glucose is stored in the plant as…",o:["Water","Oxygen","Starch","Sugar cubes"],a:2,e:"Glucose is changed into starch for storage."},
+      {q:"Which solution is used to test for starch?",o:["Salt water","Iodine solution","Soap water","Lemon juice"],a:1,e:"Iodine solution tests for starch."},
+      {q:"With starch, iodine turns…",o:["Red","Green","Blue-black","Yellow"],a:2,e:"Iodine gives a blue-black colour with starch."},
+      {q:"In 'photosynthesis', 'Photo' means…",o:["Plant","Light","Water","Food"],a:1,e:"'Photo' = light, 'synthesis' = combine."},
+      {q:"Tiny pores mostly on the lower surface of a leaf are…",o:["Veins","Stomata","Roots","Petioles"],a:1,e:"Stomata are the tiny pores on the leaf."},
+      {q:"The loss of extra water from leaves as vapour is called…",o:["Photosynthesis","Transpiration","Soil erosion","Germination"],a:1,e:"Transpiration releases water vapour and keeps the plant cool."},
+      {q:"Paper is obtained from plants such as…",o:["Rose and lily","Bamboo and pampas grass","Mango and apple","Wheat and rice"],a:1,e:"Bamboo and pampas grass are used to make paper."},
+      {q:"Seeds that we can eat (like rice, wheat) are called…",o:["Inedible seeds","Edible seeds","Fruit seeds","Hard seeds"],a:1,e:"Edible = can be eaten."},
+      {q:"A root with one main root and side roots is a…",o:["Fibrous root","Tap root","Stem","Shoot"],a:1,e:"Tap root has one main root growing down."},
+      {q:"A bunch of thin small roots with NO main root is a…",o:["Tap root","Trunk","Fibrous root","Petiole"],a:2,e:"Fibrous roots are a bunch of thin small roots."},
+      {q:"Which gas do plants TAKE IN for photosynthesis?",o:["Oxygen","Carbon dioxide","Nitrogen","Water vapour"],a:1,e:"Plants take in carbon dioxide and give out oxygen."},
+      {q:"Which gas do plants GIVE OUT during photosynthesis?",o:["Carbon dioxide","Oxygen","Smoke","Nitrogen"],a:1,e:"Plants give out oxygen — the gas we breathe!"},
+      {q:"Roots holding the soil firmly help to prevent…",o:["Photosynthesis","Soil erosion","Transpiration","Rain"],a:1,e:"Roots stop the top soil from being washed away (soil erosion)."},
+    ],
+    written:[
+      {q:"What is photosynthesis?",keywords:["green plants|plants","own food|food","carbon dioxide","water","sunlight|sun","chlorophyll"],
+        model:"Photosynthesis is the process by which green plants make their own food using carbon dioxide and water, in the presence of sunlight and chlorophyll."},
+      {q:"What is transpiration?",keywords:["water","leaves|leaf","vapour|vapor","loss|lost|extra|excess"],
+        model:"Transpiration is the loss of excess water from plants, mainly through the leaves, as water vapour. It also helps keep the plant cool."},
+      {q:"Why are leaves mostly flat and broad? Give a reason.",keywords:["food","sunlight|sun","photosynthesis","trap|catch|more"],
+        model:"Leaves make food for the whole plant. Their flat and broad shape helps them trap more sunlight for photosynthesis."},
+      {q:"Can plants make food at night? Give a reason.",keywords:["no","sunlight|sun","night","photosynthesis"],
+        model:"No. Plants cannot make food at night because sunlight is needed for photosynthesis, and there is no sunlight at night."},
+      {q:"Why do tall trees have roots that go very deep into the soil?",keywords:["deep|strong|bind","soil","fall|support|hold","water|nutrients"],
+        model:"Tall trees need deep roots to bind strongly to the soil so they do not fall, and to take in more water and nutrients."},
+      {q:"What is soil erosion, and how do roots help?",keywords:["top layer|top soil|soil","wind|water","wash|removal","roots|hold|prevent"],
+        model:"Soil erosion is the removal or washing away of the top layer of soil by wind, water or human activities. Roots hold the soil firmly and prevent it."},
+      {q:"Rahul kept a rose plant inside the house and its leaves lost colour and dried. Why?",keywords:["sunlight|sun|light","photosynthesis|food","inside|dark|no"],
+        model:"Inside the house the plant did not get enough sunlight, so it could not do photosynthesis to make food. Without food, the leaves lost their colour and dried."},
+      {q:"Write the word equation for photosynthesis.",keywords:["carbon dioxide","water","glucose|sugar|food","oxygen"],
+        model:"Carbon dioxide + Water → (using sunlight and chlorophyll) → Glucose + Oxygen."},
+    ],
+  },
+
+  hindi: {
+    name:"हिंदी (Hindi)", emoji:"🪔", color:"hin", blurb:"वर्णमाला + हमारे त्योहार — Alphabet & Festivals",
+    lessons:[
+      {key:'hindiSwar',    title:'स्वर — Vowels',        intro:'Step 1. Tap the buttons to learn the rules!'},
+      {key:'hindiVyanjan', title:'व्यंजन — Consonants',   intro:'Step 2. Each letter shows its sound + a word.'},
+      {key:'hindiMatra',   title:'मात्राएँ — Vowel signs', intro:'Step 3. How vowels join a letter.'},
+      {key:'hindiBara',    title:'बारहखड़ी — Reading',     intro:'Step 4. Read each row across to learn to read!'},
+    ],
+    flashcards:[
+      {ic:"🎉",term:"त्योहार",rom:"tyohaar",def:"Festival. (Synonyms / पर्यायवाची: पर्व, उत्सव)"},
+      {ic:"🪔",term:"दीपावली",rom:"deepaavali",def:"Diwali — the festival of lights (प्रकाश-पर्व)."},
+      {ic:"🌈",term:"होली",rom:"holi",def:"Holi — the festival of colours; a symbol of love and joy."},
+      {ic:"🧵",term:"राखी",rom:"raakhi",def:"Rakhi (Rakshabandhan) — the festival of a brother and sister's love."},
+      {ic:"🌾",term:"पोंगल",rom:"pongal",def:"Pongal — a harvest festival of Tamil Nadu (तमिलनाडु)."},
+      {ic:"☀️",term:"ओणम",rom:"onam",def:"Onam — a harvest festival of Kerala (केरल)."},
+      {ic:"🔥",term:"लोहड़ी",rom:"lohri",def:"Lohri — a festival of Punjab (पंजाब)."},
+      {ic:"💡",term:"प्रकाश",rom:"prakaash",def:"Light. (Synonyms: आलोक, उजाला)"},
+      {ic:"🌑",term:"अंधकार",rom:"andhkaar",def:"Darkness. (Synonyms: तम, अँधेरा)"},
+      {ic:"😀",term:"प्रसन्नता",rom:"prasannata",def:"Happiness, joy. (= खुशी, उल्लास)"},
+      {ic:"💪",term:"उत्साह",rom:"utsaah",def:"Enthusiasm, energy. (= जोश, उमंग, हर्ष)"},
+      {ic:"🔖",term:"प्रतीक",rom:"prateek",def:"A symbol or sign. (= चिह्न)"},
+      {ic:"📍",term:"क्षेत्र",rom:"kshetra",def:"An area or region. (= इलाका)"},
+      {ic:"🤝",term:"एकता",rom:"ekta",def:"Unity — the feeling of being one. (Opposite: अनेकता)"},
+      {ic:"🎁",term:"उपहार",rom:"uphaar",def:"A gift. (= भेंट, सौगात)"},
+      {ic:"✉️",term:"संदेश",rom:"sandesh",def:"A message. (= सूचना, खबर)"},
+      {ic:"♾️",term:"आजीवन",rom:"aajeevan",def:"Lifelong — for the whole life. (= जीवन भर) [आ + जीवन]"},
+      {ic:"🙏",term:"माथा टेकना",rom:"maatha tekna",def:"To bow the head in respect. (= सिर झुकाना)"},
+      {ic:"📅",term:"सप्ताह के दिन",rom:"saptaah ke din",def:"Days of the week: सोमवार(Mon), मंगलवार(Tue), बुधवार(Wed), गुरुवार(Thu), शुक्रवार(Fri), शनिवार(Sat), रविवार(Sun)."},
+      {ic:"🔢",term:"गिनती",rom:"ginti",def:"Counting: एक(1) दो(2) तीन(3) चार(4) पाँच(5) छः(6) सात(7) आठ(8) नौ(9) दस(10)."},
+      {ic:"🐝",term:"विलोम",rom:"vilom",def:"Opposite word (antonym). Examples: दिन × रात, सुख × दुख, प्रेम × घृणा."},
+      {ic:"🧩",term:"उपसर्ग",rom:"upsarg",def:"A prefix added before a word. वि+देश=विदेश, प्र+काश=प्रकाश, परा+जय=पराजय."}
+    ],
+    quiz:[
+      {q:"हमारे त्योहार किस पर आधारित हैं? (Our festivals are based on…)",o:["सिर्फ़ धर्म पर (only religion)","सिर्फ़ फसलों पर (only crops)","दोनों ही बातें (both)","किसी पर नहीं"],a:2,e:"त्योहार धर्म पर और अलग-अलग मौसम की फसलों — दोनों पर आधारित हैं।"},
+      {q:"प्रेम और खुशियों के रंग बिखेरने का प्रतीक कौन-सा त्योहार है?",o:["दीवाली","होली","दशहरा","ईद"],a:1,e:"होली रंगों का त्योहार है — प्रेम और खुशी का प्रतीक।"},
+      {q:"भाई-बहन के प्यार का त्योहार कौन-सा है?",o:["दशहरा","राखी (रक्षाबंधन)","गुरुपर्व","पोंगल"],a:1,e:"राखी (रक्षाबंधन) भाई-बहन के प्यार का त्योहार है।"},
+      {q:"ओणम का त्योहार कहाँ मनाया जाता है? (Onam is celebrated in…)",o:["असम","पंजाब","केरल (Kerala)","तमिलनाडु"],a:2,e:"ओणम केरल में मनाया जाता है।"},
+      {q:"पोंगल किस राज्य का त्योहार है?",o:["तमिलनाडु","केरल","पंजाब","असम"],a:0,e:"पोंगल तमिलनाडु का फसल-त्योहार है।"},
+      {q:"लोहड़ी किस राज्य में मनाई जाती है?",o:["केरल","पंजाब","असम","गोवा"],a:1,e:"लोहड़ी पंजाब का त्योहार है।"},
+      {q:"क्रिसमस कब मनाया जाता है? (When is Christmas?)",o:["25 दिसंबर","1 जनवरी","15 अगस्त","2 अक्टूबर"],a:0,e:"क्रिसमस 25 दिसंबर को मनाया जाता है।"},
+      {q:"'प्रकाश' का पर्यायवाची (same meaning) शब्द है—",o:["तम","अँधेरा","उजाला","रात"],a:2,e:"प्रकाश = उजाला, आलोक।"},
+      {q:"'दिन' का विलोम (opposite) शब्द है—",o:["सुबह","रात","शाम","दोपहर"],a:1,e:"दिन × रात।"},
+      {q:"'खुशी' का विलोम शब्द है—",o:["उदासी","हँसी","प्रेम","सुख"],a:0,e:"खुशी × उदासी।"},
+      {q:"'विदेश' शब्द में उपसर्ग (prefix) कौन-सा है?",o:["वि","देश","दे","श"],a:0,e:"वि + देश = विदेश। उपसर्ग 'वि' है।"},
+      {q:"सप्ताह का पहला दिन (first day of the week) कौन-सा है?",o:["रविवार","शनिवार","सोमवार","मंगलवार"],a:2,e:"सोमवार (Monday)।"}
+    ],
+    grammar:[
+      {q:"संज्ञा (noun) किसे कहते हैं?",o:["काम बताने वाले शब्द","किसी वस्तु, व्यक्ति, स्थान या भाव के नाम","रंगों के नाम","गिनती"],a:1,e:"किसी वस्तु, प्राणी, स्थान, गुण या भाव के नाम को संज्ञा कहते हैं। जैसे— सीमा, आगरा, बच्चा।"},
+      {q:"संज्ञा के कितने भेद होते हैं?",o:["2","3","4","5"],a:1,e:"तीन भेद — व्यक्तिवाचक, जातिवाचक, भाववाचक।"},
+      {q:"'दीपावली' किस प्रकार की संज्ञा है?",o:["व्यक्तिवाचक (proper)","जातिवाचक (common)","भाववाचक","सर्वनाम"],a:0,e:"दीपावली एक खास नाम है → व्यक्तिवाचक संज्ञा।"},
+      {q:"'खुशी' और 'मिठास' किस प्रकार की संज्ञा हैं?",o:["व्यक्तिवाचक","जातिवाचक","भाववाचक (feeling)","क्रिया"],a:2,e:"भाव (feeling) बताने वाली → भाववाचक संज्ञा।"},
+      {q:"सर्वनाम (pronoun) किसे कहते हैं?",o:["संज्ञा के नाम","संज्ञा के स्थान पर आने वाले शब्द","जगहों के नाम","गिनती"],a:1,e:"संज्ञा के स्थान पर प्रयोग होने वाले शब्द — वह, तुम, मैं, उसका, कौन।"},
+      {q:"इनमें से सर्वनाम कौन-सा है?",o:["आगरा","वह","पुस्तक","फूल"],a:1,e:"'वह' सर्वनाम है (he/she/it)।"},
+      {q:"कारक चिह्न (का, के, की, ने, से…) क्या बताते हैं?",o:["रंग","संज्ञा का दूसरे शब्दों से संबंध","गिनती","समय"],a:1,e:"कारक संज्ञा/सर्वनाम का वाक्य के बाकी शब्दों से संबंध बताते हैं।"},
+      {q:"सही कारक भरो: 'आम ___ पेड़'",o:["का","की","ने","से"],a:0,e:"आम का पेड़ — 'का' संबंध बताता है।"},
+      {q:"'बच्चा' का बहुवचन (plural) क्या है?",o:["बच्चे","बच्चु","बच्ची","बच्चों"],a:0,e:"एकवचन बच्चा → बहुवचन बच्चे।"},
+      {q:"'तितली' का बहुवचन क्या है?",o:["तितलाँ","तितलियाँ","तितले","तितली"],a:1,e:"तितली → तितलियाँ।"}
+    ],
+    written:[
+      {q:"होली पर सब क्या करते हैं? (What does everyone do on Holi? — you may answer in English)",keywords:["रंग|colour|color|rang","लगाते|लगा|put|play|throw"],
+        model:"होली पर सब एक-दूसरे को रंग लगाते हैं। (On Holi, everyone puts colours on each other.)"},
+      {q:"क्रिसमस कब मनाया जाता है? (When is Christmas celebrated?)",keywords:["25|दिसंबर|december|पच्चीस|25th"],
+        model:"क्रिसमस 25 दिसंबर को मनाया जाता है। (Christmas is celebrated on 25th December.)"},
+      {q:"रक्षाबंधन के दिन भाई अपनी बहन को क्या वचन देता है?",keywords:["रक्षा|protect|raksha|safe","वचन|promise|आजीवन|life"],
+        model:"भाई अपनी बहन को आजीवन उसकी रक्षा करने का वचन देता है। (The brother promises to protect his sister all his life.)"},
+      {q:"ईद के दिन मुसलमान भाई क्या करते हैं?",keywords:["नमाज़|namaz|namaaz|pray|prayer","गले|मीठी|सेवइयाँ|eid|hug|sweet"],
+        model:"ईद के दिन मुसलमान भाई ईदगाह जाकर नमाज़ पढ़ते हैं, गले मिलकर 'ईद-मुबारक' कहते हैं और मीठी सेवइयाँ खाते हैं।"},
+      {q:"दीपावली को 'प्रकाश-पर्व' क्यों कहते हैं? (Why is Diwali called the festival of light?)",keywords:["प्रकाश|light|उजाला","अंधकार|दुख|बुराई|darkness|evil","ज्ञान|अच्छाई|प्रसन्नता|knowledge|good|joy"],
+        model:"क्योंकि दीपावली जीवन से दुख और बुराइयों के अंधकार को मिटाकर ज्ञान, अच्छाई और प्रसन्नता का प्रकाश फैलाती है।"},
+      {q:"सभी त्योहार हमें क्या संदेश देते हैं?",keywords:["मिलकर|together|एकता|unity","खुशी|उत्साह|प्रेम|love|happiness|joy"],
+        model:"सभी त्योहार हमें एक-दूसरे के साथ मिलकर खुशी, उत्साह और प्रेम से जीने का संदेश देते हैं।"}
+    ],
+  },
+
+  telugu: {
+    name:"తెలుగు (Telugu)", emoji:"🌼", color:"tel", blurb:"వర్ణమాల — Letters, Sounds & First Words",
+    lessons:[
+      {key:'teluguAchu',    title:'అచ్చులు — Vowels',       intro:'Step 1. Tap the buttons for the rules!'},
+      {key:'teluguHallu',   title:'హల్లులు — Consonants',    intro:'Step 2. Each letter shows its sound + a word.'},
+      {key:'teluguGuninth', title:'గుణింతం — Vowel signs',   intro:'Step 3. How vowels join a letter.'},
+      {key:'teluguPada',    title:'సరళ పదాలు — First words',  intro:'Step 4. Easy words. Read them aloud!'},
+    ],
+    flashcards:[
+      {ic:"🎮",term:"ఆట",rom:"aata",def:"Game / play."},
+      {ic:"🪶",term:"ఈక",rom:"eeka",def:"A feather."},
+      {ic:"🛝",term:"ఊయల",rom:"ooyala",def:"A swing / cradle."},
+      {ic:"🌸",term:"కమల",rom:"kamala",def:"Lotus flower."},
+      {ic:"🚪",term:"గడప",rom:"gadapa",def:"Doorstep / threshold."},
+      {ic:"🥁",term:"తబల",rom:"tabala",def:"Tabla (a drum)."},
+      {ic:"❤️",term:"మమత",rom:"mamata",def:"Love / affection."},
+      {ic:"✅",term:"సరళ",rom:"sarala",def:"Simple / easy."},
+      {ic:"🌧️",term:"వాన",rom:"vaana",def:"Rain."},
+      {ic:"🎪",term:"జాతర",rom:"jaatara",def:"A village fair."},
+      {ic:"📅",term:"వారం",rom:"vaaram",def:"A week."},
+      {ic:"🏫",term:"పాఠశాల",rom:"paathashaala",def:"School."},
+      {ic:"🌌",term:"ఆకాశం",rom:"aakaasham",def:"The sky."},
+      {ic:"🌺",term:"మందారం",rom:"mandaaram",def:"Hibiscus flower."},
+      {ic:"💰",term:"ధనం",rom:"dhanam",def:"Wealth / money."},
+      {ic:"🍎",term:"ఫలం",rom:"phalam",def:"A fruit."},
+      {ic:"🏢",term:"భవనం",rom:"bhavanam",def:"A building."},
+      {ic:"🏺",term:"ఘటం",rom:"ghatam",def:"A pot."},
+      {ic:"🗣️",term:"కంఠం",rom:"kantham",def:"The throat / voice."},
+      {ic:"🐘",term:"ఏనుగు",rom:"aenugu",def:"An elephant."},
+      {ic:"🏠",term:"ఇల్లు",rom:"illu",def:"A house."},
+      {ic:"5️⃣",term:"ఐదు",rom:"aidu",def:"The number five (5)."}
+    ],
+    quiz:[
+      {q:"ఆట (aata) means…",o:["Game","Rain","House","Sky"],a:0,e:"ఆట = game / play."},
+      {q:"వాన (vaana) means…",o:["Week","Rain","Fruit","Swing"],a:1,e:"వాన = rain."},
+      {q:"పాఠశాల (paathashaala) means…",o:["Market","Temple","School","Garden"],a:2,e:"పాఠశాల = school."},
+      {q:"కమల (kamala) means…",o:["Rose","Lotus","Mango","Leaf"],a:1,e:"కమల = lotus."},
+      {q:"ధనం (dhanam) means…",o:["Wealth / Money","Water","Fire","Food"],a:0,e:"ధనం = wealth / money."},
+      {q:"ఆకాశం (aakaasham) means…",o:["Earth","River","Sky","Hill"],a:2,e:"ఆకాశం = sky."},
+      {q:"Which one is a vowel (అచ్చు)?",o:["క","ఆ","మ","ర"],a:1,e:"ఆ is a vowel (అచ్చు). క, మ, ర are consonants (హల్లులు)."},
+      {q:"Which one is a consonant (హల్లు)?",o:["అ","ఇ","క","ఉ"],a:2,e:"క is a consonant. అ, ఇ, ఉ are vowels."},
+      {q:"The గుణింతం sign for ఆ (aa) is…",o:["ి","ు","ా","ే"],a:2,e:"క + ా = కా. The sign for ఆ is ా."},
+      {q:"ఈక (eeka) means…",o:["Feather","Doorstep","Drum","Fair"],a:0,e:"ఈక = feather."},
+      {q:"మమత (mamata) means…",o:["Anger","Love / Affection","Fear","Hunger"],a:1,e:"మమత = love / affection."},
+      {q:"ఏనుగు (aenugu) means…",o:["Mouse","Camel","Elephant","Swan"],a:2,e:"ఏనుగు = elephant."}
+    ],
+    letters:[
+      {q:"Which is the FIRST vowel (అచ్చు) of Telugu?",o:["క","అ","మ","ఆ"],a:1,e:"The first vowel is అ."},
+      {q:"హ్రస్వాలు means…",o:["Long sounds","Short sounds","Numbers","Colours"],a:1,e:"హ్రస్వాలు = short vowels (అ ఇ ఉ ఋ ఎ ఒ)."},
+      {q:"దీర్ఘాలు means…",o:["Short sounds","Long sounds","Letters","Words"],a:1,e:"దీర్ఘాలు = long vowels (ఆ ఈ ఊ ఏ ఓ…)."},
+      {q:"Which is a మహాప్రాణం (strong-breath) letter?",o:["క","గ","ఖ","ట"],a:2,e:"ఖ is మహాప్రాణం. క, గ, ట are అల్పప్రాణాలు (soft)."},
+      {q:"క + ి = ?",o:["కా","కి","కు","కే"],a:1,e:"క + ి = కి (ki)."},
+      {q:"గ + ా = ?",o:["గా","గి","గు","గే"],a:0,e:"గ + ా = గా (gaa)."},
+      {q:"Which one is a vowel sign (గుణింతం)?",o:["క","ా","మ","ట"],a:1,e:"ా is a vowel sign; it joins to consonants."},
+      {q:"అం and అః are called…",o:["హల్లులు","ఉభయాక్షరాలు","సంఖ్యలు","పదాలు"],a:1,e:"అం (సున్న) and అః (విసర్గ) are ఉభయాక్షరాలు."},
+      {q:"ఒంటె (onte) means…",o:["Camel","Mouse","Ship","Lotus"],a:0,e:"ఒంటె = camel."},
+      {q:"ఓడ (oda) means…",o:["Ship / Boat","Sky","Tree","Fruit"],a:0,e:"ఓడ = ship / boat."}
+    ],
+    written:[
+      {q:"What does ఆట (aata) mean? (write in English)",keywords:["game|play"],
+        model:"ఆట (aata) means a 'game' or 'play'."},
+      {q:"What does పాఠశాల (paathashaala) mean?",keywords:["school"],
+        model:"పాఠశాల (paathashaala) means 'school'."},
+      {q:"What does వాన (vaana) mean?",keywords:["rain"],
+        model:"వాన (vaana) means 'rain'."},
+      {q:"Name the two kinds of letters (వర్ణాలు) in Telugu.",keywords:["vowel|achulu|అచ్చులు","consonant|hallulu|హల్లులు"],
+        model:"Telugu letters are of two kinds: అచ్చులు (vowels) and హల్లులు (consonants)."},
+      {q:"What is a గుణింతం? (in your own words)",keywords:["vowel|sign|మాత్ర|matra|sound","consonant|letter|join|adds|combine"],
+        model:"A గుణింతం is a vowel sign that joins to a consonant to give it a vowel sound, like క + ా = కా."}
+    ],
+  },
+};
+
+DATA.computers.allquiz = [...DATA.computers.quiz, ...DATA.computers.units];
+DATA.maths.allquiz     = [...DATA.maths.quiz, ...DATA.maths.roman];
+DATA.science.allquiz   = [...DATA.science.quiz];
+DATA.hindi.allquiz     = [...DATA.hindi.quiz, ...DATA.hindi.grammar];
+DATA.telugu.allquiz    = [...DATA.telugu.quiz, ...DATA.telugu.letters];
+
+/* =======================================================================
+   STATE / PROGRESS
+   ======================================================================= */
+const SAVE_KEY="khiradStudyZone_v2";
+let S = load();
+function load(){ try{ return JSON.parse(localStorage.getItem(SAVE_KEY)) || fresh(); }catch(e){ return fresh(); } }
+function fresh(){ return {stars:0, badges:{}, seenCards:{}, bestQuiz:{}, quizzesDone:0, perfectRuns:0, written:0}; }
+function save(){ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); refreshTop(); }
+
+const BADGES=[
+  {id:"first",  icon:"🌱", name:"First Steps", desc:"Finish your first quiz"},
+  {id:"star10", icon:"⭐", name:"Star Collector", desc:"Earn 10 stars"},
+  {id:"star50", icon:"🌟", name:"Star Master", desc:"Earn 50 stars"},
+  {id:"perfect",icon:"💯", name:"Perfect!", desc:"Get every answer right in a quiz"},
+  {id:"compcard",icon:"💻", name:"Tech Whiz", desc:"See all Computer flashcards"},
+  {id:"mathcard",icon:"🔢", name:"Number Ninja", desc:"See all Maths flashcards"},
+  {id:"scicard", icon:"🌿", name:"Plant Pro", desc:"See all Science flashcards"},
+  {id:"roman",  icon:"🏛️", name:"Roman Hero", desc:"Score 4+ on the Roman quiz"},
+  {id:"writer", icon:"✍️", name:"Super Writer", desc:"Finish a Write-the-Answer set"},
+  {id:"triple", icon:"🔥", name:"On Fire", desc:"Finish 3 quizzes"},
+  {id:"hindcard",icon:"🪔", name:"Hindi Star", desc:"See all Hindi flashcards"},
+  {id:"telcard", icon:"🌼", name:"Telugu Star", desc:"See all Telugu flashcards"},
+];
+function unlock(id){ if(!S.badges[id]){ S.badges[id]=true; save(); toastBadge(id); } }
+function refreshTop(){
+  document.getElementById('starPill').textContent="⭐ "+S.stars;
+  document.getElementById('badgePill').textContent="🏅 "+Object.keys(S.badges).length;
+}
+
+/* =======================================================================
+   ROUTER
+   ======================================================================= */
+const app=document.getElementById('app');
+function go(html){ app.innerHTML=html; window.scrollTo({top:0,behavior:'smooth'}); }
+
+function home(){
+  refreshTop();
+  const subj=(k)=>{
+    const d=DATA[k]; const prog=cardProgress(k);
+    if(d.locked) return `<button class="tile ${d.color} locked" disabled><span class="emoji">${d.emoji}</span><h3>${d.name}</h3><small>${d.blurb}</small><span class="ribbon">SOON</span></button>`;
+    return `<button class="tile ${d.color}" onclick="subject('${k}')"><span class="emoji">${d.emoji}</span><h3>${d.name}</h3><small>${d.blurb}</small><div class="barwrap"><div class="bar" style="width:${prog}%"></div></div></button>`;
+  };
+  go(`<div class="screen">
+    <div class="hero"><span class="mascot">🦊</span><h1>Hi Khirad! 👋</h1><p>Pick a subject and let's have fun learning!</p></div>
+    <div class="grid">
+      ${subj('computers')}${subj('maths')}${subj('science')}${subj('hindi')}${subj('telugu')}
+      <button class="tile" style="background:linear-gradient(135deg,#fff3d6,#fff)" onclick="badges()"><span class="emoji">🏅</span><h3>My Badges</h3><small>${Object.keys(S.badges).length} / ${BADGES.length} unlocked</small></button>
+      <button class="tile" style="background:linear-gradient(135deg,#eef0ff,#fff)" onclick="apiSettings()"><span class="emoji">⚙️</span><h3>Settings</h3><small>For grown-ups · handwriting check</small></button>
+    </div></div>`);
+}
+function cardProgress(k){ const d=DATA[k]; if(!d.flashcards) return 0; const seen=(S.seenCards[k]||[]).length; return Math.round(100*seen/d.flashcards.length); }
+
+function subject(k){
+  const d=DATA[k];
+  const lang=(k==='hindi'||k==='telugu');
+  const bonus = k==='computers'?bonusBtn(k,'units','🧮','Storage Units Quiz','bit, byte, KB, MB…')
+              : k==='maths'?bonusBtn(k,'roman','🏛️','Roman Numerals Quiz','I, V, X, L, C…')
+              : k==='hindi'?bonusBtn(k,'grammar','📝','Grammar Quiz','संज्ञा · सर्वनाम · कारक')
+              : k==='telugu'?bonusBtn(k,'letters','🔤','Letters Quiz','అచ్చులు · హల్లులు · గుణింతం')
+              : '';
+  const learnTile = lang
+    ? `<button class="tile" onclick="startLearn('${k}')"><span class="emoji">🔤</span><h3>Alphabet &amp; Basics</h3><small>⭐ Start here! Letters, sounds &amp; meanings</small></button>`
+    : `<button class="tile" onclick="startLearn('${k}')"><span class="emoji">🖼️</span><h3>Picture Lessons</h3><small>Learn with cool diagrams</small></button>`;
+  go(`<div class="screen">
+    <button class="backbtn" onclick="home()">← Home</button>
+    <h2 class="sec">${d.emoji} ${d.name}</h2>
+    <p class="subtitle">${d.blurb}</p>
+    ${lang?`<div class="startnote">🌟 New to ${d.name}? Tap <b>Alphabet &amp; Basics</b> first — it teaches the letters, how to say them (in English) and what words mean. Take your time! 💛</div>`:''}
+    <div class="modegrid">
+      ${learnTile}
+      <button class="tile" onclick="startCards('${k}')"><span class="emoji">🃏</span><h3>Flashcards</h3><small>${lang?'Word · say it · meaning':'Flip & learn the words'}</small></button>
+      <button class="tile" onclick="startQuiz('${k}','quiz')"><span class="emoji">❓</span><h3>Quiz</h3><small>Multiple choice fun</small></button>
+      <button class="tile" onclick="startWritten('${k}')"><span class="emoji">✍️</span><h3>Write the Answer</h3><small>Type your own answers</small></button>
+      <button class="tile" onclick="startPaper('${k}')"><span class="emoji">📷</span><h3>Write on Paper</h3><small>Write by hand, snap a photo, get checked</small></button>
+      <button class="tile" onclick="startQuiz('${k}','all')"><span class="emoji">🏆</span><h3>Big Challenge</h3><small>All questions mixed</small></button>
+      ${bonus}
+    </div>
+  </div>`);
+}
+function bonusBtn(k,mode,emoji,title,sub){ return `<button class="tile" style="background:linear-gradient(135deg,#fff,#f0ecff)" onclick="startQuiz('${k}','${mode}')"><span class="emoji">${emoji}</span><h3>${title}</h3><small>${sub}</small></button>`; }
+
+/* =======================================================================
+   PICTURE LESSONS
+   ======================================================================= */
+let LS={k:null,i:0}, curParts=[];
+function startLearn(k){ LS={k,i:0}; renderLesson(); }
+function renderLesson(){
+  const d=DATA[LS.k], lesson=d.lessons[LS.i], built=DIAGRAMS[lesson.key]();
+  curParts=built.parts||[];
+  const chips = curParts.map((p,idx)=>`<button class="chip" id="chip${idx}" onclick="pickPart(${idx})">${p.label}</button>`).join('');
+  go(`<div class="screen">
+    <button class="backbtn" onclick="subject('${LS.k}')">← Back</button>
+    <h2 class="sec">🖼️ ${d.name} Lessons</h2>
+    <div class="learnwrap">
+      <h3>${lesson.title}</h3>
+      <p class="intro">${lesson.intro}</p>
+      <div class="stage">${built.body}</div>
+      <div class="chips">${chips}</div>
+      <div class="factbox" id="factbox"><span class="ph">👆 Tap a button above to learn about it!</span></div>
+    </div>
+    <div class="navrow">
+      <button class="btn btn-ghost" onclick="prevLesson()">⬅️ Prev</button>
+      <span class="counter">${LS.i+1} / ${d.lessons.length}</span>
+      <button class="btn btn-primary" onclick="nextLesson()">${LS.i+1===d.lessons.length?'Finish ✅':'Next ➡️'}</button>
+    </div>
+  </div>`);
+}
+function pickPart(idx){
+  const p=curParts[idx];
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.dot').forEach(c=>c.classList.remove('active'));
+  const chip=document.getElementById('chip'+idx); if(chip) chip.classList.add('active');
+  if(p.id){ const dotEl=document.getElementById('dot-'+p.id); if(dotEl) dotEl.classList.add('active'); }
+  document.getElementById('factbox').innerHTML=p.desc;
+}
+function nextLesson(){
+  const d=DATA[LS.k];
+  if(LS.i+1>=d.lessons.length){ addStars(2); burst(); return lessonsDone(LS.k); }
+  LS.i++; renderLesson();
+}
+function prevLesson(){ if(LS.i>0){ LS.i--; renderLesson(); } }
+function lessonsDone(k){
+  const d=DATA[k];
+  go(`<div class="screen"><div class="result"><span class="mascot">🎉</span><h1>Great learning!</h1>
+    <p>You finished all the ${d.name} picture lessons. You earned ⭐ 2 stars!</p>
+    <div style="margin-top:16px"><button class="btn btn-good" onclick="startQuiz('${k}','quiz')">Try the Quiz ❓</button>
+    <button class="btn btn-ghost" onclick="startCards('${k}')">Flashcards 🃏</button></div>
+    <div style="margin-top:10px"><button class="btn btn-primary btn-full" onclick="subject('${k}')">⬅️ Back to ${d.name}</button></div></div></div>`);
+}
+
+/* =======================================================================
+   FLASHCARDS
+   ======================================================================= */
+let fc={k:null,i:0,flipped:false};
+function startCards(k){ fc={k,i:0,flipped:false}; renderCard(); }
+function renderCard(){
+  const d=DATA[fc.k], c=d.flashcards[fc.i]; markSeen(fc.k, fc.i);
+  go(`<div class="screen">
+    <button class="backbtn" onclick="subject('${fc.k}')">← Back</button>
+    <h2 class="sec">🃏 ${d.name} Flashcards</h2>
+    <div class="flashstage"><div class="flashcard ${fc.flipped?'flipped':''}" id="card" onclick="flip()">
+      <div class="face front"><span class="label">WORD</span><span class="ic">${c.ic}</span><div class="big">${c.term}</div>${c.rom?`<div class="romline">🔊 ${c.rom}</div>`:''}<span class="tap">👆 tap to see the meaning</span></div>
+      <div class="face back"><span class="label">MEANING</span>${c.rom?`<div class="romline" style="font-size:15px">🔊 say: ${c.rom}</div>`:''}<div class="def">${c.def}</div><span class="tap">👆 tap to flip back</span></div>
+    </div></div>
+    <div class="navrow">
+      <button class="btn btn-ghost" onclick="prevCard()">⬅️ Prev</button>
+      <span class="counter">${fc.i+1} / ${d.flashcards.length}</span>
+      <button class="btn btn-primary" onclick="nextCard()">${fc.i+1===d.flashcards.length?'Finish ✅':'Next ➡️'}</button>
+    </div></div>`);
+}
+function flip(){ fc.flipped=!fc.flipped; document.getElementById('card').classList.toggle('flipped'); }
+function nextCard(){
+  const d=DATA[fc.k];
+  if(fc.i+1>=d.flashcards.length){
+    addStars(2);
+    if(fc.k==='computers') unlock('compcard');
+    if(fc.k==='maths') unlock('mathcard');
+    if(fc.k==='science') unlock('scicard');
+    if(fc.k==='hindi') unlock('hindcard');
+    if(fc.k==='telugu') unlock('telcard');
+    return cardsDone(fc.k);
+  }
+  fc.i++; fc.flipped=false; renderCard();
+}
+function prevCard(){ if(fc.i>0){fc.i--; fc.flipped=false; renderCard();} }
+function markSeen(k,i){ S.seenCards[k]=S.seenCards[k]||[]; if(!S.seenCards[k].includes(i)){ S.seenCards[k].push(i); save(); } }
+function cardsDone(k){
+  const d=DATA[k]; burst();
+  go(`<div class="screen"><div class="result"><span class="mascot">🎉</span><h1>All done!</h1>
+    <p>You looked at all ${d.flashcards.length} ${d.name} flashcards. Amazing memory, Khirad!</p>
+    <div style="margin-top:18px"><button class="btn btn-good" onclick="startQuiz('${k}','quiz')">Try the Quiz ❓</button>
+    <button class="btn btn-ghost" onclick="startCards('${k}')">Review again 🔁</button></div>
+    <div style="margin-top:10px"><button class="btn btn-primary btn-full" onclick="subject('${k}')">⬅️ Back to ${d.name}</button></div></div></div>`);
+}
+
+/* =======================================================================
+   QUIZ
+   ======================================================================= */
+let qz=null;
+function poolFor(k,mode){ const d=DATA[k]; return mode==='all'?d.allquiz:d[mode]; }
+function startQuiz(k,mode){
+  let pool=shuffle(poolFor(k,mode).slice()).slice(0, Math.min(poolFor(k,mode).length, mode==='all'?12:10));
+  qz={k,mode,pool,i:0,score:0,answered:false}; renderQ();
+}
+function renderQ(){
+  const d=DATA[qz.k], item=qz.pool[qz.i], pct=Math.round(100*qz.i/qz.pool.length), keys=['A','B','C','D'];
+  go(`<div class="screen">
+    <button class="backbtn" onclick="subject('${qz.k}')">← Quit</button>
+    <div class="qcard">
+      <div class="qtop"><span>${d.emoji} ${d.name}</span><span>⭐ Score: ${qz.score}</span></div>
+      <div class="qprog"><div style="width:${pct}%"></div></div>
+      <div class="qtop"><span>Question ${qz.i+1} of ${qz.pool.length}</span></div>
+      <p class="qtext">${item.q}</p>
+      <div class="opts" id="opts">${item.o.map((t,idx)=>`<button class="opt" id="opt${idx}" onclick="answer(${idx})"><span class="key">${keys[idx]}</span><span>${t}</span></button>`).join('')}</div>
+      <div class="feedback" id="fb"></div>
+      <div class="explain" id="ex">${item.e||''}</div>
+      <div id="nextrow" style="margin-top:16px;display:none"><button class="btn btn-primary btn-full" onclick="nextQ()">${qz.i+1===qz.pool.length?'See my results 🎁':'Next question ➡️'}</button></div>
+    </div></div>`);
+}
+function answer(idx){
+  if(qz.answered) return; qz.answered=true;
+  const item=qz.pool[qz.i], correct=item.a;
+  document.querySelectorAll('.opt').forEach((b,i)=>{ b.classList.add('done'); if(i===correct)b.classList.add('correct'); else if(i===idx)b.classList.add('wrong'); else b.classList.add('dim'); });
+  const fb=document.getElementById('fb');
+  if(idx===correct){ qz.score++; addStars(1); fb.innerHTML="✅ Correct! +1 ⭐"; fb.style.color="var(--good)"; miniBurst(); }
+  else { fb.innerHTML="❌ Oops! The right answer is "+["A","B","C","D"][correct]; fb.style.color="var(--bad)"; }
+  document.getElementById('ex').style.display='block';
+  document.getElementById('nextrow').style.display='block';
+}
+function nextQ(){ if(qz.i+1>=qz.pool.length) return quizDone(); qz.i++; qz.answered=false; renderQ(); }
+function quizDone(){
+  const d=DATA[qz.k], total=qz.pool.length, sc=qz.score, pct=sc/total;
+  const stars3=pct===1?3:pct>=0.6?2:pct>0?1:0;
+  S.quizzesDone=(S.quizzesDone||0)+1;
+  const key=qz.k+":"+qz.mode; if(!S.bestQuiz[key]||sc>S.bestQuiz[key]) S.bestQuiz[key]=sc;
+  save(); unlock('first');
+  if(S.quizzesDone>=3) unlock('triple');
+  if(pct===1){ S.perfectRuns=(S.perfectRuns||0)+1; save(); unlock('perfect'); }
+  if(qz.mode==='roman' && sc>=4) unlock('roman');
+  let msg,face;
+  if(pct===1){msg="PERFECT score! You're a superstar! 🌟";face="🏆";}
+  else if(pct>=0.6){msg="Great job! Keep it up! 💪";face="😃";}
+  else {msg="Good try! Practice makes perfect 💛";face="🦊";}
+  if(pct>=0.6) burst();
+  go(`<div class="screen"><div class="result"><span class="mascot">${face}</span>
+    <div class="score">${sc} / ${total}</div>
+    <div class="stars">${'⭐'.repeat(stars3)}${'☆'.repeat(3-stars3)}</div>
+    <p>${msg}</p><p style="color:var(--muted)">You earned ${sc} star${sc===1?'':'s'} this round!</p>
+    <div style="margin-top:18px"><button class="btn btn-good" onclick="startQuiz('${qz.k}','${qz.mode}')">Play again 🔁</button>
+    <button class="btn btn-ghost" onclick="badges()">My Badges 🏅</button></div>
+    <div style="margin-top:10px"><button class="btn btn-primary btn-full" onclick="subject('${qz.k}')">⬅️ Back to ${d.name}</button></div></div></div>`);
+}
+
+/* =======================================================================
+   WRITE THE ANSWER (subjective)
+   ======================================================================= */
+let WR=null;
+function startWritten(k){ WR={k,pool:DATA[k].written,i:0,checked:false,scored:0}; renderWritten(); }
+function renderWritten(){
+  const d=DATA[WR.k], item=WR.pool[WR.i], pct=Math.round(100*WR.i/WR.pool.length);
+  go(`<div class="screen">
+    <button class="backbtn" onclick="subject('${WR.k}')">← Quit</button>
+    <div class="qcard">
+      <div class="qtop"><span>✍️ ${d.name} · Write the Answer</span><span>${WR.i+1} / ${WR.pool.length}</span></div>
+      <div class="qprog"><div style="width:${pct}%"></div></div>
+      <p class="qtext">${item.q}</p>
+      <textarea class="wbox" id="wans" placeholder="Type your answer here in your own words…"></textarea>
+      <div class="keyrow" id="keyrow"></div>
+      <div class="model" id="model"></div>
+      <div id="wbtns" style="margin-top:16px">
+        <button class="btn btn-good btn-full" onclick="checkWritten()">Check my answer ✅</button>
+      </div>
+    </div></div>`);
+  setTimeout(()=>{ const t=document.getElementById('wans'); if(t) t.focus(); },150);
+}
+function checkWritten(){
+  if(WR.checked) return;
+  const item=WR.pool[WR.i];
+  const ans=(document.getElementById('wans').value||'').toLowerCase().trim();
+  if(ans.length<3){ alert("Try writing a little answer first — even a few words! 😊"); return; }
+  WR.checked=true;
+  // keyword matching (each keyword may have alternatives separated by |)
+  const results=item.keywords.map(kw=>{
+    const alts=kw.split('|');
+    const hit=alts.some(a=>ans.includes(a.toLowerCase()));
+    return {kw:alts[0], hit};
+  });
+  const hits=results.filter(r=>r.hit).length;
+  const good = hits >= Math.ceil(item.keywords.length/2);
+  // show key ideas
+  document.getElementById('keyrow').innerHTML =
+    '<div style="width:100%;font-size:13px;color:var(--muted);margin-bottom:2px">Key ideas you included:</div>' +
+    results.map(r=>`<span class="chipk ${r.hit?'hit':''}">${r.hit?'✓':'•'} ${r.kw}</span>`).join('');
+  // show model
+  const m=document.getElementById('model'); m.style.display='block';
+  m.innerHTML=`<b>⭐ A good answer:</b><br>${item.model}`;
+  // award + buttons
+  let earned;
+  if(good){ earned=3; addStars(3); miniBurst(); }
+  else { earned=1; addStars(1); }
+  document.getElementById('wbtns').innerHTML=
+    `<div class="feedback" style="color:${good?'var(--good)':'#c98a00'}">${good?`🌟 Brilliant! You included ${hits} key ideas. +3 ⭐`:`💛 Nice try! You got ${hits} key idea${hits===1?'':'s'}. Read the good answer above. +1 ⭐`}</div>
+     <button class="btn btn-primary btn-full" onclick="nextWritten()">${WR.i+1===WR.pool.length?'Finish ✍️':'Next question ➡️'}</button>`;
+}
+function nextWritten(){
+  if(WR.i+1>=WR.pool.length){
+    S.written=(S.written||0)+1; save(); unlock('writer'); burst();
+    const d=DATA[WR.k];
+    return go(`<div class="screen"><div class="result"><span class="mascot">✍️</span><h1>Well written!</h1>
+      <p>You answered all the ${d.name} questions in your own words. That's how toppers study! 🌟</p>
+      <div style="margin-top:16px"><button class="btn btn-good" onclick="startWritten('${WR.k}')">Try again 🔁</button>
+      <button class="btn btn-ghost" onclick="badges()">My Badges 🏅</button></div>
+      <div style="margin-top:10px"><button class="btn btn-primary btn-full" onclick="subject('${WR.k}')">⬅️ Back to ${d.name}</button></div></div></div>`);
+  }
+  WR.i++; WR.checked=false; renderWritten();
+}
+
+/* =======================================================================
+   WRITE ON PAPER  (handwriting photo + AI evaluation, with offline fallback)
+   ======================================================================= */
+const AI_KEY_STORE = "khiradStudyZone_apikey";
+const AI_MODEL = "claude-opus-4-8";
+function getKey(){ try{ return (localStorage.getItem(AI_KEY_STORE)||"").trim(); }catch(e){ return ""; } }
+
+const EVAL_SCHEMA = { type:"object", additionalProperties:false,
+  properties:{
+    readable:{type:"boolean"},
+    transcription:{type:"string"},
+    verdict:{type:"string", enum:["great","good","tryagain"]},
+    stars:{type:"integer", enum:[1,2,3]},
+    praise:{type:"string"},
+    improve:{type:"string"},
+    correct:{type:"string"}
+  },
+  required:["readable","transcription","verdict","stars","praise","improve","correct"]
+};
+const EVAL_SYSTEM =
+"You are Ms. Foxy, a warm, patient Grade-4 teacher. A 9-year-old girl named Khirad has written an answer BY HAND on paper and taken a photo of it. You will be given the question, the expected (model) answer, and the photo. "+
+"Read her handwriting carefully — it may be in English, in Hindi (Devanagari script), or in Telugu script, and it may be messy or faint. Then grade it KINDLY. Return ONLY the JSON object. "+
+"Fields: readable = true if you can make out the writing, false if the photo is too blurry/dark/empty. "+
+"transcription = exactly what you read in her handwriting, in its original script (empty string if unreadable). "+
+"verdict = 'great' if correct and complete, 'good' if partly correct or mostly right with small gaps, 'tryagain' if mostly wrong, blank, or unreadable. "+
+"stars = 3 for great, 2 for good, 1 for tryagain. "+
+"praise = ONE warm specific sentence celebrating something real (effort, neat letters, a correct idea), in very simple words a 9-year-old knows, with one emoji. "+
+"improve = ONE gentle concrete tip on what to fix or add (one short sentence). If great, give a tiny extra challenge or 'keep it up!'. Never scold. "+
+"correct = the correct answer written simply so she can compare; for Hindi/Telugu include the script AND its English meaning. "+
+"If unreadable: verdict 'tryagain', praise her effort, and in 'improve' gently ask her to take a clearer photo in good light.";
+
+let PR = null;
+function startPaper(k){ PR = {k, pool: DATA[k].written, i:0, img:null, busy:false}; renderPaper(); }
+function renderPaper(){
+  const d=DATA[PR.k], item=PR.pool[PR.i], pct=Math.round(100*PR.i/PR.pool.length);
+  go(`<div class="screen">
+    <button class="backbtn" onclick="subject('${PR.k}')">← Quit</button>
+    <div class="qcard">
+      <div class="qtop"><span>✏️ ${d.name} · Write on Paper</span><span>${PR.i+1} / ${PR.pool.length}</span></div>
+      <div class="qprog"><div style="width:${pct}%"></div></div>
+      <p class="qtext">${item.q}</p>
+      <p style="color:var(--muted);margin:-6px 0 10px;font-size:15px">✍️ Write your answer on paper, then take a photo of it.</p>
+      <input type="file" accept="image/*" capture="environment" id="pfile" style="display:none" onchange="onPaperFile(event)">
+      <button class="btn btn-primary btn-full" onclick="document.getElementById('pfile').click()">📷 Take / upload a photo</button>
+      <div id="ppreview"></div>
+      <div id="pcheckrow" style="display:none;margin-top:12px">
+        <button class="btn btn-good btn-full" id="pcheckbtn" onclick="checkPaper()">✅ Check my handwriting</button>
+      </div>
+      <div id="presult"></div>
+      <div style="margin-top:12px;text-align:center"><button class="btn btn-ghost" onclick="paperGuided()">🙈 Check it myself instead</button></div>
+    </div></div>`);
+}
+function fileToScaledJpeg(file, maxEdge, quality){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file), img=new Image();
+    img.onload=()=>{ let w=img.width,h=img.height; const s=Math.min(1, maxEdge/Math.max(w,h));
+      const cw=Math.max(1,Math.round(w*s)), ch=Math.max(1,Math.round(h*s));
+      const c=document.createElement('canvas'); c.width=cw; c.height=ch;
+      c.getContext('2d').drawImage(img,0,0,cw,ch); URL.revokeObjectURL(url);
+      try{ res(c.toDataURL('image/jpeg', quality)); }catch(e){ rej(e); } };
+    img.onerror=()=>{ URL.revokeObjectURL(url); rej(new Error('Could not read that image.')); };
+    img.src=url;
+  });
+}
+async function onPaperFile(ev){
+  const f=ev.target.files && ev.target.files[0]; if(!f) return;
+  const prev=document.getElementById('ppreview');
+  prev.innerHTML='<div class="spin"></div>';
+  try{
+    PR.img = await fileToScaledJpeg(f, 1280, 0.82);
+    prev.innerHTML='<img src="'+PR.img+'" alt="your answer"><div style="color:var(--muted);font-size:13px;margin-top:6px">📸 Looks good? Tap “Check my handwriting”. Or tap the photo button again to retake.</div>';
+    document.getElementById('pcheckrow').style.display='block';
+    document.getElementById('presult').innerHTML='';
+  }catch(e){ prev.innerHTML='<div class="notebox">😅 That photo didn’t load. Please try again.</div>'; }
+}
+function paperEvalBody(item, base64, subjName){
+  const keys=(item.keywords||[]).map(k=>k.split('|')[0]).join(', ');
+  const userText="Subject: "+subjName+".\nQuestion: "+item.q+"\nExpected answer: "+item.model+"\nKey points she should include: "+keys;
+  return {
+    model: AI_MODEL, max_tokens: 1024,
+    thinking: { type:"adaptive" },
+    output_config: { effort:"medium", format:{ type:"json_schema", schema: EVAL_SCHEMA } },
+    system: EVAL_SYSTEM,
+    messages: [{ role:"user", content:[
+      { type:"image", source:{ type:"base64", media_type:"image/jpeg", data: base64 } },
+      { type:"text", text: userText }
+    ]}]
+  };
+}
+async function aiCheck(item, dataUrl, subjName){
+  const key=getKey(); if(!key) throw new Error("nokey");
+  const base64=dataUrl.split(',')[1];
+  const resp=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json","x-api-key":key,
+      "anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true" },
+    body: JSON.stringify(paperEvalBody(item, base64, subjName))
+  });
+  if(!resp.ok){ let msg="HTTP "+resp.status; try{ const j=await resp.json(); if(j && j.error && j.error.message) msg=j.error.message; }catch(e){} const er=new Error(msg); er.http=resp.status; throw er; }
+  const data=await resp.json();
+  if(data.stop_reason==="refusal") throw new Error("Sorry, I couldn’t check that one.");
+  const tb=(data.content||[]).find(b=>b.type==="text");
+  if(!tb) throw new Error("Empty reply from the checker.");
+  return JSON.parse(tb.text);
+}
+async function checkPaper(){
+  if(PR.busy) return;
+  if(!PR.img){ alert("Take a photo of your answer first 😊"); return; }
+  if(!getKey()){
+    return paperGuided("🔑 Auto-checking by Ms. Foxy needs a one-time setup by a grown-up (tap ⚙️ Settings on the home screen). For now, let’s check it together below! 💛");
+  }
+  PR.busy=true;
+  const btn=document.getElementById('pcheckbtn'); if(btn){ btn.disabled=true; btn.textContent="Checking…"; }
+  document.getElementById('presult').innerHTML='<div class="evalcard"><div class="spin"></div><div style="text-align:center;color:#6b5a00">🦊 Ms. Foxy is reading your writing… this can take a few seconds ✨</div></div>';
+  try{
+    const ev=await aiCheck(PR.pool[PR.i], PR.img, DATA[PR.k].name);
+    renderEval(ev);
+  }catch(e){
+    let hint="";
+    if(e.message==="nokey") hint="Add your key in ⚙️ Settings.";
+    else if(e.http===401) hint="The API key looks wrong — check it in ⚙️ Settings.";
+    else if(e.http===429) hint="Too many tries right now — wait a minute and try again.";
+    else hint="Check the internet connection and the key in ⚙️ Settings.";
+    paperGuided("😅 Couldn’t auto-check just now. "+hint+" No problem — let’s check it together!");
+  }finally{
+    PR.busy=false;
+    const b=document.getElementById('pcheckbtn'); if(b){ b.disabled=false; b.textContent="✅ Check my handwriting"; }
+  }
+}
+function esc(s){ return (s||"").replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function renderEval(ev){
+  const face = ev.verdict==='great'?'🏆': ev.verdict==='good'?'😃':'🦊';
+  const stars = Math.max(1, Math.min(3, ev.stars||1));
+  addStars(stars);
+  if(ev.verdict==='great') burst(); else miniBurst();
+  const readLine = ev.readable && ev.transcription
+    ? '<div class="er">📖 <b>I read:</b><div class="readbox">'+esc(ev.transcription)+'</div></div>' : '';
+  document.getElementById('presult').innerHTML=
+    `<div class="evalcard">
+      <div style="text-align:center"><span style="font-size:44px">${face}</span>
+      <div class="stars" style="font-size:34px">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div></div>
+      ${readLine}
+      <div class="er">🌟 ${esc(ev.praise)}</div>
+      <div class="er">💡 <b>Tip:</b> ${esc(ev.improve)}</div>
+      <div class="er">✅ <b>Correct answer:</b> ${esc(ev.correct)}</div>
+      <div style="color:var(--good);text-align:center;font-weight:bold;margin-top:6px">+${stars} ⭐</div>
+      <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="nextPaper()">${PR.i+1===PR.pool.length?'Finish ✏️':'Next question ➡️'}</button>
+    </div>`;
+}
+function paperGuided(note){
+  const item=PR.pool[PR.i];
+  const keys=(item.keywords||[]).map(k=>k.split('|')[0]);
+  document.getElementById('presult').innerHTML=
+    (note?'<div class="notebox" style="margin-top:12px">'+note+'</div>':'')+
+    `<div class="evalcard">
+      <div class="er">✅ <b>A good answer:</b><br>${item.model}</div>
+      ${keys.length?`<div class="keyrow">`+keys.map(k=>`<span class="chipk">• ${esc(k)}</span>`).join('')+`</div>`:''}
+      <div style="text-align:center;margin-top:10px;color:#6b5a00">Compare it with what you wrote. How did you do?</div>
+      <div class="modegrid" style="margin-top:10px">
+        <button class="btn btn-good" onclick="paperSelf(3)">🌟 I got it right!</button>
+        <button class="btn btn-ghost" onclick="paperSelf(1)">💛 I'll try again</button>
+      </div>
+    </div>`;
+}
+function paperSelf(n){
+  addStars(n); if(n>=3) burst(); else miniBurst();
+  document.getElementById('presult').innerHTML=
+    `<div class="evalcard"><div style="text-align:center"><span style="font-size:40px">${n>=3?'🌟':'💛'}</span>
+      <p style="font-weight:bold">${n>=3?'Awesome! +3 ⭐':'Good try! Practice makes perfect. +1 ⭐'}</p></div>
+      <button class="btn btn-primary btn-full" onclick="nextPaper()">${PR.i+1===PR.pool.length?'Finish ✏️':'Next question ➡️'}</button></div>`;
+}
+function nextPaper(){
+  if(PR.i+1>=PR.pool.length){
+    S.written=(S.written||0)+1; save(); unlock('writer'); burst();
+    const d=DATA[PR.k];
+    return go(`<div class="screen"><div class="result"><span class="mascot">✏️</span><h1>Great handwriting practice!</h1>
+      <p>You wrote and checked all the ${d.name} questions on paper. That's how real students learn! 🌟</p>
+      <div style="margin-top:16px"><button class="btn btn-good" onclick="startPaper('${PR.k}')">Try again 🔁</button>
+      <button class="btn btn-ghost" onclick="badges()">My Badges 🏅</button></div>
+      <div style="margin-top:10px"><button class="btn btn-primary btn-full" onclick="subject('${PR.k}')">⬅️ Back to ${d.name}</button></div></div></div>`);
+  }
+  PR.i++; PR.img=null; renderPaper();
+}
+
+/* =======================================================================
+   SETTINGS  (parent enters their own Anthropic API key — stored on device only)
+   ======================================================================= */
+function apiSettings(){
+  const k=getKey();
+  go(`<div class="screen">
+    <button class="backbtn" onclick="home()">← Home</button>
+    <h2 class="sec">⚙️ Settings (for grown-ups)</h2>
+    <div class="qcard">
+      <h3 style="margin-top:0">📷 Handwriting auto-check</h3>
+      <p style="color:var(--muted);font-size:15px">To let Ms. Foxy read and grade Khirad's handwritten photos, paste an Anthropic API key below. It is saved <b>only on this device</b> and is never shared.</p>
+      <input class="keyinput" id="apikey" type="password" placeholder="sk-ant-..." value="${esc(k)}" autocomplete="off">
+      <div class="modegrid" style="margin-top:12px">
+        <button class="btn btn-good" onclick="saveKey()">💾 Save key</button>
+        <button class="btn btn-ghost" onclick="clearKey()">🗑️ Remove key</button>
+      </div>
+      <div id="keymsg" style="text-align:center;margin:10px 0;font-weight:bold;min-height:20px"></div>
+      <div class="notebox">
+        <b>Where do I get a key?</b><br>
+        1. Go to <b>console.anthropic.com</b> on a computer and sign in.<br>
+        2. Open <b>API Keys</b> → <b>Create Key</b>, then copy it.<br>
+        3. Paste it here and tap Save.<br><br>
+        💡 Without a key, “Write on Paper” still works — it shows the correct answer and Khirad checks her own work. Checking with AI uses your Anthropic account (a few cents per check) and needs internet.
+      </div>
+    </div></div>`);
+}
+function saveKey(){
+  const v=(document.getElementById('apikey').value||"").trim();
+  try{ localStorage.setItem(AI_KEY_STORE, v); }catch(e){}
+  const m=document.getElementById('keymsg'); m.style.color="var(--good)";
+  m.textContent = v ? "✅ Saved on this device!" : "Cleared.";
+}
+function clearKey(){
+  try{ localStorage.removeItem(AI_KEY_STORE); }catch(e){}
+  const i=document.getElementById('apikey'); if(i) i.value="";
+  const m=document.getElementById('keymsg'); m.style.color="var(--muted)"; m.textContent="🗑️ Key removed.";
+}
+
+/* =======================================================================
+   BADGES
+   ======================================================================= */
+function badges(){
+  if(S.stars>=10) unlock('star10');
+  if(S.stars>=50) unlock('star50');
+  go(`<div class="screen">
+    <button class="backbtn" onclick="home()">← Home</button>
+    <h2 class="sec">🏅 My Badges</h2>
+    <p class="subtitle">You have ⭐ ${S.stars} stars and ${Object.keys(S.badges).length} badges!</p>
+    <div class="badgewrap">${BADGES.map(b=>`<div class="badge ${S.badges[b.id]?'unlocked':''}"><div class="bi">${b.icon}</div><b>${b.name}</b><small>${b.desc}</small>${S.badges[b.id]?'<small style="color:var(--good)">✓ Unlocked</small>':'<small>🔒 Locked</small>'}</div>`).join('')}</div>
+    <div style="margin-top:16px" class="center"><button class="btn btn-ghost" onclick="resetConfirm()">↺ Reset all progress</button></div>
+  </div>`);
+}
+function resetConfirm(){ if(confirm("Reset ALL stars and badges? This cannot be undone.")){ S=fresh(); save(); home(); } }
+
+/* =======================================================================
+   REWARDS + CONFETTI
+   ======================================================================= */
+function addStars(n){ S.stars+=n; save(); if(S.stars>=10)unlock('star10'); if(S.stars>=50)unlock('star50'); }
+let toastTimer;
+function toastBadge(id){
+  const b=BADGES.find(x=>x.id===id); if(!b) return;
+  const el=document.createElement('div');
+  el.style.cssText="position:fixed;left:50%;top:24px;transform:translateX(-50%);z-index:99;background:linear-gradient(135deg,#fff,#fff3d6);border:3px solid var(--gold);border-radius:18px;padding:12px 18px;box-shadow:var(--shadow);font-weight:bold;animation:pop .4s ease both";
+  el.innerHTML=`🏅 New badge: ${b.icon} <b>${b.name}</b>!`;
+  document.body.appendChild(el); burst();
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{el.style.transition="opacity .4s";el.style.opacity="0";setTimeout(()=>el.remove(),400);},2600);
+}
+const cv=document.getElementById('confetti'), ctx=cv.getContext('2d');
+let parts=[],raf=null;
+function resize(){cv.width=innerWidth;cv.height=innerHeight;} addEventListener('resize',resize); resize();
+const COLORS=['#ff5b7a','#ffcf3f','#27d07f','#36d1dc','#7c5cff','#ff6ec7'];
+function spawn(n,cx,cy){ for(let i=0;i<n;i++){ parts.push({x:cx,y:cy,vx:(Math.random()-0.5)*9,vy:(Math.random()*-9)-3,g:0.28+Math.random()*0.12,s:6+Math.random()*7,c:COLORS[(i+parts.length)%COLORS.length],rot:Math.random()*6,vr:(Math.random()-0.5)*0.4,life:90+Math.random()*40}); } if(!raf)raf=requestAnimationFrame(tick); }
+function burst(){ spawn(120, cv.width/2, cv.height*0.32); }
+function miniBurst(){ spawn(28, cv.width/2, cv.height*0.4); }
+function tick(){ ctx.clearRect(0,0,cv.width,cv.height); parts.forEach(p=>{ p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.life--; ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);ctx.restore(); }); parts=parts.filter(p=>p.life>0&&p.y<cv.height+40); if(parts.length)raf=requestAnimationFrame(tick); else{raf=null;ctx.clearRect(0,0,cv.width,cv.height);} }
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+refreshTop(); home();
+</script>
+
+<!-- Floating "Install app" button (appears when the tablet offers installation) -->
+<button id="pwaInstall" style="display:none;position:fixed;right:14px;bottom:14px;z-index:60;font-family:var(--font);font-weight:bold;font-size:16px;border:0;cursor:pointer;border-radius:16px;padding:12px 18px;color:#fff;background:linear-gradient(135deg,#27d07f,#5fe6a3);box-shadow:0 8px 22px rgba(20,120,70,.45)">⬇️ Install app</button>
+<script>
+  let deferredPrompt = null;
+  const installBtn = document.getElementById('pwaInstall');
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'block';
+  });
+  installBtn.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.style.display = 'none';
+  });
+  window.addEventListener('appinstalled', () => { installBtn.style.display = 'none'; });
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+============================================================
+   KHIRAD'S STUDY ZONE  —  Install on an Android Tablet
+============================================================
+
+This is an "installable web app" (PWA). After installing it gets
+its own icon in the app drawer, opens full-screen like a normal
+app, and works fully OFFLINE (no internet needed once installed).
+
+WHY A WEB LINK?  Android only lets you install an app like this
+from a secure "https://" web link. So there is one quick step:
+put this folder online for free, then open the link on the tablet.
+(You only do the upload once.)
+
+------------------------------------------------------------
+EASIEST WAY  —  tiiny.host  (no software to install)
+------------------------------------------------------------
+1. On your PC/laptop, open a browser and go to:  https://tiiny.host
+2. Click "Upload" and choose the file:
+        Khirad-Study-Zone-PWA.zip
+   (it is in the "khirad homework" folder, next to this app folder)
+3. It gives you a free link like:  https://something.tiiny.site
+   Copy that link.  (A free account keeps it forever; optional.)
+
+------------------------------------------------------------
+OR  —  Netlify Drop  (also free)
+------------------------------------------------------------
+1. Go to:  https://app.netlify.com/drop   (sign in free with Google)
+2. Drag the WHOLE "Khirad-App" folder onto the page.
+3. It gives you an https link. Copy it.
+
+------------------------------------------------------------
+NOW INSTALL IT ON THE TABLET
+------------------------------------------------------------
+1. On the tablet, open Google Chrome.
+2. Type/paste the https link you copied and open it.
+3. Tap the green "⬇️ Install app" button at the bottom,
+   OR tap Chrome's menu (⋮ top-right) and choose
+   "Install app"  /  "Add to Home screen".
+4. Confirm.  The star icon "Study Zone" appears with your apps.
+5. Open it from the app drawer — done!  It now works offline. 🎉
+
+------------------------------------------------------------
+NEW: "WRITE ON PAPER" (handwriting check)
+------------------------------------------------------------
+Every subject now has a "Write on Paper" activity: Khirad writes her
+answer by hand, snaps a photo, and gets it checked.
+
+* It ALWAYS works offline: it shows the correct answer and key points,
+  and she ticks how she did to earn stars.
+* OPTIONAL auto-checking by "Ms. Foxy": if you add your own Anthropic
+  API key (tap the "Settings" tile on the home screen), the app will
+  read her handwriting (English, Hindi or Telugu), grade it, and give
+  kid-friendly feedback. The key is saved ONLY on that tablet and is
+  never put in this app file or shared. Auto-checking needs internet
+  and uses your Anthropic account (a few cents per check).
+  Get a key at console.anthropic.com -> API Keys -> Create Key.
+
+------------------------------------------------------------
+NOTES
+------------------------------------------------------------
+* Progress, stars and badges are saved on the tablet automatically.
+* To just TRY it on a computer first, double-click "index.html".
+* If the Install button doesn't show, use Chrome's ⋮ menu ->
+  "Add to Home screen". (Make sure you opened the https link,
+  not a file on the device.)
+* Use Google Chrome for installing (Samsung Internet also works).
+============================================================
