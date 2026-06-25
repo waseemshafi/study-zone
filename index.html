@@ -199,6 +199,13 @@
   .keyinput:focus{outline:none;border-color:var(--bg1)}
   .notebox{background:#eef9ff;border:2px dashed #36d1dc;border-radius:14px;padding:12px;font-size:14px;color:#0a7ea4;line-height:1.55;text-align:left}
   .notebox b{color:#086a8c}
+
+  /* quiz lock + 5-minute game */
+  .lockmsg{background:#ffeaef;border:2px dashed var(--bad);border-radius:14px;padding:12px;color:#a3203a;font-size:15px;line-height:1.5;margin-bottom:10px}
+  .gametop{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+  .gpill{background:#fff;border-radius:14px;padding:8px 14px;font-weight:bold;box-shadow:var(--shadow);font-size:16px}
+  .gbar{height:14px;background:rgba(255,255,255,.5);border-radius:99px;overflow:hidden;margin-bottom:12px;border:2px solid rgba(255,255,255,.6)}
+  .gbar>div{height:100%;width:100%;background:linear-gradient(90deg,#27d07f,#ffcf3f,#ff5b7a);transition:width 1s linear}
 </style>
 </head>
 <body>
@@ -627,6 +634,13 @@ const DATA = {
       {q:"The number system computers use has only…",o:["0 and 1","1 to 9","A to Z","0 to 100"],a:0,e:"Computers use binary: only 0 and 1."},
       {q:"ROM is a ______ memory.",o:["temporary","volatile","permanent","broken"],a:2,e:"ROM is permanent; RAM is temporary."},
       {q:"A small portable device to store and transfer data is a…",o:["Hard Disk","Pen Drive","Monitor","Keyboard"],a:1,e:"A pen drive is small and portable."},
+      {q:"How many bits are in 2 bytes?",o:["8","16","2","32"],a:1,e:"1 byte = 8 bits, so 2 bytes = 16 bits."},
+      {q:"Which device stores data permanently even when the computer is OFF?",o:["RAM","Cache","Hard Disk","Power button"],a:2,e:"A hard disk keeps data even when the power is off."},
+      {q:"Cache memory is a type of…",o:["Secondary memory","Primary memory","Pen drive","Monitor"],a:1,e:"Cache is primary memory, inside the computer."},
+      {q:"Which is the smallest unit of computer memory?",o:["Byte","Bit","KB","MB"],a:1,e:"A bit (0 or 1) is the smallest unit."},
+      {q:"A DVD is an example of…",o:["Primary memory","Secondary memory","RAM","Cache"],a:1,e:"CD, DVD and pen drive are secondary memory."},
+      {q:"Information is…",o:["Raw facts","Processed, useful data","Only numbers","A device"],a:1,e:"Information is processed data that is meaningful and useful."},
+      {q:"Which one is volatile (loses data when power is off)?",o:["ROM","Hard Disk","RAM","DVD"],a:2,e:"RAM is volatile — it loses data when power is off."},
     ],
     units:[
       {q:"1 Bit equals…",o:["0 or 1","8 numbers","2 bytes","10"],a:0,e:"A bit is the smallest unit: 0 or 1."},
@@ -682,6 +696,13 @@ const DATA = {
       {q:"Form the GREATEST 5-digit number from 3, 6, 5, 4, 2",o:["23456","65432","63542","64532"],a:1,e:"Biggest digits first: 65432."},
       {q:"Form the SMALLEST 5-digit number from 3, 6, 5, 4, 2",o:["23456","24356","32456","26543"],a:0,e:"Smallest digits first: 23456."},
       {q:"Expanded notation of 86,945 is…",o:["8000+6000+900+40+5","80000+6000+900+40+5","80000+600+90+4+5","8+6+9+4+5"],a:1,e:"80,000 + 6,000 + 900 + 40 + 5."},
+      {q:"What is the place value of 7 in 5,72,103?",o:["7","700","7,000","70,000"],a:3,e:"7 is in the ten-thousands place → 70,000."},
+      {q:"Which is the GREATEST number?",o:["45,678","45,876","45,768","45,687"],a:1,e:"45,876 is the largest."},
+      {q:"The successor of 9,999 is…",o:["9,998","10,000","9,990","10,001"],a:1,e:"9,999 + 1 = 10,000."},
+      {q:"The predecessor of 40,000 is…",o:["39,999","40,001","39,000","41,000"],a:0,e:"40,000 − 1 = 39,999."},
+      {q:"How do you write 60,408 in words?",o:["Six thousand forty-eight","Sixty thousand four hundred eight","Sixty-four thousand eight","Six lakh forty-eight"],a:1,e:"60,408 = Sixty thousand four hundred eight."},
+      {q:"Ascending order means…",o:["Largest to smallest","Smallest to largest","Random order","Backwards"],a:1,e:"Ascending = smallest to largest."},
+      {q:"Which number comes between 23,899 and 23,901?",o:["23,900","23,898","24,000","23,890"],a:0,e:"23,900 sits between them."},
     ],
     roman:[
       {q:"What is 4 in Roman numerals?",o:["IIII","IV","VI","XIV"],a:1,e:"IV = 5 − 1 = 4 (smaller before bigger = subtract)."},
@@ -757,6 +778,13 @@ const DATA = {
       {q:"Which gas do plants TAKE IN for photosynthesis?",o:["Oxygen","Carbon dioxide","Nitrogen","Water vapour"],a:1,e:"Plants take in carbon dioxide and give out oxygen."},
       {q:"Which gas do plants GIVE OUT during photosynthesis?",o:["Carbon dioxide","Oxygen","Smoke","Nitrogen"],a:1,e:"Plants give out oxygen — the gas we breathe!"},
       {q:"Roots holding the soil firmly help to prevent…",o:["Photosynthesis","Soil erosion","Transpiration","Rain"],a:1,e:"Roots stop the top soil from being washed away (soil erosion)."},
+      {q:"Which part of the plant makes food?",o:["Root","Stem","Leaf","Flower"],a:2,e:"Leaves make food by photosynthesis."},
+      {q:"Which part carries water from the roots up the plant?",o:["Leaf","Stem","Flower","Fruit"],a:1,e:"The stem carries water and food through the plant."},
+      {q:"During the day, plants give out which gas?",o:["Carbon dioxide","Oxygen","Smoke","Nitrogen"],a:1,e:"During photosynthesis plants give out oxygen."},
+      {q:"A carrot is an example of which root?",o:["Fibrous root","Tap root","Stem","Climber"],a:1,e:"A carrot is a tap root (one main root)."},
+      {q:"Grass and wheat have which type of root?",o:["Tap root","Fibrous root","Trunk","Petiole"],a:1,e:"Grass and wheat have fibrous roots."},
+      {q:"Where are most stomata found on a leaf?",o:["Upper surface","Lower surface","On the stem","On the root"],a:1,e:"Stomata are mostly on the lower surface of the leaf."},
+      {q:"A plant with a weak stem that needs support is a…",o:["Tree","Climber","Shrub","Herb"],a:1,e:"Climbers have weak stems and need support to grow up."},
     ],
     written:[
       {q:"What is photosynthesis?",keywords:["green plants|plants","own food|food","carbon dioxide","water","sunlight|sun","chlorophyll"],
@@ -822,7 +850,14 @@ const DATA = {
       {q:"'दिन' का विलोम (opposite) शब्द है—",o:["सुबह","रात","शाम","दोपहर"],a:1,e:"दिन × रात।"},
       {q:"'खुशी' का विलोम शब्द है—",o:["उदासी","हँसी","प्रेम","सुख"],a:0,e:"खुशी × उदासी।"},
       {q:"'विदेश' शब्द में उपसर्ग (prefix) कौन-सा है?",o:["वि","देश","दे","श"],a:0,e:"वि + देश = विदेश। उपसर्ग 'वि' है।"},
-      {q:"सप्ताह का पहला दिन (first day of the week) कौन-सा है?",o:["रविवार","शनिवार","सोमवार","मंगलवार"],a:2,e:"सोमवार (Monday)।"}
+      {q:"सप्ताह का पहला दिन (first day of the week) कौन-सा है?",o:["रविवार","शनिवार","सोमवार","मंगलवार"],a:2,e:"सोमवार (Monday)।"},
+      {q:"'खुशी' का पर्यायवाची (same meaning) शब्द है—",o:["उदासी","प्रसन्नता","रात","दुख"],a:1,e:"खुशी = प्रसन्नता, उल्लास।"},
+      {q:"'सुख' का विलोम (opposite) है—",o:["दुख","आराम","चैन","खुशी"],a:0,e:"सुख × दुख।"},
+      {q:"बैसाखी किस राज्य का त्योहार है?",o:["पंजाब","केरल","असम","गोवा"],a:0,e:"बैसाखी पंजाब का त्योहार है।"},
+      {q:"'अच्छाई' का विलोम शब्द है—",o:["भलाई","बुराई","सच्चाई","मिठास"],a:1,e:"अच्छाई × बुराई।"},
+      {q:"'प्रकाश' शब्द में उपसर्ग (prefix) कौन-सा है?",o:["प्र","काश","श","प"],a:0,e:"प्र + काश = प्रकाश।"},
+      {q:"सप्ताह में कितने दिन होते हैं?",o:["5","6","7","8"],a:2,e:"सप्ताह में 7 दिन होते हैं।"},
+      {q:"'ओणम' किस बात से जुड़ा त्योहार है?",o:["फसल कटाई (harvest)","सर्दी","गर्मी","परीक्षा"],a:0,e:"ओणम केरल का फसल (harvest) त्योहार है।"}
     ],
     grammar:[
       {q:"संज्ञा (noun) किसे कहते हैं?",o:["काम बताने वाले शब्द","किसी वस्तु, व्यक्ति, स्थान या भाव के नाम","रंगों के नाम","गिनती"],a:1,e:"किसी वस्तु, प्राणी, स्थान, गुण या भाव के नाम को संज्ञा कहते हैं। जैसे— सीमा, आगरा, बच्चा।"},
@@ -896,7 +931,14 @@ const DATA = {
       {q:"The గుణింతం sign for ఆ (aa) is…",o:["ి","ు","ా","ే"],a:2,e:"క + ా = కా. The sign for ఆ is ా."},
       {q:"ఈక (eeka) means…",o:["Feather","Doorstep","Drum","Fair"],a:0,e:"ఈక = feather."},
       {q:"మమత (mamata) means…",o:["Anger","Love / Affection","Fear","Hunger"],a:1,e:"మమత = love / affection."},
-      {q:"ఏనుగు (aenugu) means…",o:["Mouse","Camel","Elephant","Swan"],a:2,e:"ఏనుగు = elephant."}
+      {q:"ఏనుగు (aenugu) means…",o:["Mouse","Camel","Elephant","Swan"],a:2,e:"ఏనుగు = elephant."},
+      {q:"గడప (gadapa) means…",o:["Doorstep","Sky","Rain","Lotus"],a:0,e:"గడప = doorstep / threshold."},
+      {q:"తబల (tabala) is a…",o:["Drum","Flute","Bell","Book"],a:0,e:"తబల = tabla, a drum."},
+      {q:"భవనం (bhavanam) means…",o:["River","Building","Tree","Fruit"],a:1,e:"భవనం = building."},
+      {q:"ఇల్లు (illu) means…",o:["School","House","Market","Hill"],a:1,e:"ఇల్లు = house."},
+      {q:"ఐదు (aidu) is the number…",o:["3","4","5","6"],a:2,e:"ఐదు = five (5)."},
+      {q:"Which one is a long vowel (దీర్ఘం)?",o:["అ","ఆ","ఇ","ఉ"],a:1,e:"ఆ is a long vowel; అ, ఇ, ఉ are short."},
+      {q:"జాతర (jaatara) means…",o:["A fair","A book","A river","A bird"],a:0,e:"జాతర = a village fair."}
     ],
     letters:[
       {q:"Which is the FIRST vowel (అచ్చు) of Telugu?",o:["క","అ","మ","ఆ"],a:1,e:"The first vowel is అ."},
@@ -936,8 +978,9 @@ DATA.telugu.allquiz    = [...DATA.telugu.quiz, ...DATA.telugu.letters];
    ======================================================================= */
 const SAVE_KEY="khiradStudyZone_v2";
 let S = load();
-function load(){ try{ return JSON.parse(localStorage.getItem(SAVE_KEY)) || fresh(); }catch(e){ return fresh(); } }
-function fresh(){ return {stars:0, badges:{}, seenCards:{}, bestQuiz:{}, quizzesDone:0, perfectRuns:0, written:0}; }
+function load(){ try{ const s=JSON.parse(localStorage.getItem(SAVE_KEY)); return s?Object.assign(fresh(),s):fresh(); }catch(e){ return fresh(); } }
+function fresh(){ return {stars:0, badges:{}, seenCards:{}, bestQuiz:{}, quizzesDone:0, perfectRuns:0, written:0,
+  starredQ:{}, handDone:{}, wrongCount:0, gameTokens:0, gamesPlayed:0, bestGame:0, handPassed:0}; }
 function save(){ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); refreshTop(); }
 
 const BADGES=[
@@ -945,14 +988,14 @@ const BADGES=[
   {id:"star10", icon:"⭐", name:"Star Collector", desc:"Earn 10 stars"},
   {id:"star50", icon:"🌟", name:"Star Master", desc:"Earn 50 stars"},
   {id:"perfect",icon:"💯", name:"Perfect!", desc:"Get every answer right in a quiz"},
-  {id:"compcard",icon:"💻", name:"Tech Whiz", desc:"See all Computer flashcards"},
-  {id:"mathcard",icon:"🔢", name:"Number Ninja", desc:"See all Maths flashcards"},
-  {id:"scicard", icon:"🌿", name:"Plant Pro", desc:"See all Science flashcards"},
   {id:"roman",  icon:"🏛️", name:"Roman Hero", desc:"Score 4+ on the Roman quiz"},
   {id:"writer", icon:"✍️", name:"Super Writer", desc:"Finish a Write-the-Answer set"},
   {id:"triple", icon:"🔥", name:"On Fire", desc:"Finish 3 quizzes"},
-  {id:"hindcard",icon:"🪔", name:"Hindi Star", desc:"See all Hindi flashcards"},
-  {id:"telcard", icon:"🌼", name:"Telugu Star", desc:"See all Telugu flashcards"},
+  {id:"penpal", icon:"✒️", name:"Pen Pal", desc:"Pass a handwriting question"},
+  {id:"comeback",icon:"💪", name:"Comeback Kid", desc:"Beat a 3-mistake unlock challenge"},
+  {id:"gamer",  icon:"🎮", name:"Game Master", desc:"Play a 5-minute learning game"},
+  {id:"sharp",  icon:"🎯", name:"Sharp Shooter", desc:"Answer 25 different questions right"},
+  {id:"scholar",icon:"🧠", name:"Scholar", desc:"Answer 50 different questions right"},
 ];
 function unlock(id){ if(!S.badges[id]){ S.badges[id]=true; save(); toastBadge(id); } }
 function refreshTop(){
@@ -960,11 +1003,24 @@ function refreshTop(){
   document.getElementById('badgePill').textContent="🏅 "+Object.keys(S.badges).length;
 }
 
+/* --- reward rules: no star/badge for the SAME question twice --- */
+function qid(item){ const s=(item&&item.q)||''; let h=0; for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))|0; } return 'q'+(h>>>0).toString(36); }
+function starOnce(item, n){ const id=qid(item); if(S.starredQ[id]) return false; S.starredQ[id]=true; addStars(n); save();
+  const c=Object.keys(S.starredQ).length; if(c>=25) unlock('sharp'); if(c>=50) unlock('scholar'); return true; }
+/* a passed handwriting question gives ONE 5-minute game (once per unique question) */
+function passHandwriting(item){ const id=qid(item); const freshQ=!S.handDone[id];
+  if(freshQ){ S.handDone[id]=true; S.gameTokens=(S.gameTokens||0)+1; }
+  S.handPassed=(S.handPassed||0)+1; save(); unlock('penpal'); return freshQ; }
+function accuracyOf(item, ans){ const a=(ans||'').toLowerCase();
+  const ks=item.keywords||[]; if(!ks.length) return a.length>=3?100:0;
+  const hit=ks.filter(kw=>kw.split('|').some(x=>a.includes(x.toLowerCase()))).length;
+  return Math.round(100*hit/ks.length); }
+
 /* =======================================================================
    ROUTER
    ======================================================================= */
 const app=document.getElementById('app');
-function go(html){ app.innerHTML=html; window.scrollTo({top:0,behavior:'smooth'}); }
+function go(html){ if(gameTimer){ clearInterval(gameTimer); gameTimer=null; } app.innerHTML=html; window.scrollTo({top:0,behavior:'smooth'}); }
 
 function home(){
   refreshTop();
@@ -977,6 +1033,7 @@ function home(){
     <div class="hero"><span class="mascot">🦊</span><h1>Hi Khirad! 👋</h1><p>Pick a subject and let's have fun learning!</p></div>
     <div class="grid">
       ${subj('computers')}${subj('maths')}${subj('science')}${subj('hindi')}${subj('telugu')}
+      <button class="tile" style="background:linear-gradient(135deg,#ffe0ef,#fff)" onclick="gameZone()"><span class="emoji">🎮</span><h3>Game Zone</h3><small>${(S.gameTokens||0)} game${(S.gameTokens||0)===1?'':'s'} ready · win by writing</small></button>
       <button class="tile" style="background:linear-gradient(135deg,#fff3d6,#fff)" onclick="badges()"><span class="emoji">🏅</span><h3>My Badges</h3><small>${Object.keys(S.badges).length} / ${BADGES.length} unlocked</small></button>
       <button class="tile" style="background:linear-gradient(135deg,#eef0ff,#fff)" onclick="apiSettings()"><span class="emoji">⚙️</span><h3>Settings</h3><small>For grown-ups · handwriting check</small></button>
     </div></div>`);
@@ -1048,14 +1105,14 @@ function pickPart(idx){
 }
 function nextLesson(){
   const d=DATA[LS.k];
-  if(LS.i+1>=d.lessons.length){ addStars(2); burst(); return lessonsDone(LS.k); }
+  if(LS.i+1>=d.lessons.length){ burst(); return lessonsDone(LS.k); }
   LS.i++; renderLesson();
 }
 function prevLesson(){ if(LS.i>0){ LS.i--; renderLesson(); } }
 function lessonsDone(k){
   const d=DATA[k];
   go(`<div class="screen"><div class="result"><span class="mascot">🎉</span><h1>Great learning!</h1>
-    <p>You finished all the ${d.name} picture lessons. You earned ⭐ 2 stars!</p>
+    <p>You finished all the ${d.name} picture lessons. Now try a quiz to earn ⭐ stars!</p>
     <div style="margin-top:16px"><button class="btn btn-good" onclick="startQuiz('${k}','quiz')">Try the Quiz ❓</button>
     <button class="btn btn-ghost" onclick="startCards('${k}')">Flashcards 🃏</button></div>
     <div style="margin-top:10px"><button class="btn btn-primary btn-full" onclick="subject('${k}')">⬅️ Back to ${d.name}</button></div></div></div>`);
@@ -1084,15 +1141,7 @@ function renderCard(){
 function flip(){ fc.flipped=!fc.flipped; document.getElementById('card').classList.toggle('flipped'); }
 function nextCard(){
   const d=DATA[fc.k];
-  if(fc.i+1>=d.flashcards.length){
-    addStars(2);
-    if(fc.k==='computers') unlock('compcard');
-    if(fc.k==='maths') unlock('mathcard');
-    if(fc.k==='science') unlock('scicard');
-    if(fc.k==='hindi') unlock('hindcard');
-    if(fc.k==='telugu') unlock('telcard');
-    return cardsDone(fc.k);
-  }
+  if(fc.i+1>=d.flashcards.length){ return cardsDone(fc.k); }
   fc.i++; fc.flipped=false; renderCard();
 }
 function prevCard(){ if(fc.i>0){fc.i--; fc.flipped=false; renderCard();} }
@@ -1100,7 +1149,7 @@ function markSeen(k,i){ S.seenCards[k]=S.seenCards[k]||[]; if(!S.seenCards[k].in
 function cardsDone(k){
   const d=DATA[k]; burst();
   go(`<div class="screen"><div class="result"><span class="mascot">🎉</span><h1>All done!</h1>
-    <p>You looked at all ${d.flashcards.length} ${d.name} flashcards. Amazing memory, Khirad!</p>
+    <p>You looked at all ${d.flashcards.length} ${d.name} flashcards. Now win ⭐ stars in the Quiz!</p>
     <div style="margin-top:18px"><button class="btn btn-good" onclick="startQuiz('${k}','quiz')">Try the Quiz ❓</button>
     <button class="btn btn-ghost" onclick="startCards('${k}')">Review again 🔁</button></div>
     <div style="margin-top:10px"><button class="btn btn-primary btn-full" onclick="subject('${k}')">⬅️ Back to ${d.name}</button></div></div></div>`);
@@ -1112,7 +1161,7 @@ function cardsDone(k){
 let qz=null;
 function poolFor(k,mode){ const d=DATA[k]; return mode==='all'?d.allquiz:d[mode]; }
 function startQuiz(k,mode){
-  let pool=shuffle(poolFor(k,mode).slice()).slice(0, Math.min(poolFor(k,mode).length, mode==='all'?12:10));
+  let pool=shuffle(poolFor(k,mode).slice()).slice(0, Math.min(poolFor(k,mode).length, mode==='all'?18:14));
   qz={k,mode,pool,i:0,score:0,answered:false}; renderQ();
 }
 function renderQ(){
@@ -1127,7 +1176,7 @@ function renderQ(){
       <div class="opts" id="opts">${item.o.map((t,idx)=>`<button class="opt" id="opt${idx}" onclick="answer(${idx})"><span class="key">${keys[idx]}</span><span>${t}</span></button>`).join('')}</div>
       <div class="feedback" id="fb"></div>
       <div class="explain" id="ex">${item.e||''}</div>
-      <div id="nextrow" style="margin-top:16px;display:none"><button class="btn btn-primary btn-full" onclick="nextQ()">${qz.i+1===qz.pool.length?'See my results 🎁':'Next question ➡️'}</button></div>
+      <div id="nextrow" style="margin-top:16px;display:none"></div>
     </div></div>`);
 }
 function answer(idx){
@@ -1135,10 +1184,23 @@ function answer(idx){
   const item=qz.pool[qz.i], correct=item.a;
   document.querySelectorAll('.opt').forEach((b,i)=>{ b.classList.add('done'); if(i===correct)b.classList.add('correct'); else if(i===idx)b.classList.add('wrong'); else b.classList.add('dim'); });
   const fb=document.getElementById('fb');
-  if(idx===correct){ qz.score++; addStars(1); fb.innerHTML="✅ Correct! +1 ⭐"; fb.style.color="var(--good)"; miniBurst(); }
-  else { fb.innerHTML="❌ Oops! The right answer is "+["A","B","C","D"][correct]; fb.style.color="var(--bad)"; }
+  if(idx===correct){
+    qz.score++;
+    const fresh=starOnce(item,1);
+    fb.innerHTML = fresh ? "✅ Correct! +1 ⭐" : "✅ Correct! (already earned its star ⭐)";
+    fb.style.color="var(--good)"; miniBurst();
+  } else {
+    S.wrongCount=(S.wrongCount||0)+1; save();
+    fb.innerHTML="❌ Oops! The right answer is "+["A","B","C","D"][correct]; fb.style.color="var(--bad)";
+  }
   document.getElementById('ex').style.display='block';
-  document.getElementById('nextrow').style.display='block';
+  const last=qz.i+1===qz.pool.length, nr=document.getElementById('nextrow'); nr.style.display='block';
+  if((S.wrongCount||0)>=3){
+    nr.innerHTML='<div class="lockmsg">🛑 Oops — 3 mistakes have added up! To keep going you must pass a quick <b>handwriting challenge</b> at <b>80%</b> or better. You\'ll also earn a 5-minute game! 🎮</div>'+
+      '<button class="btn btn-good btn-full" onclick="startGate()">✍️ Start unlock challenge</button>';
+  } else {
+    nr.innerHTML='<button class="btn btn-primary btn-full" onclick="nextQ()">'+(last?'See my results 🎁':'Next question ➡️')+'</button>';
+  }
 }
 function nextQ(){ if(qz.i+1>=qz.pool.length) return quizDone(); qz.i++; qz.answered=false; renderQ(); }
 function quizDone(){
@@ -1208,11 +1270,11 @@ function checkWritten(){
   const m=document.getElementById('model'); m.style.display='block';
   m.innerHTML=`<b>⭐ A good answer:</b><br>${item.model}`;
   // award + buttons
-  let earned;
-  if(good){ earned=3; addStars(3); miniBurst(); }
-  else { earned=1; addStars(1); }
+  if(good) miniBurst();
+  const gotStar = starOnce(item, good?3:1);
+  const earnTxt = gotStar ? (good?'+3 ⭐':'+1 ⭐') : '(already earned its star ⭐)';
   document.getElementById('wbtns').innerHTML=
-    `<div class="feedback" style="color:${good?'var(--good)':'#c98a00'}">${good?`🌟 Brilliant! You included ${hits} key ideas. +3 ⭐`:`💛 Nice try! You got ${hits} key idea${hits===1?'':'s'}. Read the good answer above. +1 ⭐`}</div>
+    `<div class="feedback" style="color:${good?'var(--good)':'#c98a00'}">${good?`🌟 Brilliant! You included ${hits} key ideas. ${earnTxt}`:`💛 Nice try! You got ${hits} key idea${hits===1?'':'s'}. Read the good answer above. ${earnTxt}`}</div>
      <button class="btn btn-primary btn-full" onclick="nextWritten()">${WR.i+1===WR.pool.length?'Finish ✍️':'Next question ➡️'}</button>`;
 }
 function nextWritten(){
@@ -1241,11 +1303,12 @@ const EVAL_SCHEMA = { type:"object", additionalProperties:false,
     transcription:{type:"string"},
     verdict:{type:"string", enum:["great","good","tryagain"]},
     stars:{type:"integer", enum:[1,2,3]},
+    accuracy:{type:"integer"},
     praise:{type:"string"},
     improve:{type:"string"},
     correct:{type:"string"}
   },
-  required:["readable","transcription","verdict","stars","praise","improve","correct"]
+  required:["readable","transcription","verdict","stars","accuracy","praise","improve","correct"]
 };
 const EVAL_SYSTEM =
 "You are Ms. Foxy, a warm, patient Grade-4 teacher. A 9-year-old girl named Khirad has written an answer BY HAND on paper and taken a photo of it. You will be given the question, the expected (model) answer, and the photo. "+
@@ -1254,6 +1317,7 @@ const EVAL_SYSTEM =
 "transcription = exactly what you read in her handwriting, in its original script (empty string if unreadable). "+
 "verdict = 'great' if correct and complete, 'good' if partly correct or mostly right with small gaps, 'tryagain' if mostly wrong, blank, or unreadable. "+
 "stars = 3 for great, 2 for good, 1 for tryagain. "+
+"accuracy = a whole number 0-100 estimating how correct and complete her answer is versus the expected answer (100 = perfect, 0 = blank/wrong/unreadable). "+
 "praise = ONE warm specific sentence celebrating something real (effort, neat letters, a correct idea), in very simple words a 9-year-old knows, with one emoji. "+
 "improve = ONE gentle concrete tip on what to fix or add (one short sentence). If great, give a tiny extra challenge or 'keep it up!'. Never scold. "+
 "correct = the correct answer written simply so she can compare; for Hindi/Telugu include the script AND its English meaning. "+
@@ -1359,21 +1423,28 @@ async function checkPaper(){
 }
 function esc(s){ return (s||"").replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function renderEval(ev){
+  const item=PR.pool[PR.i];
   const face = ev.verdict==='great'?'🏆': ev.verdict==='good'?'😃':'🦊';
   const stars = Math.max(1, Math.min(3, ev.stars||1));
-  addStars(stars);
+  const gotStar = starOnce(item, stars);
+  let gameMsg='';
+  if(stars>=2){ const fg=passHandwriting(item);
+    gameMsg = fg ? '<div class="er">🎮 You passed! You earned a <b>5-minute game</b> — open <b>Game Zone</b> on the home screen.</div>'
+                 : '<div class="er">🎮 (You already earned a game from this question.)</div>'; }
   if(ev.verdict==='great') burst(); else miniBurst();
   const readLine = ev.readable && ev.transcription
     ? '<div class="er">📖 <b>I read:</b><div class="readbox">'+esc(ev.transcription)+'</div></div>' : '';
   document.getElementById('presult').innerHTML=
     `<div class="evalcard">
       <div style="text-align:center"><span style="font-size:44px">${face}</span>
-      <div class="stars" style="font-size:34px">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div></div>
+      <div class="stars" style="font-size:34px">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+      ${typeof ev.accuracy==='number'?`<div style="color:var(--muted);font-weight:bold">${ev.accuracy}% correct</div>`:''}</div>
       ${readLine}
       <div class="er">🌟 ${esc(ev.praise)}</div>
       <div class="er">💡 <b>Tip:</b> ${esc(ev.improve)}</div>
       <div class="er">✅ <b>Correct answer:</b> ${esc(ev.correct)}</div>
-      <div style="color:var(--good);text-align:center;font-weight:bold;margin-top:6px">+${stars} ⭐</div>
+      ${gameMsg}
+      <div style="color:var(--good);text-align:center;font-weight:bold;margin-top:6px">${gotStar?'+'+stars+' ⭐':'Already earned its star ⭐'}</div>
       <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="nextPaper()">${PR.i+1===PR.pool.length?'Finish ✏️':'Next question ➡️'}</button>
     </div>`;
 }
@@ -1393,10 +1464,16 @@ function paperGuided(note){
     </div>`;
 }
 function paperSelf(n){
-  addStars(n); if(n>=3) burst(); else miniBurst();
+  const item=PR.pool[PR.i];
+  const gotStar = starOnce(item, n);
+  if(n>=3) burst(); else miniBurst();
+  let gameMsg='';
+  if(n>=3){ const fg=passHandwriting(item);
+    gameMsg = fg ? '<p style="color:#0a7ea4">🎮 You earned a <b>5-minute game</b> — see <b>Game Zone</b> on the home screen!</p>'
+                 : '<p style="color:var(--muted)">🎮 (Already earned a game from this question.)</p>'; }
   document.getElementById('presult').innerHTML=
     `<div class="evalcard"><div style="text-align:center"><span style="font-size:40px">${n>=3?'🌟':'💛'}</span>
-      <p style="font-weight:bold">${n>=3?'Awesome! +3 ⭐':'Good try! Practice makes perfect. +1 ⭐'}</p></div>
+      <p style="font-weight:bold">${n>=3?'Awesome!':'Good try! Practice makes perfect.'} ${gotStar?'+'+n+' ⭐':'(already earned its star ⭐)'}</p>${gameMsg}</div>
       <button class="btn btn-primary btn-full" onclick="nextPaper()">${PR.i+1===PR.pool.length?'Finish ✏️':'Next question ➡️'}</button></div>`;
 }
 function nextPaper(){
@@ -1411,6 +1488,179 @@ function nextPaper(){
   }
   PR.i++; PR.img=null; renderPaper();
 }
+
+/* =======================================================================
+   UNLOCK CHALLENGE  (after 3 wrong answers — pass a handwriting Q at 80%)
+   ======================================================================= */
+let GATE=null;
+function startGate(){
+  const pool=DATA[qz.k].written;
+  GATE={ item: pool[Math.floor(Math.random()*pool.length)], img:null, busy:false, typed:false };
+  renderGate();
+}
+function renderGate(note){
+  const ai = !!getKey() && !GATE.typed, d=DATA[qz.k], item=GATE.item;
+  go(`<div class="screen">
+    <h2 class="sec">🛑 Unlock Challenge</h2>
+    <p class="subtitle">3 mistakes added up. Pass this at <b>80%</b> to keep going — and earn a 5-minute game! 🎮</p>
+    <div class="qcard">
+      <div class="qtop"><span>${d.emoji} ${d.name}</span><span>Need 80%</span></div>
+      <p class="qtext">${item.q}</p>
+      ${note?'<div class="notebox" style="margin:0 0 10px">'+note+'</div>':''}
+      ${ai
+        ? `<p style="color:var(--muted);margin:-2px 0 10px;font-size:15px">✍️ Write the answer on paper, then take a photo.</p>
+           <input type="file" accept="image/*" capture="environment" id="gfile" style="display:none" onchange="onGateFile(event)">
+           <button class="btn btn-primary btn-full" onclick="document.getElementById('gfile').click()">📷 Take / upload a photo</button>
+           <div id="gpreview"></div>
+           <div id="gcheckrow" style="display:none;margin-top:12px"><button class="btn btn-good btn-full" id="gcheckbtn" onclick="checkGate()">✅ Check (need 80%)</button></div>`
+        : `<p style="color:var(--muted);margin:-2px 0 10px;font-size:15px">✍️ Write your answer below in your own words — include the key ideas.</p>
+           <textarea class="wbox" id="gans" placeholder="Type your answer…"></textarea>
+           <div style="margin-top:12px"><button class="btn btn-good btn-full" onclick="checkGate()">✅ Check (need 80%)</button></div>`}
+      <div id="gresult"></div>
+      <div style="margin-top:12px;text-align:center">
+        <button class="btn btn-ghost" onclick="startGate()">↻ Different question</button>
+        <button class="btn btn-ghost" onclick="subject('${qz.k}')">Quit quiz</button></div>
+    </div></div>`);
+  if(!ai) setTimeout(()=>{ const t=document.getElementById('gans'); if(t) t.focus(); },150);
+}
+async function onGateFile(ev){
+  const f=ev.target.files && ev.target.files[0]; if(!f) return;
+  const prev=document.getElementById('gpreview'); prev.innerHTML='<div class="spin"></div>';
+  try{ GATE.img=await fileToScaledJpeg(f,1280,0.82);
+    prev.innerHTML='<img src="'+GATE.img+'" alt="your answer"><div style="color:var(--muted);font-size:13px;margin-top:6px">📸 Tap “Check” when ready, or pick the photo again to retake.</div>';
+    document.getElementById('gcheckrow').style.display='block';
+  }catch(e){ prev.innerHTML='<div class="notebox">😅 That photo didn’t load. Please try again.</div>'; }
+}
+async function checkGate(){
+  if(GATE.busy) return; const item=GATE.item;
+  if(getKey() && !GATE.typed){
+    if(!GATE.img){ alert("Take a photo first 😊"); return; }
+    GATE.busy=true; const b=document.getElementById('gcheckbtn'); if(b){ b.disabled=true; b.textContent="Checking…"; }
+    document.getElementById('gresult').innerHTML='<div class="evalcard"><div class="spin"></div><div style="text-align:center;color:#6b5a00">🦊 Ms. Foxy is checking… ✨</div></div>';
+    try{
+      const ev=await aiCheck(item, GATE.img, DATA[qz.k].name);
+      const acc=(typeof ev.accuracy==='number')?ev.accuracy:(ev.verdict==='great'?100:ev.verdict==='good'?70:30);
+      gateResult(acc>=80, acc, ev);
+    }catch(e){
+      const hint = e.http===401?"The key looks wrong (⚙️ Settings).":"Check the internet & key (⚙️ Settings).";
+      document.getElementById('gresult').innerHTML=
+        '<div class="notebox" style="margin-top:12px">😅 Couldn’t auto-check. '+hint+'</div>'+
+        '<button class="btn btn-good btn-full" style="margin-top:8px" onclick="GATE.typed=true;renderGate()">✍️ Type my answer instead</button>';
+    }finally{ GATE.busy=false; const bb=document.getElementById('gcheckbtn'); if(bb){ bb.disabled=false; bb.textContent="✅ Check (need 80%)"; } }
+  } else {
+    const ans=(document.getElementById('gans').value||'').toLowerCase().trim();
+    if(ans.length<3){ alert("Write a little answer first 😊"); return; }
+    gateResult(accuracyOf(item,ans)>=80, accuracyOf(item,ans), null);
+  }
+}
+function gateResult(pass, acc, ev){
+  const read = ev && ev.readable && ev.transcription ? '<div class="er">📖 <b>I read:</b><div class="readbox">'+esc(ev.transcription)+'</div></div>' : '';
+  if(pass){
+    S.wrongCount=0; save();
+    const freshGame=passHandwriting(GATE.item);
+    unlock('comeback'); starOnce(GATE.item, 2); burst();
+    document.getElementById('gresult').innerHTML=
+      `<div class="evalcard"><div style="text-align:center"><span style="font-size:46px">🎉</span>
+        <h3 style="margin:6px 0">${acc}% — you passed!</h3></div>
+        ${read}${ev?`<div class="er">🌟 ${esc(ev.praise)}</div>`:''}
+        <div class="er">🎮 ${freshGame?'You earned a <b>5-minute game</b>! It\'s in <b>Game Zone</b> on the home screen.':'(You already earned a game from this question.)'}</div>
+        <button class="btn btn-good btn-full" style="margin-top:10px" onclick="resumeAfterGate()">▶️ Keep going with the quiz</button>
+        ${freshGame?'<button class="btn btn-primary btn-full" style="margin-top:8px" onclick="gameZone()">🎮 Play my game now</button>':''}
+      </div>`;
+  } else {
+    document.getElementById('gresult').innerHTML=
+      `<div class="evalcard"><div style="text-align:center"><span style="font-size:42px">💛</span>
+        <h3 style="margin:6px 0">${acc}% — so close! You need 80%.</h3></div>
+        ${read}${ev?`<div class="er">💡 ${esc(ev.improve)}</div>`:''}
+        <div class="er">✅ <b>Correct answer:</b> ${esc(GATE.item.model)}</div>
+        <div class="modegrid" style="margin-top:10px">
+          <button class="btn btn-good" onclick="renderGate()">↻ Try again</button>
+          <button class="btn btn-ghost" onclick="startGate()">Different question</button>
+        </div></div>`;
+  }
+}
+function resumeAfterGate(){ nextQ(); }
+
+/* =======================================================================
+   GAME ZONE  (each handwriting pass = one 5-minute learning game)
+   ======================================================================= */
+let GAME=null, gameTimer=null;
+function gameZone(){
+  const t=S.gameTokens||0;
+  go(`<div class="screen">
+    <button class="backbtn" onclick="home()">← Home</button>
+    <h2 class="sec">🎮 Game Zone</h2>
+    <div class="qcard" style="text-align:center">
+      <div style="font-size:54px">${t>0?'🎟️':'🔒'}</div>
+      <h3 style="margin:6px 0">${t} game session${t===1?'':'s'} ready</h3>
+      <p style="color:var(--muted)">Best score: ${S.bestGame||0} ⭐</p>
+      ${t>0
+        ? `<p>Each session is a fast <b>5-minute Quiz Blast</b> — answer as many as you can and build big combo streaks! 🚀</p>
+           <button class="btn btn-good btn-full" onclick="startGame()">▶️ Play (5 minutes)</button>`
+        : `<div class="notebox" style="margin-top:8px;text-align:left">🔑 To earn a game, pass a <b>Write on Paper</b> (handwriting) question — or beat the <b>3-mistake unlock challenge</b> in a quiz. Each one you pass gives one 5-minute game! 💛</div>`}
+    </div></div>`);
+}
+function startGame(){
+  if((S.gameTokens||0)<1) return gameZone();
+  S.gameTokens--; S.gamesPlayed=(S.gamesPlayed||0)+1; save(); unlock('gamer');
+  let pool=[];
+  Object.keys(DATA).forEach(k=>{ (DATA[k].allquiz||DATA[k].quiz||[]).forEach(q=>{ if(q&&q.o&&typeof q.a==='number') pool.push({q:q.q,o:q.o,a:q.a,subj:DATA[k].emoji}); }); });
+  pool=shuffle(pool);
+  GAME={ pool, i:0, score:0, streak:0, left:300, answered:false };
+  go(`<div class="screen">
+    <button class="backbtn" onclick="quitGame()">← Quit game</button>
+    <h2 class="sec">⚡ Quiz Blast</h2>
+    <div class="gametop"><span class="gpill" id="gtime">5:00</span><span class="gpill" id="gscore">⭐ 0</span><span class="gpill" id="gcombo">🔥 x1</span></div>
+    <div class="gbar"><div id="gbarfill"></div></div>
+    <div class="qcard" id="gameQ"></div>
+  </div>`);
+  renderGameQ();
+  gameTimer=setInterval(gameTick,1000);
+}
+function gmult(s){ return s>=6?3:s>=3?2:1; }
+function renderGameQ(){
+  if(GAME.i>=GAME.pool.length){ GAME.pool=shuffle(GAME.pool); GAME.i=0; }
+  const item=GAME.pool[GAME.i]; GAME.answered=false; const keys=['A','B','C','D'];
+  document.getElementById('gameQ').innerHTML=
+    `<p class="qtext">${item.subj||''} ${item.q}</p>
+     <div class="opts">${item.o.map((t,idx)=>`<button class="opt" id="g${idx}" onclick="gameAnswer(${idx})"><span class="key">${keys[idx]}</span><span>${t}</span></button>`).join('')}</div>
+     <div class="feedback" id="gfb"></div>`;
+}
+function gameAnswer(idx){
+  if(!GAME || GAME.answered || GAME.left<=0) return; GAME.answered=true;
+  const item=GAME.pool[GAME.i], correct=item.a;
+  document.querySelectorAll('#gameQ .opt').forEach((b,i)=>{ b.classList.add('done'); if(i===correct)b.classList.add('correct'); else if(i===idx)b.classList.add('wrong'); else b.classList.add('dim'); });
+  const fb=document.getElementById('gfb');
+  if(idx===correct){ GAME.streak++; const m=gmult(GAME.streak), pts=10*m; GAME.score+=pts;
+    fb.innerHTML="✅ +"+pts+(m>1?" (🔥 x"+m+")":""); fb.style.color="var(--good)"; miniBurst(); }
+  else { GAME.streak=0; fb.innerHTML="❌ "+["A","B","C","D"][correct]; fb.style.color="var(--bad)"; }
+  const gs=document.getElementById('gscore'); if(gs) gs.textContent="⭐ "+GAME.score;
+  const gc=document.getElementById('gcombo'); if(gc) gc.textContent="🔥 x"+gmult(GAME.streak);
+  setTimeout(()=>{ if(GAME && GAME.left>0){ GAME.i++; renderGameQ(); } }, 650);
+}
+function gameTick(){
+  if(!GAME){ clearGame(); return; }
+  GAME.left--;
+  const mm=Math.floor(GAME.left/60), ss=GAME.left%60, el=document.getElementById('gtime');
+  if(el) el.textContent=mm+":"+(ss<10?'0':'')+ss;
+  const bf=document.getElementById('gbarfill'); if(bf) bf.style.width=(100*Math.max(0,GAME.left)/300)+"%";
+  if(GAME.left<=0) endGame();
+}
+function endGame(){
+  clearGame();
+  const sc=GAME?GAME.score:0, prevBest=S.bestGame||0, isBest=sc>prevBest;
+  if(isBest) S.bestGame=sc; save();
+  GAME=null;
+  go(`<div class="screen"><div class="result"><span class="mascot">🎉</span><h1>Time's up!</h1>
+    <div class="score">${sc}</div>
+    <p>${isBest?'New best score! 🏆':'Your best is '+(S.bestGame||0)+' ⭐'}</p>
+    <div style="margin-top:16px"><button class="btn btn-good" onclick="gameZone()">🎮 Game Zone</button>
+    <button class="btn btn-ghost" onclick="home()">🏠 Home</button></div>
+    <p style="color:var(--muted);margin-top:12px">Earn another game by passing a handwriting question! ✍️</p>
+  </div></div>`);
+}
+function clearGame(){ if(gameTimer){ clearInterval(gameTimer); gameTimer=null; } }
+function quitGame(){ clearGame(); GAME=null; home(); }
 
 /* =======================================================================
    SETTINGS  (parent enters their own Anthropic API key — stored on device only)
