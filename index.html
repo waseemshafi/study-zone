@@ -293,7 +293,12 @@ const HIN = {
 "मात्रा":"vowel-sign","कम":"less","कलम":"pen","कब":"when","कौन":"who","शुद्ध":"correct","वर्तनी":"spelling",
 "परीक्षा":"exam","परिक्षा":"exam (wrong spelling)","परिछा":"exam (wrong spelling)","परीछा":"exam (wrong spelling)",
 "इसमें":"in this","रोशनी":"light","किसका":"of what","जानते":"know","साल":"year","आख़िरी":"last","बारहखड़ी":"barahkhadi (letter chart)","बाद":"after","आता":"comes","कु":"ku","दिवाली":"Diwali",
-"बुधवार":"Wednesday","गुरुवार":"Thursday","शुक्रवार":"Friday","कौन-सी":"which","कौन-कौन":"which all","क":"ka (letter)","कि":"ki","आ":"aa (vowel)","इ":"i (vowel)","ई":"ee (vowel)","उ":"u (vowel)","कैसे":"how"
+"बुधवार":"Wednesday","गुरुवार":"Thursday","शुक्रवार":"Friday","कौन-सी":"which","कौन-कौन":"which all","क":"ka (letter)","कि":"ki","आ":"aa (vowel)","इ":"i (vowel)","ई":"ee (vowel)","उ":"u (vowel)","कैसे":"how",
+"सिक्ख":"Sikh","लोग":"people","जाते":"go","कुत्ता":"dog","कुत्ते":"dogs","कुत्ती":"female dog","कुत्तु":"(wrong form)","बिल्ली":"cat","बिल्लियाँ":"cats","बिल्ले":"tom-cats","बिल्लाँ":"(wrong form)","पुस्तकें":"books","पुस्तकाँ":"(wrong form)","पुस्तके":"(wrong form)",
+"बीहू":"Bihu (festival)","पकवान":"dish (food)","बनता":"is made","जन्मदिन":"birthday","उपग्रह":"satellite","पराजय":"defeat","एकता":"unity","जीवन":"life","भँवरा":"bumblebee","बैठा":"sits","आसमान":"sky","तारे":"stars","टिमटिमा":"twinkle","रहे":"are","रहा":"is","मनाते":"celebrate","मनाए":"celebrated","भारत":"India","धूमधाम":"with great pomp","बारह":"twelve (12)","महीनों":"months",
+"कमला":"Kamla (name)","बाज़ार":"market","कमरे":"room","पंखा":"fan","चल":"moving","उसके":"his / her","पिताजी":"father","डॉक्टर":"doctor","जिसने":"the one who","मेहनत":"hard work","उसने":"he/she (did)","पाया":"got",
+"मंदिर":"temple","मस्जिद":"mosque","गिरजाघर":"church","गुलाब":"rose","जामुन":"jamun","जलेबी":"jalebi (sweet)","खीर":"kheer (sweet)","गौतम":"Gautam","बुद्ध":"Buddha","गुरु":"guru / teacher","नानक":"Nanak","राम":"Ram",
+"उप":"up- (prefix)","ग्रह":"planet","ह":"ha (letter)","जय":"victory","परा":"paraa- (prefix)","य":"ya (letter)","मिलन":"meeting","अनेकता":"disunity","जोड़":"joining","प्राण":"life-breath","मृत्यु":"death","साँस":"breath","जन्म":"birth","स्नेह":"affection","घृणा":"hatred","दोस्ती":"friendship","पर्व":"festival","पाठ":"lesson","पत्र":"letter","दिवस":"day","ईसा":"Jesus","मसीह":"Christ","गुरुपर्व":"Gurupurab","गुरुद्वारे":"to the gurudwara","सेवइयाँ":"sweet vermicelli"
 };
 const HDIG={'०':'0','१':'1','२':'2','३':'3','४':'4','५':'5','६':'6','७':'7','८':'8','९':'9'};
 function gloss1(w){
@@ -959,7 +964,11 @@ const DATA = {
       {q:"'अच्छाई' का विलोम शब्द है— (The opposite of 'अच्छाई / goodness' is—)",o:["भलाई","बुराई","सच्चाई","मिठास"],a:1,e:"अच्छाई × बुराई।"},
       {q:"'प्रकाश' शब्द में उपसर्ग कौन-सा है? (Which is the prefix in 'प्रकाश / prakaash'?)",o:["प्र","काश","श","प"],a:0,e:"प्र + काश = प्रकाश।"},
       {q:"सप्ताह में कितने दिन होते हैं? (How many days are there in a week?)",o:["5","6","7","8"],a:2,e:"सप्ताह में 7 दिन होते हैं।"},
-      {q:"'ओणम' किस बात से जुड़ा त्योहार है? (Onam is linked to what?)",o:["फसल कटाई (harvest)","सर्दी","गर्मी","परीक्षा"],a:0,e:"ओणम केरल का फसल (harvest) त्योहार है।"}
+      {q:"'ओणम' किस बात से जुड़ा त्योहार है? (Onam is linked to what?)",o:["फसल कटाई (harvest)","सर्दी","गर्मी","परीक्षा"],a:0,e:"ओणम केरल का फसल (harvest) त्योहार है।"},
+      {q:"बीहू किस राज्य का त्योहार है? (Bihu is a festival of which state?)",o:["असम (Assam)","केरल","पंजाब","गोवा"],a:0,e:"बीहू असम का त्योहार है।"},
+      {q:"सिक्ख लोग गुरुपर्व के दिन कहाँ जाते हैं? (On Gurupurab, Sikhs go to the…)",o:["मंदिर","गुरुद्वारा (gurudwara)","मस्जिद","गिरजाघर"],a:1,e:"गुरुपर्व पर सिक्ख गुरुद्वारे जाते हैं और शब्द-कीर्तन करते हैं।"},
+      {q:"ईद के दिन कौन-सा मीठा पकवान बनता है? (Which sweet is made on Eid?)",o:["सेवइयाँ (seviyaan)","गुलाब जामुन","जलेबी","खीर"],a:0,e:"ईद के दिन मीठी सेवइयाँ बनती और खाई जाती हैं।"},
+      {q:"क्रिसमस के दिन किसका जन्मदिन मनाया जाता है? (Whose birthday is celebrated on Christmas?)",o:["ईसा मसीह (Jesus)","गौतम बुद्ध","गुरु नानक","राम"],a:0,e:"क्रिसमस ईसा मसीह (Jesus) के जन्मदिन के रूप में मनाया जाता है।"}
     ],
     grammar:[
       {q:"संज्ञा (noun) किसे कहते हैं? (What is a noun?)",o:["काम बताने वाले शब्द","किसी वस्तु, व्यक्ति, स्थान या भाव के नाम","रंगों के नाम","गिनती"],a:1,e:"किसी वस्तु, प्राणी, स्थान, गुण या भाव के नाम को संज्ञा कहते हैं। जैसे— सीमा, आगरा, बच्चा।"},
@@ -971,7 +980,20 @@ const DATA = {
       {q:"कारक चिह्न (का, के, की, ने, से…) क्या बताते हैं? (What do the kaarak signs show?)",o:["रंग","संज्ञा का दूसरे शब्दों से संबंध","गिनती","समय"],a:1,e:"कारक संज्ञा/सर्वनाम का वाक्य के बाकी शब्दों से संबंध बताते हैं।"},
       {q:"सही कारक भरो: 'आम ___ पेड़' (Fill the right kaarak: 'mango ___ tree')",o:["का","की","ने","से"],a:0,e:"आम का पेड़ — 'का' संबंध बताता है।"},
       {q:"'बच्चा' का बहुवचन (plural) क्या है? (What is the plural of 'bachcha / child'?)",o:["बच्चे","बच्चु","बच्ची","बच्चों"],a:0,e:"एकवचन बच्चा → बहुवचन बच्चे।"},
-      {q:"'तितली' का बहुवचन क्या है? (What is the plural of 'titli / butterfly'?)",o:["तितलाँ","तितलियाँ","तितले","तितली"],a:1,e:"तितली → तितलियाँ।"}
+      {q:"'तितली' का बहुवचन क्या है? (What is the plural of 'titli / butterfly'?)",o:["तितलाँ","तितलियाँ","तितले","तितली"],a:1,e:"तितली → तितलियाँ।"},
+      {q:"'कुत्ता' का बहुवचन (plural) क्या है? (Plural of 'kutta / dog'?)",o:["कुत्ता","कुत्ते","कुत्ती","कुत्तु"],a:1,e:"एकवचन कुत्ता → बहुवचन कुत्ते।"},
+      {q:"'बिल्ली' का बहुवचन क्या है? (Plural of 'billi / cat'?)",o:["बिल्ले","बिल्लियाँ","बिल्लाँ","बिल्ली"],a:1,e:"बिल्ली → बिल्लियाँ।"},
+      {q:"'पुस्तक' का बहुवचन क्या है? (Plural of 'pustak / book'?)",o:["पुस्तकाँ","पुस्तकें","पुस्तके","पुस्तक"],a:1,e:"पुस्तक → पुस्तकें।"},
+      {q:"'उपग्रह' शब्द में उपसर्ग (prefix) कौन-सा है? (Prefix in 'upgrah'?)",o:["उप","ग्रह","ह","उ"],a:0,e:"उप + ग्रह = उपग्रह। उपसर्ग 'उप' है।"},
+      {q:"'पराजय' शब्द में उपसर्ग कौन-सा है? (Prefix in 'paraajay'?)",o:["जय","परा","प","य"],a:1,e:"परा + जय = पराजय। उपसर्ग 'परा' है।"},
+      {q:"'एकता' का विलोम (opposite) शब्द है— (Opposite of 'ekta / unity'?)",o:["मिलन","अनेकता","प्रेम","जोड़"],a:1,e:"एकता × अनेकता।"},
+      {q:"'जीवन' का विलोम शब्द है— (Opposite of 'jeevan / life'?)",o:["प्राण","मृत्यु","साँस","जन्म"],a:1,e:"जीवन × मृत्यु।"},
+      {q:"'प्रेम' का विलोम शब्द है— (Opposite of 'prem / love'?)",o:["स्नेह","घृणा","दोस्ती","प्यार"],a:1,e:"प्रेम × घृणा।"},
+      {q:"'त्योहार' का पर्यायवाची (synonym) शब्द है— (Synonym of 'tyohaar / festival'?)",o:["पर्व","परीक्षा","पाठ","पत्र"],a:0,e:"त्योहार = पर्व, उत्सव।"},
+      {q:"'दिन' का पर्यायवाची शब्द है— (Synonym of 'din / day'?)",o:["रात","दिवस","शाम","सुबह"],a:1,e:"दिन = दिवस, वार।"},
+      {q:"सही कारक भरो: 'बहन ___ राखी' (Fill the kaarak: 'sister__ rakhi')",o:["का","की","के","ने"],a:1,e:"बहन की राखी — 'की' संबंध बताता है।"},
+      {q:"सही कारक भरो: 'फूल ___ भँवरा बैठा है' (Fill the kaarak)",o:["में","पर","से","को"],a:1,e:"फूल पर भँवरा बैठा है — 'पर' (on)।"},
+      {q:"सही कारक भरो: 'आसमान ___ तारे टिमटिमा रहे हैं' (Fill the kaarak)",o:["में","पर","ने","का"],a:0,e:"आसमान में तारे — 'में' (in)।"}
     ],
     written:[
       {q:"होली पर सब क्या करते हैं? (What does everyone do on Holi? — you may answer in English)",keywords:["रंग|colour|color|rang","लगाते|लगा|put|play|throw"],
@@ -993,7 +1015,21 @@ const DATA = {
       {q:"इस वाक्य में से सर्वनाम (pronoun) लिखो: 'यह सीमा का घर है।'",keywords:["यह|yah|this"],
         model:"सर्वनाम (pronoun): यह (this)।"},
       {q:"इस वाक्य में से सर्वनाम (pronoun) लिखो: 'तुम बहुत अच्छी हिंदी बोलते हो।'",keywords:["तुम|tum|you"],
-        model:"सर्वनाम (pronoun): तुम (you)।"}
+        model:"सर्वनाम (pronoun): तुम (you)।"},
+      {q:"सिक्ख लोग गुरुपर्व कैसे मनाते हैं? (How do Sikhs celebrate Gurupurab?)",keywords:["गुरुद्वारा|गुरुद्वारे|gurudwara","कीर्तन|माथा|kirtan|bow|prayer|pray"],
+        model:"सिक्ख लोग गुरुपर्व के दिन गुरुद्वारे जाते हैं, मिलकर शब्द-कीर्तन करते हैं और माथा टेकते हैं।"},
+      {q:"भारत में कौन-कौन से त्योहार धूमधाम से मनाए जाते हैं? नाम लिखो। (Name some festivals celebrated grandly in India.)",keywords:["होली|holi|दीवाली|diwali|दीपावली","ईद|eid|राखी|rakhi|क्रिसमस|christmas|पोंगल|ओणम"],
+        model:"भारत में होली, दीपावली, ईद, क्रिसमस, रक्षाबंधन, पोंगल, ओणम, बैसाखी जैसे कई त्योहार धूमधाम से मनाए जाते हैं।"},
+      {q:"हिंदी के बारह महीनों के नाम लिखो। (Write the names of the 12 Hindi months.)",keywords:["चैत्र|chaitra","फाल्गुन|phalgun|माघ|magh"],
+        model:"चैत्र, वैशाख, ज्येष्ठ, आषाढ़, श्रावण, भाद्रपद, आश्विन, कार्तिक, मार्गशीर्ष, पौष, माघ, फाल्गुन।"},
+      {q:"इस वाक्य में से संज्ञा (nouns) छाँटकर लिखो: 'कमला बाज़ार गई।'",keywords:["कमला|kamla","बाज़ार|बाजार|market|bazaar"],
+        model:"संज्ञा (nouns): कमला (Kamla), बाज़ार (market)।"},
+      {q:"इस वाक्य में से संज्ञा (nouns) लिखो: 'कमरे में पंखा चल रहा है।'",keywords:["कमरे|कमरा|room","पंखा|fan|pankha"],
+        model:"संज्ञा (nouns): कमरे (room), पंखा (fan)।"},
+      {q:"इस वाक्य में से सर्वनाम (pronoun) लिखो: 'उसके पिताजी डॉक्टर हैं।'",keywords:["उसके|uske|his|her"],
+        model:"सर्वनाम (pronoun): उसके (his/her)।"},
+      {q:"इस वाक्य में से सर्वनाम (pronoun) लिखो: 'जिसने मेहनत की उसने फल पाया।'",keywords:["जिसने|उसने|jisne|usne|who"],
+        model:"सर्वनाम (pronouns): जिसने, उसने।"}
     ],
     easy:[
       {q:"गिनती लिखो: १ से १० तक (Write counting 1 to 10).",keywords:["१|1|ek","१०|10|das"],
@@ -1057,7 +1093,28 @@ const DATA = {
       {w:"फल",rom:"phal",a:"fruit",m:"fruit"},
       {w:"रंग",rom:"rang",a:"colour|color",m:"colour"},
       {w:"पेड़",rom:"ped",a:"tree",m:"tree"},
-      {w:"बच्चा",rom:"bachcha",a:"child|kid|boy",m:"child"}
+      {w:"बच्चा",rom:"bachcha",a:"child|kid|boy",m:"child"},
+      {w:"धर्म",rom:"dharm",a:"religion|faith",m:"religion / faith"},
+      {w:"उत्सव",rom:"utsav",a:"festival|celebration|celebrat",m:"festival / celebration"},
+      {w:"पर्व",rom:"parv",a:"festival",m:"festival"},
+      {w:"संदेश",rom:"sandesh",a:"message",m:"message"},
+      {w:"प्रसन्नता",rom:"prasannata",a:"happy|happiness|joy",m:"happiness / joy"},
+      {w:"उत्साह",rom:"utsaah",a:"enthusiasm|zeal|energy|excite",m:"enthusiasm / zeal"},
+      {w:"प्रतीक",rom:"prateek",a:"symbol|sign",m:"symbol / sign"},
+      {w:"आधारित",rom:"aadhaarit",a:"based|depend",m:"based on"},
+      {w:"क्षेत्र",rom:"kshetra",a:"area|region|field",m:"area / region"},
+      {w:"आजीवन",rom:"aajeevan",a:"lifelong|life",m:"lifelong (for whole life)"},
+      {w:"अन्याय",rom:"anyaay",a:"injustice|unfair|unjust",m:"injustice"},
+      {w:"प्रेरणा",rom:"prerna",a:"inspiration|motivation|inspire",m:"inspiration"},
+      {w:"पूर्णिमा",rom:"poornima",a:"full moon|fullmoon",m:"full-moon day"},
+      {w:"जन्मदिन",rom:"janmadin",a:"birthday|birth",m:"birthday"},
+      {w:"प्रत्येक",rom:"pratyek",a:"each|every",m:"each / every"},
+      {w:"घृणा",rom:"ghrina",a:"hatred|hate",m:"hatred"},
+      {w:"मृत्यु",rom:"mrityu",a:"death|die",m:"death"},
+      {w:"दिवस",rom:"divas",a:"day",m:"day"},
+      {w:"आलोक",rom:"aalok",a:"light",m:"light"},
+      {w:"क्रिसमस",rom:"krismas",a:"christmas",m:"Christmas"},
+      {w:"इस्लाम",rom:"islaam",a:"islam",m:"Islam"}
     ],
   },
 
@@ -1337,7 +1394,7 @@ function examSubject(k){
    DICTIONARY  (word → write the English meaning; NO multiple choice)
    ======================================================================= */
 let DICT=null;
-function startDict(k){ DICT={k, pool:shuffle(DATA[k].dict.slice()), i:0, checked:false}; renderDict(); }
+function startDict(k){ const all=shuffle(DATA[k].dict.slice()); DICT={k, pool:all.slice(0, Math.min(all.length, 15)), i:0, checked:false}; renderDict(); }
 function renderDict(){
   const d=DATA[DICT.k], item=DICT.pool[DICT.i], pct=Math.round(100*DICT.i/DICT.pool.length);
   go(`<div class="screen">
