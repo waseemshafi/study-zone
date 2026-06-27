@@ -181,6 +181,10 @@
   .lcell .mn{font-size:12px;color:var(--muted);display:block}
   .romline{font-size:18px;color:#a07bff;font-weight:bold;margin:2px 0 6px}
   .startnote{background:#fff3d6;border:2px dashed var(--gold);border-radius:14px;padding:10px 14px;color:#6b5a00;font-size:14px;margin:0 0 12px;text-align:center;line-height:1.5}
+  .examnote{background:#ffeede;border:2px dashed #ff8c42;border-radius:14px;padding:12px 16px;color:#8a3b00;font-size:14.5px;margin:0 0 16px;text-align:center;line-height:1.6}
+  .dictword{text-align:center;font-size:46px;font-weight:800;color:var(--ink);margin:6px 0 2px;line-height:1.2}
+  .dinput{width:100%;border:3px solid #e3e0f7;border-radius:16px;padding:14px;font-family:inherit;font-size:18px;color:var(--ink);margin-top:10px;box-sizing:border-box}
+  .dinput:focus{outline:none;border-color:#a07bff}
   .bara{border-collapse:collapse;margin:8px auto;font-size:15px}
   .bara td{border:2px solid #e8e2fb;padding:6px 5px;text-align:center;white-space:nowrap}
   .bara .base{background:#efeaff;color:#5a47b0;font-weight:bold;font-size:19px}
@@ -283,7 +287,13 @@ const HIN = {
 "हिंदी":"Hindi","ही":"only",
 "इस":"this","वाक्य":"sentence","छाँटकर":"pick out","अजय":"Ajay","क्रिकेट":"cricket","खेलता":"plays","बैठी":"is sitting",
 "कल":"tomorrow","जाएगा":"will go","मुझे":"me","मीठा":"sweet","पसंद":"like","मीना":"Meena","रहती":"lives","सीमा":"Seema",
-"फट":"tore","गई":"went","यह":"this","घर":"house","तुम":"you","बहुत":"very","अच्छी":"good","बोलते":"speak","हो":"are"
+"फट":"tore","गई":"went","यह":"this","घर":"house","तुम":"you","बहुत":"very","अच्छी":"good","बोलते":"speak","हो":"are",
+"तीसरा":"third","महीना":"month","चैत्र":"Chaitra (month)","वैशाख":"Vaishakh (month)","माघ":"Magh (month)","फाल्गुन":"Phalgun (month)","श्रावण":"Shravan (month)",
+"सत्ताईस":"twenty-seven (27)","छब्बीस":"twenty-six (26)","अट्ठाईस":"twenty-eight (28)","उनतीस":"twenty-nine (29)","बीस":"twenty (20)","पच्चीस":"twenty-five (25)","तीस":"thirty (30)","चालीस":"forty (40)",
+"मात्रा":"vowel-sign","कम":"less","कलम":"pen","कब":"when","कौन":"who","शुद्ध":"correct","वर्तनी":"spelling",
+"परीक्षा":"exam","परिक्षा":"exam (wrong spelling)","परिछा":"exam (wrong spelling)","परीछा":"exam (wrong spelling)",
+"इसमें":"in this","रोशनी":"light","किसका":"of what","जानते":"know","साल":"year","आख़िरी":"last","बारहखड़ी":"barahkhadi (letter chart)","बाद":"after","आता":"comes","कु":"ku","दिवाली":"Diwali",
+"बुधवार":"Wednesday","गुरुवार":"Thursday","शुक्रवार":"Friday","कौन-सी":"which","कौन-कौन":"which all","क":"ka (letter)","कि":"ki","आ":"aa (vowel)","इ":"i (vowel)","ई":"ee (vowel)","उ":"u (vowel)","कैसे":"how"
 };
 const HDIG={'०':'0','१':'1','२':'2','३':'3','४':'4','५':'5','६':'6','७':'7','८':'8','९':'9'};
 function gloss1(w){
@@ -1011,6 +1021,44 @@ const DATA = {
       {q:"तीन फल या तीन रंगों के नाम हिंदी में लिखो।",keywords:["फल|रंग|fruit|colour|color"],
         model:"फल: आम, केला, सेब। या रंग: लाल, नीला, हरा, पीला।"}
     ],
+    exam:[
+      {q:"सप्ताह का तीसरा दिन कौन-सा है? (Which is the 3rd day of the week?)",o:["मंगलवार","बुधवार","गुरुवार","रविवार"],a:1,e:"सोमवार, मंगलवार, बुधवार… तीसरा दिन बुधवार है।"},
+      {q:"हिंदी का पहला महीना कौन-सा है? (Which is the first Hindi month?)",o:["चैत्र","वैशाख","माघ","फाल्गुन"],a:0,e:"हिंदी का पहला महीना चैत्र है।"},
+      {q:"साल का आख़िरी हिंदी महीना कौन-सा है? (Last Hindi month?)",o:["फाल्गुन","चैत्र","माघ","श्रावण"],a:0,e:"आख़िरी हिंदी महीना फाल्गुन है।"},
+      {q:"गिनती में 27 को हिंदी में क्या कहते हैं? (27 in Hindi words?)",o:["सत्ताईस","छब्बीस","अट्ठाईस","उनतीस"],a:0,e:"27 = सत्ताईस।"},
+      {q:"गिनती में 30 को हिंदी में क्या कहते हैं? (30 in Hindi?)",o:["बीस","पच्चीस","तीस","चालीस"],a:2,e:"30 = तीस।"},
+      {q:"'आ' की मात्रा किस शब्द में है? (Which word has the 'aa' maatra?)",o:["कम","काम","कलम","कब"],a:1,e:"काम में 'ा' (आ की मात्रा) है।"},
+      {q:"शुद्ध वर्तनी (correct spelling) कौन-सी है? (Which spelling is correct?)",o:["परिक्षा","परीक्षा","परिछा","परीछा"],a:1,e:"शुद्ध वर्तनी: परीक्षा।"},
+      {q:"'क' की बारहखड़ी में 'कि' के बाद कौन आता है? (After 'कि' comes?)",o:["का","की","कु","के"],a:1,e:"क, का, कि, की… 'कि' के बाद 'की' आता है।"},
+      {q:"'मीना आगरा में रहती है।' — इसमें संज्ञा (noun) कौन है? (Which are the nouns?)",o:["सिर्फ़ मीना","सिर्फ़ आगरा","मीना और आगरा","रहती"],a:2,e:"मीना और आगरा दोनों संज्ञा (nouns) हैं।"},
+      {q:"होली किसका त्योहार है? (Holi is a festival of?)",o:["रंगों","रोशनी","फसल","सर्दी"],a:0,e:"होली रंगों का त्योहार है।"},
+      {q:"दीपावली को और किस नाम से जानते हैं? (Diwali is also called?)",o:["रंगों का त्योहार","प्रकाश-पर्व","राखी","पोंगल"],a:1,e:"दीपावली को प्रकाश-पर्व कहते हैं।"},
+      {q:"रक्षाबंधन किसका त्योहार है? (Rakhi celebrates?)",o:["भाई-बहन के प्यार","फसल","रोशनी","रंगों"],a:0,e:"राखी भाई-बहन के प्यार का त्योहार है।"}
+    ],
+    dict:[
+      {w:"त्योहार",rom:"tyohaar",a:"festival",m:"festival"},
+      {w:"प्रकाश",rom:"prakaash",a:"light",m:"light"},
+      {w:"अंधकार",rom:"andhkaar",a:"dark",m:"darkness / dark"},
+      {w:"खुशी",rom:"khushi",a:"happy|happiness|joy",m:"happiness / joy"},
+      {w:"प्रेम",rom:"prem",a:"love",m:"love"},
+      {w:"एकता",rom:"ekta",a:"unity|one",m:"unity"},
+      {w:"उपहार",rom:"uphaar",a:"gift|present",m:"gift"},
+      {w:"मिठाई",rom:"mithaai",a:"sweet",m:"sweet / sweets"},
+      {w:"दिन",rom:"din",a:"day",m:"day"},
+      {w:"रात",rom:"raat",a:"night",m:"night"},
+      {w:"सप्ताह",rom:"saptaah",a:"week",m:"week"},
+      {w:"महीना",rom:"maheena",a:"month",m:"month"},
+      {w:"फूल",rom:"phool",a:"flower",m:"flower"},
+      {w:"पुस्तक",rom:"pustak",a:"book",m:"book"},
+      {w:"घर",rom:"ghar",a:"house|home",m:"house / home"},
+      {w:"पानी",rom:"paani",a:"water",m:"water"},
+      {w:"दूध",rom:"doodh",a:"milk",m:"milk"},
+      {w:"आम",rom:"aam",a:"mango",m:"mango"},
+      {w:"फल",rom:"phal",a:"fruit",m:"fruit"},
+      {w:"रंग",rom:"rang",a:"colour|color",m:"colour"},
+      {w:"पेड़",rom:"ped",a:"tree",m:"tree"},
+      {w:"बच्चा",rom:"bachcha",a:"child|kid|boy",m:"child"}
+    ],
   },
 
   telugu: {
@@ -1108,6 +1156,44 @@ const DATA = {
       {q:"మీ పేరు, ఒక రంగు పేరు తెలుగులో రాయండి (Write your name and a colour in Telugu).",keywords:["రంగు|colour|color|పేరు|name"],
         model:"ఉదా: ఎరుపు, నీలం, పచ్చ — మీ పేరుతో పాటు ఒక రంగు."}
     ],
+    exam:[
+      {q:"వారంలో ఎన్ని రోజులు ఉంటాయి? (How many days in a week?)",o:["5","6","7","8"],a:2,e:"వారంలో 7 రోజులు ఉంటాయి (7 days)."},
+      {q:"5 ని తెలుగులో ఏమంటారు? (What is 5 in Telugu?)",o:["నాలుగు (four)","ఐదు (five)","ఆరు (six)","మూడు (three)"],a:1,e:"5 = ఐదు (aidu)."},
+      {q:"10 ని తెలుగులో ఏమంటారు? (What is 10 in Telugu?)",o:["ఎనిమిది (eight)","తొమ్మిది (nine)","పది (ten)","పదకొండు (eleven)"],a:2,e:"10 = పది (padi)."},
+      {q:"నామవాచకం (noun) అంటే ఏమిటి? (What is a noun?)",o:["పని పేరు (an action)","వ్యక్తి/వస్తువు పేరు (name of a person or thing)","రంగు (a colour)","సంఖ్య (a number)"],a:1,e:"నామవాచకం = పేరు తెలిపే పదం — a noun names a person, place or thing."},
+      {q:"'కమల బడికి వెళ్ళింది.' — ఇందులో నామవాచకం ఏది? (Which are the nouns?)",o:["వెళ్ళింది","కమల, బడి","కి","ఇందులో"],a:1,e:"కమల, బడి రెండూ నామవాచకాలు (nouns)."},
+      {q:"Which one is a vowel (అచ్చు)?",o:["క","ఆ","మ","ట"],a:1,e:"ఆ ఒక అచ్చు (vowel)."},
+      {q:"క + ా = ? (gunintham)",o:["కి","కా","కు","కే"],a:1,e:"క + ా = కా."},
+      {q:"'ఆట' అంటే ఏమిటి? (What does ఆట mean?)",o:["Rain","Game","House","Book"],a:1,e:"ఆట = game."},
+      {q:"'వాన' అంటే ఏమిటి? (What does వాన mean?)",o:["Sun","Rain","Wind","Cloud"],a:1,e:"వాన = rain."},
+      {q:"'పుస్తకం' అంటే ఏమిటి? (What does పుస్తకం mean?)",o:["School","Book","Pen","Bag"],a:1,e:"పుస్తకం = book."},
+      {q:"'శ్రీ కృష్ణ దేవరాయలు' ఎవరు? (Who was Sri Krishna Devaraya?)",o:["ఒక రాజు (a king)","ఒక రైతు (a farmer)","ఒక డాక్టర్ (a doctor)","ఒక గురువు (a teacher)"],a:0,e:"శ్రీ కృష్ణ దేవరాయలు ఒక గొప్ప రాజు (a great king)."},
+      {q:"తెలుగు సంవత్సరంలో మొదటి నెల ఏది? (First Telugu month?)",o:["చైత్రం (Chaitram)","ఆషాఢం (Aashaadham)","మాఘం (Maagham)","కార్తీకం (Kaartikam)"],a:0,e:"తెలుగు మొదటి నెల చైత్రం (Chaitram)."}
+    ],
+    dict:[
+      {w:"ఆట",rom:"aata",a:"game|play",m:"game / play"},
+      {w:"వాన",rom:"vaana",a:"rain",m:"rain"},
+      {w:"పుస్తకం",rom:"pustakam",a:"book",m:"book"},
+      {w:"బడి",rom:"badi",a:"school",m:"school"},
+      {w:"ఇల్లు",rom:"illu",a:"house|home",m:"house"},
+      {w:"నీరు",rom:"neeru",a:"water",m:"water"},
+      {w:"పాలు",rom:"paalu",a:"milk",m:"milk"},
+      {w:"పండు",rom:"pandu",a:"fruit",m:"fruit"},
+      {w:"పువ్వు",rom:"puvvu",a:"flower",m:"flower"},
+      {w:"కమల",rom:"kamala",a:"lotus",m:"lotus"},
+      {w:"ఏనుగు",rom:"aenugu",a:"elephant",m:"elephant"},
+      {w:"రోజు",rom:"roju",a:"day",m:"day"},
+      {w:"వారం",rom:"vaaram",a:"week",m:"week"},
+      {w:"నెల",rom:"nela",a:"month",m:"month"},
+      {w:"అమ్మ",rom:"amma",a:"mother|mom|mum",m:"mother"},
+      {w:"నాన్న",rom:"naanna",a:"father|dad",m:"father"},
+      {w:"చెట్టు",rom:"chettu",a:"tree",m:"tree"},
+      {w:"ఆకాశం",rom:"aakaasham",a:"sky",m:"sky"},
+      {w:"ధనం",rom:"dhanam",a:"wealth|money",m:"wealth / money"},
+      {w:"మమత",rom:"mamata",a:"love|affection",m:"love / affection"},
+      {w:"నది",rom:"nadi",a:"river",m:"river"},
+      {w:"పాఠశాల",rom:"paathashaala",a:"school",m:"school"}
+    ],
   },
 };
 
@@ -1140,6 +1226,8 @@ const BADGES=[
   {id:"gamer",  icon:"🎮", name:"Game Master", desc:"Play a 5-minute learning game"},
   {id:"sharp",  icon:"🎯", name:"Sharp Shooter", desc:"Answer 25 different questions right"},
   {id:"scholar",icon:"🧠", name:"Scholar", desc:"Answer 50 different questions right"},
+  {id:"wordwiz",icon:"📖", name:"Word Wizard", desc:"Finish a Dictionary set"},
+  {id:"examready",icon:"🎓", name:"Exam Ready", desc:"Finish an Exam Special quiz"},
 ];
 function unlock(id){ if(!S.badges[id]){ S.badges[id]=true; save(); toastBadge(id); } }
 function refreshTop(){
@@ -1177,6 +1265,7 @@ function home(){
     <div class="hero"><span class="mascot">🦊</span><h1>Hi Khirad! 👋</h1><p>Pick a subject and let's have fun learning!</p></div>
     <div class="grid">
       ${subj('computers')}${subj('maths')}${subj('science')}${subj('hindi')}${subj('telugu')}
+      <button class="tile" style="background:linear-gradient(135deg,#ffeede,#fff);position:relative" onclick="examZone()"><span class="emoji">📝</span><h3>Exam Special</h3><small>📅 Monday test · Hindi &amp; Telugu prep</small><span class="ribbon" style="background:#ff6b6b">MON</span></button>
       <button class="tile" style="background:linear-gradient(135deg,#ffe0ef,#fff)" onclick="gameZone()"><span class="emoji">🎮</span><h3>Game Zone</h3><small>${(S.gameTokens||0)} game${(S.gameTokens||0)===1?'':'s'} ready · win by writing</small></button>
       <button class="tile" style="background:linear-gradient(135deg,#fff3d6,#fff)" onclick="badges()"><span class="emoji">🏅</span><h3>My Badges</h3><small>${Object.keys(S.badges).length} / ${BADGES.length} unlocked</small></button>
       <button class="tile" style="background:linear-gradient(135deg,#eef0ff,#fff)" onclick="apiSettings()"><span class="emoji">⚙️</span><h3>Settings</h3><small>For grown-ups · handwriting check</small></button>
@@ -1212,6 +1301,89 @@ function subject(k){
   </div>`);
 }
 function bonusBtn(k,mode,emoji,title,sub){ return `<button class="tile" style="background:linear-gradient(135deg,#fff,#f0ecff)" onclick="startQuiz('${k}','${mode}')"><span class="emoji">${emoji}</span><h3>${title}</h3><small>${sub}</small></button>`; }
+
+/* =======================================================================
+   EXAM SPECIAL  (Monday test prep — Hindi & Telugu)
+   ======================================================================= */
+function examZone(){
+  go(`<div class="screen">
+    <button class="backbtn" onclick="home()">← Home</button>
+    <h2 class="sec">📝 Exam Special</h2>
+    <div class="examnote">📅 <b>Monday's test</b> — II Language (Hindi &amp; Telugu).<br>
+      Practise the exact exam portion below. Every rule stays the same — ⭐ stars, hints, and unlock challenges all work here too. You've got this, Khirad! 💛</div>
+    <div class="modegrid">
+      <button class="tile hin" onclick="examSubject('hindi')"><span class="emoji">🪔</span><h3>हिंदी Exam Prep</h3><small>मात्राएँ · दिन · महीने · गिनती · संज्ञा · त्योहार</small></button>
+      <button class="tile tel" onclick="examSubject('telugu')"><span class="emoji">🌼</span><h3>తెలుగు Exam Prep</h3><small>నెలలు · వారాలు · అంకెలు · నామవాచకం · పాఠం</small></button>
+    </div>
+  </div>`);
+}
+function examSubject(k){
+  const d=DATA[k];
+  go(`<div class="screen">
+    <button class="backbtn" onclick="examZone()">← Exam Special</button>
+    <h2 class="sec">${d.emoji} ${d.name} · Exam Prep</h2>
+    <p class="subtitle">Everything that can come in Monday's test.</p>
+    <div class="modegrid">
+      <button class="tile" style="background:linear-gradient(135deg,#e7fbe9,#fff)" onclick="startDict('${k}')"><span class="emoji">📖</span><h3>Dictionary</h3><small>See a word → write its English meaning ✍️</small></button>
+      <button class="tile" style="background:linear-gradient(135deg,#fff3d6,#fff)" onclick="startQuiz('${k}','exam')"><span class="emoji">🎓</span><h3>Exam Quiz</h3><small>Questions that can come in the test</small></button>
+      <button class="tile" onclick="startWritten('${k}')"><span class="emoji">✍️</span><h3>Write the Answer</h3><small>Nouns, sentences &amp; meanings</small></button>
+      <button class="tile" onclick="startPaper('${k}')"><span class="emoji">📷</span><h3>Write on Paper</h3><small>Write by hand, snap a photo, get checked</small></button>
+      <button class="tile" onclick="startLearn('${k}')"><span class="emoji">🔤</span><h3>Alphabet &amp; Basics</h3><small>मात्राएँ/बारहखड़ी · అచ్చులు · గుణింతం</small></button>
+    </div>
+  </div>`);
+}
+
+/* =======================================================================
+   DICTIONARY  (word → write the English meaning; NO multiple choice)
+   ======================================================================= */
+let DICT=null;
+function startDict(k){ DICT={k, pool:shuffle(DATA[k].dict.slice()), i:0, checked:false}; renderDict(); }
+function renderDict(){
+  const d=DATA[DICT.k], item=DICT.pool[DICT.i], pct=Math.round(100*DICT.i/DICT.pool.length);
+  go(`<div class="screen">
+    <button class="backbtn" onclick="examSubject('${DICT.k}')">← Quit</button>
+    <div class="qcard">
+      <div class="qtop"><span>📖 ${d.name} · Dictionary</span><span>${DICT.i+1} / ${DICT.pool.length}</span></div>
+      <div class="qprog"><div style="width:${pct}%"></div></div>
+      <p style="text-align:center;color:var(--muted);margin:10px 0 2px">Write what this word means in English:</p>
+      <div class="dictword">${item.w}</div>
+      ${item.rom?`<div class="romline" style="text-align:center">🔊 say: ${item.rom}</div>`:''}
+      <input class="dinput" id="dans" type="text" placeholder="Type the English meaning…" autocomplete="off" autocorrect="off" spellcheck="false">
+      <div class="model" id="dmodel"></div>
+      <div id="dbtns" style="margin-top:14px">
+        <button class="btn btn-good btn-full" onclick="checkDict()">Check ✅</button>
+      </div>
+    </div></div>`);
+  setTimeout(()=>{ const t=document.getElementById('dans'); if(t){ t.focus(); t.onkeydown=(e)=>{ if(e.key==='Enter'){ DICT.checked?nextDict():checkDict(); } }; } },150);
+}
+function checkDict(){
+  if(DICT.checked) return;
+  const item=DICT.pool[DICT.i];
+  const ans=(document.getElementById('dans').value||'').toLowerCase().trim();
+  if(ans.length<2){ alert("Type the English meaning first 😊"); return; }
+  DICT.checked=true;
+  const ok=item.a.split('|').some(a=>ans.includes(a.toLowerCase().trim()));
+  const m=document.getElementById('dmodel'); m.style.display='block';
+  m.innerHTML=`<b>${item.w}</b>${item.rom?` <span style="color:var(--muted)">(${item.rom})</span>`:''} = <b style="color:var(--good)">${item.m}</b>`;
+  const gotStar = ok ? starOnce({q:'dict:'+DICT.k+':'+item.w}, 2) : false;
+  if(ok) miniBurst();
+  const last = DICT.i+1===DICT.pool.length;
+  document.getElementById('dbtns').innerHTML=
+    `<div class="feedback" style="color:${ok?'var(--good)':'#c98a00'}">${ok?(gotStar?'🌟 Correct! +2 ⭐':'✅ Correct! (already earned its star ⭐)'):'💛 Not quite — the meaning is above. Read it once more!'}</div>
+     <button class="btn btn-primary btn-full" onclick="nextDict()">${last?'Finish 📖':'Next word ➡️'}</button>`;
+}
+function nextDict(){
+  if(DICT.i+1>=DICT.pool.length){
+    burst(); unlock('wordwiz');
+    const d=DATA[DICT.k];
+    return go(`<div class="screen"><div class="result"><span class="mascot">📖</span><h1>Word Wizard!</h1>
+      <p>You wrote the meanings for all the ${d.name} words. Your vocabulary is getting stronger every day! 🌟</p>
+      <div style="margin-top:16px"><button class="btn btn-good" onclick="startDict('${DICT.k}')">Practise again 🔁</button>
+      <button class="btn btn-ghost" onclick="examSubject('${DICT.k}')">More exam prep 📝</button></div>
+      <div style="margin-top:10px"><button class="btn btn-primary btn-full" onclick="home()">⬅️ Home</button></div></div></div>`);
+  }
+  DICT.i++; DICT.checked=false; renderDict();
+}
 
 /* =======================================================================
    PICTURE LESSONS
@@ -1358,6 +1530,7 @@ function quizDone(){
   if(S.quizzesDone>=3) unlock('triple');
   if(pct===1){ S.perfectRuns=(S.perfectRuns||0)+1; save(); unlock('perfect'); }
   if(qz.mode==='roman' && sc>=4) unlock('roman');
+  if(qz.mode==='exam') unlock('examready');
   let msg,face;
   if(pct===1){msg="PERFECT score! You're a superstar! 🌟";face="🏆";}
   else if(pct>=0.6){msg="Great job! Keep it up! 💪";face="😃";}
