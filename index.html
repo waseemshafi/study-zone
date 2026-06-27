@@ -278,11 +278,14 @@ const HIN = {
 "वचन":"promise","वस्तु":"thing","वह":"he/she/that","वि":"'vi' prefix","शनिवार":"Saturday","शब्दों":"words","शाम":"evening",
 "संदेश":"message","संबंध":"relation","सच्चाई":"truth","सब":"all","सभी":"all","समय":"time","सर्दी":"winter","सही":"correct",
 "सातों":"all seven","सुबह":"morning","सोमवार":"Monday","स्वर":"vowel","हँसी":"laughter","हमारे":"our","हमें":"to us",
-"हिंदी":"Hindi","ही":"only"
+"हिंदी":"Hindi","ही":"only",
+"इस":"this","वाक्य":"sentence","छाँटकर":"pick out","अजय":"Ajay","क्रिकेट":"cricket","खेलता":"plays","बैठी":"is sitting",
+"कल":"tomorrow","जाएगा":"will go","मुझे":"me","मीठा":"sweet","पसंद":"like","मीना":"Meena","रहती":"lives","सीमा":"Seema",
+"फट":"tore","गई":"went","यह":"this","घर":"house","तुम":"you","बहुत":"very","अच्छी":"good","बोलते":"speak","हो":"are"
 };
 const HDIG={'०':'0','१':'1','२':'2','३':'3','४':'4','५':'5','६':'6','७':'7','८':'8','९':'9'};
 function gloss1(w){
-  w=w.replace(/^[\s'"“”‘’।॥,.?:()\-—]+/,'').replace(/[\s'"“”‘’।॥,.?:()\-—]+$/,'');
+  w=w.replace(/^[\s'"“”‘’।॥,.?:()…\-—]+/,'').replace(/[\s'"“”‘’।॥,.?:()…\-—]+$/,'');
   if(!w) return null;
   if(/^[०-९]+$/.test(w)) return {w, m:w.split('').map(c=>HDIG[c]).join('')};
   return {w, m: HIN[w]||null};
@@ -970,7 +973,15 @@ const DATA = {
       {q:"दीपावली को 'प्रकाश-पर्व' क्यों कहते हैं? (Why is Diwali called the festival of light?)",keywords:["प्रकाश|light|उजाला","अंधकार|दुख|बुराई|darkness|evil","ज्ञान|अच्छाई|प्रसन्नता|knowledge|good|joy"],
         model:"क्योंकि दीपावली जीवन से दुख और बुराइयों के अंधकार को मिटाकर ज्ञान, अच्छाई और प्रसन्नता का प्रकाश फैलाती है।"},
       {q:"सभी त्योहार हमें क्या संदेश देते हैं? (What message do all festivals give us?)",keywords:["मिलकर|together|एकता|unity","खुशी|उत्साह|प्रेम|love|happiness|joy"],
-        model:"सभी त्योहार हमें एक-दूसरे के साथ मिलकर खुशी, उत्साह और प्रेम से जीने का संदेश देते हैं।"}
+        model:"सभी त्योहार हमें एक-दूसरे के साथ मिलकर खुशी, उत्साह और प्रेम से जीने का संदेश देते हैं।"},
+      {q:"इस वाक्य में से संज्ञा (nouns) छाँटकर लिखो: 'मीना आगरा में रहती है।'",keywords:["मीना|meena","आगरा|agra"],
+        model:"संज्ञा (nouns): मीना (Meena), आगरा (Agra)।"},
+      {q:"इस वाक्य में से संज्ञा (nouns) लिखो: 'सीमा की पुस्तक फट गई।'",keywords:["सीमा|seema","पुस्तक|book|pustak"],
+        model:"संज्ञा (nouns): सीमा (Seema), पुस्तक (book)।"},
+      {q:"इस वाक्य में से सर्वनाम (pronoun) लिखो: 'यह सीमा का घर है।'",keywords:["यह|yah|this"],
+        model:"सर्वनाम (pronoun): यह (this)।"},
+      {q:"इस वाक्य में से सर्वनाम (pronoun) लिखो: 'तुम बहुत अच्छी हिंदी बोलते हो।'",keywords:["तुम|tum|you"],
+        model:"सर्वनाम (pronoun): तुम (you)।"}
     ],
     easy:[
       {q:"गिनती लिखो: १ से १० तक (Write counting 1 to 10).",keywords:["१|1|ek","१०|10|das"],
@@ -985,10 +996,14 @@ const DATA = {
         model:"४१–५० — इकतालीस, बयालीस, तैंतालीस, चौवालीस, पैंतालीस, छियालीस, सैंतालीस, अड़तालीस, उनचास, पचास।"},
       {q:"सप्ताह के सातों दिन लिखो (Write the 7 days of the week in Hindi).",keywords:["सोमवार|monday","रविवार|sunday"],
         model:"सोमवार, मंगलवार, बुधवार, गुरुवार, शुक्रवार, शनिवार, रविवार।"},
-      {q:"कोई तीन संज्ञा (noun) लिखो — किसी व्यक्ति, जगह या चीज़ का नाम।",keywords:["संज्ञा|noun|name|नाम"],
-        model:"कोई भी तीन नाम — जैसे: सीमा, आगरा, पुस्तक, फूल, बच्चा।"},
-      {q:"कोई तीन सर्वनाम (pronoun) लिखो।",keywords:["सर्वनाम|pronoun"],
-        model:"जैसे: मैं, तुम, वह, यह, हम, वे, कौन।"},
+      {q:"इस वाक्य में से संज्ञा (noun) के शब्द छाँटकर लिखो: 'अजय क्रिकेट खेलता है।'",keywords:["अजय|ajay","क्रिकेट|cricket"],
+        model:"संज्ञा (nouns): अजय (Ajay), क्रिकेट (cricket)।"},
+      {q:"इस वाक्य में से संज्ञा (noun) लिखो: 'फूल पर तितली बैठी है।'",keywords:["फूल|flower","तितली|butterfly"],
+        model:"संज्ञा (nouns): फूल (flower), तितली (butterfly)।"},
+      {q:"इस वाक्य में से सर्वनाम (pronoun) छाँटकर लिखो: 'वह कल आगरा जाएगा।'",keywords:["वह|vah|he"],
+        model:"सर्वनाम (pronoun): वह (he)।"},
+      {q:"इस वाक्य में से सर्वनाम (pronoun) लिखो: 'मुझे मीठा पसंद है।'",keywords:["मुझे|mujhe|me"],
+        model:"सर्वनाम (pronoun): मुझे (me)।"},
       {q:"पाँच स्वर (vowels) लिखो।",keywords:["स्वर|vowel|अ"],
         model:"अ, आ, इ, ई, उ, ऊ, ए, ऐ, ओ, औ — कोई पाँच।"},
       {q:"तीन फल या तीन रंगों के नाम हिंदी में लिखो।",keywords:["फल|रंग|fruit|colour|color"],
