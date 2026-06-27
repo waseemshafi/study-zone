@@ -891,6 +891,28 @@ const DATA = {
       {q:"सभी त्योहार हमें क्या संदेश देते हैं?",keywords:["मिलकर|together|एकता|unity","खुशी|उत्साह|प्रेम|love|happiness|joy"],
         model:"सभी त्योहार हमें एक-दूसरे के साथ मिलकर खुशी, उत्साह और प्रेम से जीने का संदेश देते हैं।"}
     ],
+    easy:[
+      {q:"गिनती लिखो: १ से १० तक (Write counting 1 to 10).",keywords:["१|1|ek","१०|10|das"],
+        model:"१ २ ३ ४ ५ ६ ७ ८ ९ १० — एक, दो, तीन, चार, पाँच, छह, सात, आठ, नौ, दस।"},
+      {q:"गिनती लिखो: ११ से २० तक (Write counting 11 to 20).",keywords:["११|11|ग्यारह","२०|20|बीस"],
+        model:"११–२० — ग्यारह, बारह, तेरह, चौदह, पंद्रह, सोलह, सत्रह, अठारह, उन्नीस, बीस।"},
+      {q:"गिनती लिखो: २१ से ३० तक (Write counting 21 to 30).",keywords:["२१|21|इक्कीस","३०|30|तीस"],
+        model:"२१–३० — इक्कीस, बाईस, तेईस, चौबीस, पच्चीस, छब्बीस, सत्ताईस, अट्ठाईस, उनतीस, तीस।"},
+      {q:"गिनती लिखो: ३१ से ४० तक (Write counting 31 to 40).",keywords:["३१|31|इकतीस","४०|40|चालीस"],
+        model:"३१–४० — इकतीस, बत्तीस, तैंतीस, चौंतीस, पैंतीस, छत्तीस, सैंतीस, अड़तीस, उनतालीस, चालीस।"},
+      {q:"गिनती लिखो: ४१ से ५० तक (Write counting 41 to 50).",keywords:["४१|41|इकतालीस","५०|50|पचास"],
+        model:"४१–५० — इकतालीस, बयालीस, तैंतालीस, चौवालीस, पैंतालीस, छियालीस, सैंतालीस, अड़तालीस, उनचास, पचास।"},
+      {q:"सप्ताह के सातों दिन लिखो (Write the 7 days of the week in Hindi).",keywords:["सोमवार|monday","रविवार|sunday"],
+        model:"सोमवार, मंगलवार, बुधवार, गुरुवार, शुक्रवार, शनिवार, रविवार।"},
+      {q:"कोई तीन संज्ञा (noun) लिखो — किसी व्यक्ति, जगह या चीज़ का नाम।",keywords:["संज्ञा|noun|name|नाम"],
+        model:"कोई भी तीन नाम — जैसे: सीमा, आगरा, पुस्तक, फूल, बच्चा।"},
+      {q:"कोई तीन सर्वनाम (pronoun) लिखो।",keywords:["सर्वनाम|pronoun"],
+        model:"जैसे: मैं, तुम, वह, यह, हम, वे, कौन।"},
+      {q:"पाँच स्वर (vowels) लिखो।",keywords:["स्वर|vowel|अ"],
+        model:"अ, आ, इ, ई, उ, ऊ, ए, ऐ, ओ, औ — कोई पाँच।"},
+      {q:"तीन फल या तीन रंगों के नाम हिंदी में लिखो।",keywords:["फल|रंग|fruit|colour|color"],
+        model:"फल: आम, केला, सेब। या रंग: लाल, नीला, हरा, पीला।"}
+    ],
   },
 
   telugu: {
@@ -969,6 +991,24 @@ const DATA = {
         model:"Telugu letters are of two kinds: అచ్చులు (vowels) and హల్లులు (consonants)."},
       {q:"What is a గుణింతం? (in your own words)",keywords:["vowel|sign|మాత్ర|matra|sound","consonant|letter|join|adds|combine"],
         model:"A గుణింతం is a vowel sign that joins to a consonant to give it a vowel sound, like క + ా = కా."}
+    ],
+    easy:[
+      {q:"1 నుండి 10 వరకు తెలుగు సంఖ్యలు రాయండి (Write numbers 1 to 10 in Telugu words).",keywords:["ఒకటి|1","పది|10"],
+        model:"ఒకటి, రెండు, మూడు, నాలుగు, ఐదు, ఆరు, ఏడు, ఎనిమిది, తొమ్మిది, పది."},
+      {q:"ఐదు అచ్చులు (vowels) రాయండి (Write 5 vowels).",keywords:["అచ్చు|vowel|అ"],
+        model:"అ, ఆ, ఇ, ఈ, ఉ — ఏవైనా ఐదు అచ్చులు."},
+      {q:"ఐదు హల్లులు (consonants) రాయండి (Write 5 consonants).",keywords:["హల్లు|consonant|క"],
+        model:"క, గ, చ, జ, ట — ఏవైనా ఐదు హల్లులు."},
+      {q:"వారంలో రోజుల పేర్లు రాయండి (Write the days of the week in Telugu).",keywords:["సోమవారం|monday","ఆదివారం|sunday"],
+        model:"సోమవారం, మంగళవారం, బుధవారం, గురువారం, శుక్రవారం, శనివారం, ఆదివారం."},
+      {q:"మీరు నేర్చుకున్న మూడు సరళ పదాలు రాయండి (Write 3 simple words you learnt).",keywords:["ఆట|కమల|వాన|tabala|తబల"],
+        model:"ఉదా: ఆట, కమల, వాన, తబల, సరళ — ఏవైనా మూడు."},
+      {q:"మూడు పండ్ల పేర్లు తెలుగులో రాయండి (Write 3 fruit names in Telugu).",keywords:["పండు|fruit|మామిడి|అరటి"],
+        model:"ఉదా: మామిడి, అరటి, ద్రాక్ష, సపోటా."},
+      {q:"'క' గుణింతం రాయండి: క కా కి కీ కు కూ (Write the ka-gunintham).",keywords:["కా|క"],
+        model:"క, కా, కి, కీ, కు, కూ, కె, కే, కొ, కో."},
+      {q:"మీ పేరు, ఒక రంగు పేరు తెలుగులో రాయండి (Write your name and a colour in Telugu).",keywords:["రంగు|colour|color|పేరు|name"],
+        model:"ఉదా: ఎరుపు, నీలం, పచ్చ — మీ పేరుతో పాటు ఒక రంగు."}
     ],
   },
 };
@@ -1500,17 +1540,40 @@ function nextPaper(){
    ======================================================================= */
 let GATE=null;
 function startGate(){
-  const pool=DATA[qz.k].written;
-  GATE={ item: pool[Math.floor(Math.random()*pool.length)], img:null, busy:false };
+  if(DATA[qz.k].easy && DATA[qz.k].easy.length) return gateChoice();
+  startGateRun('hard');
+}
+function gateChoice(){
+  const d=DATA[qz.k];
+  go(`<div class="screen">
+    <h2 class="sec">🛑 Unlock Challenge</h2>
+    <p class="subtitle">${d.name} is tricky — pick your way to unlock! Both clear the lock and earn a game. ✍️🎮</p>
+    <div class="qcard" style="text-align:center">
+      <p style="color:var(--muted);margin-top:0">Write your answer <b>by hand</b> either way.</p>
+      <button class="btn btn-good btn-full" style="margin-bottom:10px;padding:14px" onclick="startGateRun('easy')">🌱 3 Easy questions<small style="display:block;font-weight:normal;opacity:.85">counting · days · letters · nouns…</small></button>
+      <button class="btn btn-primary btn-full" style="padding:14px" onclick="startGateRun('hard')">🔥 1 Harder question</button>
+      <div style="margin-top:14px"><button class="btn btn-ghost" onclick="subject('${qz.k}')">Quit quiz</button></div>
+    </div></div>`);
+}
+function startGateRun(mode){
+  const d=DATA[qz.k];
+  const pool = (mode==='easy' && d.easy && d.easy.length) ? d.easy : d.written;
+  GATE={ mode, pool, need:(mode==='easy'?3:1), done:0, used:[], item: pool[Math.floor(Math.random()*pool.length)], img:null, busy:false };
   renderGate();
+}
+function gateNext(){
+  const avail=GATE.pool.filter(it=>!(GATE.used||[]).includes(qid(it)));
+  const src=avail.length?avail:GATE.pool;
+  GATE.item=src[Math.floor(Math.random()*src.length)]; GATE.img=null; renderGate();
 }
 function renderGate(note){
   const d=DATA[qz.k], item=GATE.item, hasKey=!!getKey();
+  const prog = (GATE.need>1) ? ('🌱 Easy '+((GATE.done||0)+1)+' of '+GATE.need) : (hasKey?'Need 80%':'By hand ✍️');
   go(`<div class="screen">
     <h2 class="sec">🛑 Unlock Challenge</h2>
-    <p class="subtitle">3 mistakes added up. Write this answer <b>by hand</b> to keep going — and earn a 5-minute game! 🎮</p>
+    <p class="subtitle">${GATE.need>1?'Pass '+GATE.need+' easy ones to unlock':'Write this answer by hand to keep going'} — and earn a game! 🎮</p>
     <div class="qcard">
-      <div class="qtop"><span>${d.emoji} ${d.name}</span><span>${hasKey?'Need 80%':'By hand ✍️'}</span></div>
+      <div class="qtop"><span>${d.emoji} ${d.name}</span><span>${prog}</span></div>
       <p class="qtext">${item.q}</p>
       ${note?'<div class="notebox" style="margin:0 0 10px">'+note+'</div>':''}
       <p style="color:var(--muted);margin:-2px 0 10px;font-size:15px">✍️ Write the answer <b>on paper</b>, then take a photo. (Typing is not allowed to unlock.)</p>
@@ -1520,7 +1583,7 @@ function renderGate(note){
       <div id="gcheckrow" style="display:none;margin-top:12px"><button class="btn btn-good btn-full" id="gcheckbtn" onclick="checkGate()">✅ ${hasKey?'Check (need 80%)':'I wrote it — check'}</button></div>
       <div id="gresult"></div>
       <div style="margin-top:12px;text-align:center">
-        <button class="btn btn-ghost" onclick="startGate()">↻ Different question</button>
+        <button class="btn btn-ghost" onclick="gateNext()">↻ Different question</button>
         <button class="btn btn-ghost" onclick="subject('${qz.k}')">Quit quiz</button></div>
     </div></div>`);
 }
@@ -1565,27 +1628,40 @@ function gateSelfCheck(note){
 function gateResult(pass, acc, ev){
   const read = ev && ev.readable && ev.transcription ? '<div class="er">📖 <b>I read:</b><div class="readbox">'+esc(ev.transcription)+'</div></div>' : '';
   const accTxt = (typeof acc==='number') ? (acc+'% — ') : '';
+  const gr=document.getElementById('gresult');
   if(pass){
-    S.wrongCount=0; save();
-    const freshGame=passHandwriting(GATE.item);
-    unlock('comeback'); starOnce(GATE.item, 2); burst();
-    document.getElementById('gresult').innerHTML=
-      `<div class="evalcard"><div style="text-align:center"><span style="font-size:46px">🎉</span>
-        <h3 style="margin:6px 0">${accTxt}you passed!</h3></div>
-        ${read}${ev?`<div class="er">🌟 ${esc(ev.praise)}</div>`:''}
-        <div class="er">🎮 ${freshGame?'You earned a <b>5-minute game</b>! It\'s in <b>Game Zone</b> on the home screen.':'(You already earned a game from this question.)'}</div>
-        <button class="btn btn-good btn-full" style="margin-top:10px" onclick="resumeAfterGate()">▶️ Keep going with the quiz</button>
-        ${freshGame?'<button class="btn btn-primary btn-full" style="margin-top:8px" onclick="gameZone()">🎮 Play my game now</button>':''}
-      </div>`;
+    const freshGame=passHandwriting(GATE.item); starOnce(GATE.item,2);
+    GATE.used=GATE.used||[]; GATE.used.push(qid(GATE.item)); GATE.done=(GATE.done||0)+1;
+    const gameLine = freshGame ? '🎮 You earned a <b>5-minute game</b> (in <b>Game Zone</b>).' : '🎮 (You already earned a game from this one.)';
+    if(GATE.done>=GATE.need){
+      S.wrongCount=0; save(); unlock('comeback'); burst();
+      gr.innerHTML=
+        `<div class="evalcard"><div style="text-align:center"><span style="font-size:46px">🎉</span>
+          <h3 style="margin:6px 0">${accTxt}Unlocked!</h3></div>
+          ${read}${ev?`<div class="er">🌟 ${esc(ev.praise)}</div>`:''}
+          <div class="er">${gameLine}</div>
+          <button class="btn btn-good btn-full" style="margin-top:10px" onclick="resumeAfterGate()">▶️ Keep going with the quiz</button>
+          <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="gameZone()">🎮 Play my game now</button>
+        </div>`;
+    } else {
+      miniBurst();
+      gr.innerHTML=
+        `<div class="evalcard"><div style="text-align:center"><span style="font-size:42px">🌟</span>
+          <h3 style="margin:6px 0">${accTxt}Nice — ${GATE.done} of ${GATE.need} done!</h3></div>
+          ${read}<div class="er">${gameLine}</div>
+          <div class="er">Just ${GATE.need-GATE.done} more easy one${(GATE.need-GATE.done)===1?'':'s'} to unlock. 💪</div>
+          <button class="btn btn-good btn-full" style="margin-top:10px" onclick="gateNext()">➡️ Next easy question</button>
+        </div>`;
+    }
   } else {
-    document.getElementById('gresult').innerHTML=
+    gr.innerHTML=
       `<div class="evalcard"><div style="text-align:center"><span style="font-size:42px">💛</span>
-        <h3 style="margin:6px 0">${accTxt}so close! You need 80%.</h3></div>
+        <h3 style="margin:6px 0">${accTxt}so close! ${GATE.mode==='easy'?'Try once more':'You need 80%'}.</h3></div>
         ${read}${ev?`<div class="er">💡 ${esc(ev.improve)}</div>`:''}
         <div class="er">✅ <b>Correct answer:</b> ${esc(GATE.item.model)}</div>
         <div class="modegrid" style="margin-top:10px">
           <button class="btn btn-good" onclick="renderGate()">↻ Try again</button>
-          <button class="btn btn-ghost" onclick="startGate()">Different question</button>
+          <button class="btn btn-ghost" onclick="gateNext()">Different question</button>
         </div></div>`;
   }
 }

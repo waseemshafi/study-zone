@@ -1,5 +1,5 @@
 /* Khirad's Study Zone - offline service worker */
-const CACHE = 'khirad-study-zone-v6';
+const CACHE = 'khirad-study-zone-v7';
 const ASSETS = [
   './',
   './index.html',
