@@ -212,6 +212,10 @@
   .pbox{background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:22px;max-width:340px;width:100%;text-align:center}
   .pbox h3{margin:6px 0}
   .pbox .modegrid{margin-top:12px}
+
+  /* Hindi word-by-word meanings */
+  .wmline{background:#f4f7ff;border:1px dashed #b9c6f0;border-radius:12px;padding:8px 10px;margin:8px 0 0;font-size:14px;color:#3a4a7a;line-height:1.65}
+  .omn{opacity:.72;font-weight:normal}
 </style>
 </head>
 <body>
@@ -242,6 +246,84 @@ function lgrid(arr){ return '<div class="lgrid">'+arr.map(L=>
 function baraTable(rows){ return '<div style="overflow-x:auto"><table class="bara"><tbody>'+rows.map(r=>
   '<tr><td class="base">'+r.base+'<span class="rom">'+r.brom+'</span></td>'+
   r.cells.map(c=>'<td>'+c[0]+'<span class="rom">'+c[1]+'</span></td>').join('')+'</tr>').join('')+'</tbody></table></div>'; }
+
+/* =======================================================================
+   HINDI WORD-BY-WORD MEANINGS  (every Hindi word → English, shown under Qs)
+   ======================================================================= */
+const HIN = {
+"है":"is","का":"of","के":"of","हैं":"are","से":"from","शब्द":"word","गिनती":"counting","त्योहार":"festival",
+"संज्ञा":"noun","किस":"which","क्या":"what","दिन":"day","लिखो":"write","कौन-सा":"which one","खुशी":"happiness",
+"पर":"on","तक":"up to","नाम":"name","में":"in","असम":"Assam","की":"of","केरल":"Kerala","तीन":"three",
+"पंजाब":"Punjab","प्रकाश":"light","विलोम":"opposite","सर्वनाम":"pronoun","कहते":"call","किसी":"any","जाता":"is",
+"मनाया":"celebrated","या":"or","राज्य":"state","रात":"night","राखी":"Rakhi","सप्ताह":"week","सुख":"comfort",
+"अच्छाई":"goodness","ईद":"Eid","उदासी":"sadness","उपसर्ग":"prefix","ओणम":"Onam","और":"and","कब":"when",
+"करते":"do","कारक":"case-marker","कितने":"how many","किसे":"what","को":"to","कोई":"any","क्रिसमस":"Christmas",
+"गोवा":"Goa","जातिवाचक":"common (noun)","तमिलनाडु":"Tamil Nadu","तितली":"butterfly","दशहरा":"Dussehra",
+"दीपावली":"Diwali","दुख":"sorrow","ने":"(by)","पर्यायवाची":"synonym","पोंगल":"Pongal","प्रकार":"kind","प्रेम":"love",
+"बहुवचन":"plural","भाई":"brother","भाववाचक":"abstract (noun)","मिठास":"sweetness","रंग":"colour","रंगों":"colours",
+"रक्षाबंधन":"Rakshabandhan","वाले":"which (come)","विदेश":"foreign land","व्यक्ति":"person","व्यक्तिवाचक":"proper (noun)",
+"श":"'sha' letter","सिर्फ़":"only","स्थान":"place","होते":"are","होली":"Holi","अँधेरा":"darkness","अक्टूबर":"October",
+"अगस्त":"August","अपनी":"one's own","आगरा":"Agra","आधारित":"based","आने":"coming","आम":"mango","आराम":"rest",
+"इनमें":"among these","उजाला":"brightness","कटाई":"harvest","कहाँ":"where","काम":"work","काश":"'kaash'","क्यों":"why",
+"क्रिया":"verb","खुशियों":"of joys","गर्मी":"summer","गुरुपर्व":"Gurupurab","चिह्न":"sign","चीज़":"thing","चैन":"peace",
+"जगह":"place","जगहों":"of places","जनवरी":"January","जाती":"is","जुड़ा":"linked","तम":"darkness","तितलाँ":"(wrong form)",
+"तितलियाँ":"butterflies","तितले":"(wrong form)","दिसंबर":"December","दीवाली":"Diwali","दूसरे":"other","दे":"give",
+"देता":"gives","देते":"give","देश":"country","दोनों":"both","दोपहर":"afternoon","धर्म":"religion","नहीं":"no",
+"प":"'pa' letter","परीक्षा":"exam","पहला":"first","पाँच":"five","पुस्तक":"book","पेड़":"tree","प्यार":"love",
+"प्र":"'pra' prefix","प्रकाश-पर्व":"festival of light","प्रतीक":"symbol","प्रसन्नता":"happiness","फल":"fruit","फसल":"crop",
+"फसलों":"crops","फूल":"flower","बच्चा":"child","बच्ची":"girl-child","बच्चु":"(wrong form)","बच्चे":"children",
+"बच्चों":"of children","बताते":"tell","बताने":"to tell","बहन":"sister","बात":"matter","बातें":"things","बिखेरने":"to spread",
+"बुराई":"evil","बैसाखी":"Baisakhi","भरो":"fill","भलाई":"goodness","भाई-बहन":"brother & sister","भाव":"feeling",
+"भेद":"kinds","मंगलवार":"Tuesday","मनाई":"celebrated","मुसलमान":"Muslim","रविवार":"Sunday","लोहड़ी":"Lohri",
+"वचन":"promise","वस्तु":"thing","वह":"he/she/that","वि":"'vi' prefix","शनिवार":"Saturday","शब्दों":"words","शाम":"evening",
+"संदेश":"message","संबंध":"relation","सच्चाई":"truth","सब":"all","सभी":"all","समय":"time","सर्दी":"winter","सही":"correct",
+"सातों":"all seven","सुबह":"morning","सोमवार":"Monday","स्वर":"vowel","हँसी":"laughter","हमारे":"our","हमें":"to us",
+"हिंदी":"Hindi","ही":"only"
+};
+const HDIG={'०':'0','१':'1','२':'2','३':'3','४':'4','५':'5','६':'6','७':'7','८':'8','९':'9'};
+function gloss1(w){
+  w=w.replace(/^[\s'"“”‘’।॥,.?:()\-—]+/,'').replace(/[\s'"“”‘’।॥,.?:()\-—]+$/,'');
+  if(!w) return null;
+  if(/^[०-९]+$/.test(w)) return {w, m:w.split('').map(c=>HDIG[c]).join('')};
+  return {w, m: HIN[w]||null};
+}
+function glossHin(text){
+  const out=[], seen=new Set();
+  (text||'').split(/\s+/).forEach(tk=>{ if(!/[ऀ-ॿ]/.test(tk)) return;
+    const g=gloss1(tk); if(g && g.m && !seen.has(g.w)){ seen.add(g.w); out.push(g.w+' ('+g.m+')'); } });
+  return out.join(' · ');
+}
+function glossMean(text){
+  if(/[A-Za-z]/.test(text||'')) return '';
+  const out=[], seen=new Set();
+  (text||'').split(/\s+/).forEach(tk=>{ if(!/[ऀ-ॿ]/.test(tk)) return;
+    const g=gloss1(tk); if(g && g.m && !seen.has(g.w)){ seen.add(g.w); out.push(g.m); } });
+  return out.join(' · ');
+}
+function wmLine(text){ const g=glossHin(text); return g?'<div class="wmline">📖 '+g+'</div>':''; }
+function optGloss(t){ const m=glossMean(t); return m?' <small class="omn">('+m+')</small>':''; }
+
+/* hint system: translation is hidden until the 💡 Hint button; 3 hints then locked */
+let CURQTEXT='', CUROPTS=null, HINTSUBJ='', HINTBACK=null, SHOWEN=false;
+function splitQ(q){ const m=(q||'').match(/^([\s\S]*?)\s*(\([^()]*[A-Za-z][^()]*\))\s*[।.]?\s*$/); return m?{hi:m[1].trim(), en:m[2]}:{hi:q, en:''}; }
+function qHidden(q){ if(SHOWEN) return q; return glossHin(q)?splitQ(q).hi:q; }
+function hintCtl(text){ if(!glossHin(text)) return ''; return hintArea(); }
+function hintArea(){
+  const used=S.hintsUsed||0, left=3-used;
+  if(used>=3) return '<div id="hintzone"><button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="startHintGate()">🔒 Hints locked — write by hand to unlock ✍️</button></div>';
+  return '<div id="hintzone"><button class="btn btn-ghost btn-full" id="hintbtn" style="margin-top:8px" onclick="revealHint()">💡 Show English meaning ('+left+' hint'+(left===1?'':'s')+' left)</button><div id="wmreveal"></div></div>';
+}
+function revealHint(){
+  if((S.hintsUsed||0)>=3) return startHintGate();
+  S.hintsUsed=(S.hintsUsed||0)+1; save();
+  const wm=document.getElementById('wmreveal'); if(wm){ const en=splitQ(CURQTEXT).en; wm.innerHTML=(en?'<div class="wmline" style="margin-bottom:6px;color:#1b6b4a"><b>📝 '+en.replace(/^\(/,'').replace(/\)$/,'')+'</b></div>':'')+wmLine(CURQTEXT); }
+  if(CUROPTS){ CUROPTS.forEach((t,idx)=>{ const b=document.getElementById('opt'+idx); if(b){ const sp=b.querySelector('span:last-child'); const g=optGloss(t); if(sp && g) sp.insertAdjacentHTML('beforeend', g); } }); }
+  const btn=document.getElementById('hintbtn'); if(btn) btn.style.display='none';
+  const z=document.getElementById('hintzone');
+  if(z && (S.hintsUsed||0)>=3) z.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#c98a00;font-weight:bold;margin-top:6px;font-size:14px">That was your last hint — the next one needs a handwriting unlock. ✍️</div>');
+}
+function startHintGate(){ startGate('hint'); }
+function resumeHint(){ if(typeof HINTBACK==='function') HINTBACK(); else home(); }
 
 const DIAGRAMS = {
   hindiSwar(){
@@ -1026,7 +1108,7 @@ const SAVE_KEY="khiradStudyZone_v2";
 let S = load();
 function load(){ try{ const s=JSON.parse(localStorage.getItem(SAVE_KEY)); return s?Object.assign(fresh(),s):fresh(); }catch(e){ return fresh(); } }
 function fresh(){ return {stars:0, badges:{}, seenCards:{}, bestQuiz:{}, quizzesDone:0, perfectRuns:0, written:0,
-  starredQ:{}, handDone:{}, wrongCount:0, gameTokens:0, gamesPlayed:0, bestGame:0, handPassed:0}; }
+  starredQ:{}, handDone:{}, wrongCount:0, gameTokens:0, gamesPlayed:0, bestGame:0, handPassed:0, hintsUsed:0}; }
 function save(){ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); refreshTop(); }
 
 const BADGES=[
@@ -1212,13 +1294,15 @@ function startQuiz(k,mode){
 }
 function renderQ(){
   const d=DATA[qz.k], item=qz.pool[qz.i], pct=Math.round(100*qz.i/qz.pool.length), keys=['A','B','C','D'];
+  CURQTEXT=item.q; CUROPTS=item.o; HINTSUBJ=qz.k; HINTBACK=renderQ; SHOWEN=false;
   go(`<div class="screen">
     <button class="backbtn" onclick="subject('${qz.k}')">← Quit</button>
     <div class="qcard">
       <div class="qtop"><span>${d.emoji} ${d.name}</span><span>⭐ Score: ${qz.score}</span></div>
       <div class="qprog"><div style="width:${pct}%"></div></div>
       <div class="qtop"><span>Question ${qz.i+1} of ${qz.pool.length}</span></div>
-      <p class="qtext">${item.q}</p>
+      <p class="qtext">${qHidden(item.q)}</p>
+      ${hintCtl(item.q)}
       <div class="opts" id="opts">${item.o.map((t,idx)=>`<button class="opt" id="opt${idx}" onclick="answer(${idx})"><span class="key">${keys[idx]}</span><span>${t}</span></button>`).join('')}</div>
       <div class="feedback" id="fb"></div>
       <div class="explain" id="ex">${item.e||''}</div>
@@ -1279,12 +1363,14 @@ let WR=null;
 function startWritten(k){ WR={k,pool:DATA[k].written,i:0,checked:false,scored:0}; renderWritten(); }
 function renderWritten(){
   const d=DATA[WR.k], item=WR.pool[WR.i], pct=Math.round(100*WR.i/WR.pool.length);
+  CURQTEXT=item.q; CUROPTS=null; HINTSUBJ=WR.k; HINTBACK=renderWritten; SHOWEN=false;
   go(`<div class="screen">
     <button class="backbtn" onclick="subject('${WR.k}')">← Quit</button>
     <div class="qcard">
       <div class="qtop"><span>✍️ ${d.name} · Write the Answer</span><span>${WR.i+1} / ${WR.pool.length}</span></div>
       <div class="qprog"><div style="width:${pct}%"></div></div>
-      <p class="qtext">${item.q}</p>
+      <p class="qtext">${qHidden(item.q)}</p>
+      ${hintCtl(item.q)}
       <textarea class="wbox" id="wans" placeholder="Type your answer here in your own words…"></textarea>
       <div class="keyrow" id="keyrow"></div>
       <div class="model" id="model"></div>
@@ -1373,12 +1459,14 @@ let PR = null;
 function startPaper(k){ PR = {k, pool: DATA[k].written, i:0, img:null, busy:false}; renderPaper(); }
 function renderPaper(){
   const d=DATA[PR.k], item=PR.pool[PR.i], pct=Math.round(100*PR.i/PR.pool.length);
+  CURQTEXT=item.q; CUROPTS=null; HINTSUBJ=PR.k; HINTBACK=renderPaper; SHOWEN=false;
   go(`<div class="screen">
     <button class="backbtn" onclick="subject('${PR.k}')">← Quit</button>
     <div class="qcard">
       <div class="qtop"><span>✏️ ${d.name} · Write on Paper</span><span>${PR.i+1} / ${PR.pool.length}</span></div>
       <div class="qprog"><div style="width:${pct}%"></div></div>
-      <p class="qtext">${item.q}</p>
+      <p class="qtext">${qHidden(item.q)}</p>
+      ${hintCtl(item.q)}
       <p style="color:var(--muted);margin:-6px 0 10px;font-size:15px">✍️ Write your answer on paper, then take a photo of it.</p>
       <input type="file" accept="image/*" capture="environment" id="pfile" style="display:none" onchange="onPaperFile(event)">
       <button class="btn btn-primary btn-full" onclick="document.getElementById('pfile').click()">📷 Take / upload a photo</button>
@@ -1539,26 +1627,28 @@ function nextPaper(){
    UNLOCK CHALLENGE  (after 3 wrong answers — pass a handwriting Q at 80%)
    ======================================================================= */
 let GATE=null;
-function startGate(){
-  if(DATA[qz.k].easy && DATA[qz.k].easy.length) return gateChoice();
+function startGate(reason){
+  const r=reason||'progress', subj=(r==='hint')?HINTSUBJ:qz.k;
+  GATE={ reason:r, subj };
+  if(DATA[subj] && DATA[subj].easy && DATA[subj].easy.length) return gateChoice();
   startGateRun('hard');
 }
 function gateChoice(){
-  const d=DATA[qz.k];
+  const d=DATA[GATE.subj], why = GATE.reason==='hint' ? 'to get 3 more hints' : 'to unlock';
   go(`<div class="screen">
     <h2 class="sec">🛑 Unlock Challenge</h2>
-    <p class="subtitle">${d.name} is tricky — pick your way to unlock! Both clear the lock and earn a game. ✍️🎮</p>
+    <p class="subtitle">${GATE.reason==='hint'?'Out of hints!':d.name+' is tricky —'} pick your way ${why}! Both earn a game. ✍️🎮</p>
     <div class="qcard" style="text-align:center">
       <p style="color:var(--muted);margin-top:0">Write your answer <b>by hand</b> either way.</p>
       <button class="btn btn-good btn-full" style="margin-bottom:10px;padding:14px" onclick="startGateRun('easy')">🌱 3 Easy questions<small style="display:block;font-weight:normal;opacity:.85">counting · days · letters · nouns…</small></button>
       <button class="btn btn-primary btn-full" style="padding:14px" onclick="startGateRun('hard')">🔥 1 Harder question</button>
-      <div style="margin-top:14px"><button class="btn btn-ghost" onclick="subject('${qz.k}')">Quit quiz</button></div>
+      <div style="margin-top:14px"><button class="btn btn-ghost" onclick="subject('${GATE.subj}')">Quit</button></div>
     </div></div>`);
 }
 function startGateRun(mode){
-  const d=DATA[qz.k];
+  const subj=GATE.subj, reason=GATE.reason, d=DATA[subj];
   const pool = (mode==='easy' && d.easy && d.easy.length) ? d.easy : d.written;
-  GATE={ mode, pool, need:(mode==='easy'?3:1), done:0, used:[], item: pool[Math.floor(Math.random()*pool.length)], img:null, busy:false };
+  GATE={ reason, subj, mode, pool, need:(mode==='easy'?3:1), done:0, used:[], item: pool[Math.floor(Math.random()*pool.length)], img:null, busy:false };
   renderGate();
 }
 function gateNext(){
@@ -1567,14 +1657,15 @@ function gateNext(){
   GATE.item=src[Math.floor(Math.random()*src.length)]; GATE.img=null; renderGate();
 }
 function renderGate(note){
-  const d=DATA[qz.k], item=GATE.item, hasKey=!!getKey();
+  const d=DATA[GATE.subj], item=GATE.item, hasKey=!!getKey(); SHOWEN=true;
   const prog = (GATE.need>1) ? ('🌱 Easy '+((GATE.done||0)+1)+' of '+GATE.need) : (hasKey?'Need 80%':'By hand ✍️');
   go(`<div class="screen">
     <h2 class="sec">🛑 Unlock Challenge</h2>
     <p class="subtitle">${GATE.need>1?'Pass '+GATE.need+' easy ones to unlock':'Write this answer by hand to keep going'} — and earn a game! 🎮</p>
     <div class="qcard">
       <div class="qtop"><span>${d.emoji} ${d.name}</span><span>${prog}</span></div>
-      <p class="qtext">${item.q}</p>
+      <p class="qtext">${qHidden(item.q)}</p>
+      ${wmLine(item.q)}
       ${note?'<div class="notebox" style="margin:0 0 10px">'+note+'</div>':''}
       <p style="color:var(--muted);margin:-2px 0 10px;font-size:15px">✍️ Write the answer <b>on paper</b>, then take a photo. (Typing is not allowed to unlock.)</p>
       <input type="file" accept="image/*" capture="environment" id="gfile" style="display:none" onchange="onGateFile(event)">
@@ -1584,7 +1675,7 @@ function renderGate(note){
       <div id="gresult"></div>
       <div style="margin-top:12px;text-align:center">
         <button class="btn btn-ghost" onclick="gateNext()">↻ Different question</button>
-        <button class="btn btn-ghost" onclick="subject('${qz.k}')">Quit quiz</button></div>
+        <button class="btn btn-ghost" onclick="subject('${GATE.subj}')">Quit</button></div>
     </div></div>`);
 }
 async function onGateFile(ev){
@@ -1602,7 +1693,7 @@ async function checkGate(){
     GATE.busy=true; const b=document.getElementById('gcheckbtn'); if(b){ b.disabled=true; b.textContent="Checking…"; }
     document.getElementById('gresult').innerHTML='<div class="evalcard"><div class="spin"></div><div style="text-align:center;color:#6b5a00">🦊 Ms. Foxy is reading your handwriting… ✨</div></div>';
     try{
-      const ev=await aiCheck(item, GATE.img, DATA[qz.k].name);
+      const ev=await aiCheck(item, GATE.img, DATA[GATE.subj].name);
       const acc=(typeof ev.accuracy==='number')?ev.accuracy:(ev.verdict==='great'?100:ev.verdict==='good'?70:30);
       gateResult(acc>=80, acc, ev);
     }catch(e){
@@ -1621,7 +1712,7 @@ function gateSelfCheck(note){
       <div style="text-align:center;margin-top:8px;color:#6b5a00">A grown-up: compare it with what she wrote <b>on paper</b>. Did she get it right (about 80% or more)?</div>
       <div class="modegrid" style="margin-top:10px">
         <button class="btn btn-good" onclick="askParent(()=>gateResult(true,null,null))">✅ Yes — passed</button>
-        <button class="btn btn-ghost" onclick="startGate()">💛 Not yet — try another</button>
+        <button class="btn btn-ghost" onclick="gateNext()">💛 Not yet — try another</button>
       </div>
     </div>`;
 }
@@ -1634,13 +1725,17 @@ function gateResult(pass, acc, ev){
     GATE.used=GATE.used||[]; GATE.used.push(qid(GATE.item)); GATE.done=(GATE.done||0)+1;
     const gameLine = freshGame ? '🎮 You earned a <b>5-minute game</b> (in <b>Game Zone</b>).' : '🎮 (You already earned a game from this one.)';
     if(GATE.done>=GATE.need){
-      S.wrongCount=0; save(); unlock('comeback'); burst();
+      S.wrongCount=0; S.hintsUsed=0; save(); unlock('comeback'); burst();
+      const isHint = GATE.reason==='hint';
+      const backBtn = isHint
+        ? '<button class="btn btn-good btn-full" style="margin-top:10px" onclick="resumeHint()">▶️ Back to my question (3 hints ready)</button>'
+        : '<button class="btn btn-good btn-full" style="margin-top:10px" onclick="resumeAfterGate()">▶️ Keep going with the quiz</button>';
       gr.innerHTML=
         `<div class="evalcard"><div style="text-align:center"><span style="font-size:46px">🎉</span>
-          <h3 style="margin:6px 0">${accTxt}Unlocked!</h3></div>
+          <h3 style="margin:6px 0">${accTxt}${isHint?'Hints unlocked!':'Unlocked!'}</h3></div>
           ${read}${ev?`<div class="er">🌟 ${esc(ev.praise)}</div>`:''}
           <div class="er">${gameLine}</div>
-          <button class="btn btn-good btn-full" style="margin-top:10px" onclick="resumeAfterGate()">▶️ Keep going with the quiz</button>
+          ${backBtn}
           <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="gameZone()">🎮 Play my game now</button>
         </div>`;
     } else {
