@@ -206,6 +206,12 @@
   .gpill{background:#fff;border-radius:14px;padding:8px 14px;font-weight:bold;box-shadow:var(--shadow);font-size:16px}
   .gbar{height:14px;background:rgba(255,255,255,.5);border-radius:99px;overflow:hidden;margin-bottom:12px;border:2px solid rgba(255,255,255,.6)}
   .gbar>div{height:100%;width:100%;background:linear-gradient(90deg,#27d07f,#ffcf3f,#ff5b7a);transition:width 1s linear}
+
+  /* parent-password approval modal */
+  .pmodal{position:fixed;inset:0;z-index:80;background:rgba(40,20,90,.45);display:flex;align-items:center;justify-content:center;padding:20px}
+  .pbox{background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:22px;max-width:340px;width:100%;text-align:center}
+  .pbox h3{margin:6px 0}
+  .pbox .modegrid{margin-top:12px}
 </style>
 </head>
 <body>
@@ -1456,10 +1462,10 @@ function paperGuided(note){
     `<div class="evalcard">
       <div class="er">✅ <b>A good answer:</b><br>${item.model}</div>
       ${keys.length?`<div class="keyrow">`+keys.map(k=>`<span class="chipk">• ${esc(k)}</span>`).join('')+`</div>`:''}
-      <div style="text-align:center;margin-top:10px;color:#6b5a00">Compare it with what you wrote. How did you do?</div>
+      <div style="text-align:center;margin-top:10px;color:#6b5a00">A grown-up: compare it with what she wrote. How did she do?</div>
       <div class="modegrid" style="margin-top:10px">
-        <button class="btn btn-good" onclick="paperSelf(3)">🌟 I got it right!</button>
-        <button class="btn btn-ghost" onclick="paperSelf(1)">💛 I'll try again</button>
+        <button class="btn btn-good" onclick="askParent(()=>paperSelf(3))">🌟 Got it right</button>
+        <button class="btn btn-ghost" onclick="paperSelf(1)">💛 Try again</button>
       </div>
     </div>`;
 }
@@ -1495,33 +1501,28 @@ function nextPaper(){
 let GATE=null;
 function startGate(){
   const pool=DATA[qz.k].written;
-  GATE={ item: pool[Math.floor(Math.random()*pool.length)], img:null, busy:false, typed:false };
+  GATE={ item: pool[Math.floor(Math.random()*pool.length)], img:null, busy:false };
   renderGate();
 }
 function renderGate(note){
-  const ai = !!getKey() && !GATE.typed, d=DATA[qz.k], item=GATE.item;
+  const d=DATA[qz.k], item=GATE.item, hasKey=!!getKey();
   go(`<div class="screen">
     <h2 class="sec">🛑 Unlock Challenge</h2>
-    <p class="subtitle">3 mistakes added up. Pass this at <b>80%</b> to keep going — and earn a 5-minute game! 🎮</p>
+    <p class="subtitle">3 mistakes added up. Write this answer <b>by hand</b> to keep going — and earn a 5-minute game! 🎮</p>
     <div class="qcard">
-      <div class="qtop"><span>${d.emoji} ${d.name}</span><span>Need 80%</span></div>
+      <div class="qtop"><span>${d.emoji} ${d.name}</span><span>${hasKey?'Need 80%':'By hand ✍️'}</span></div>
       <p class="qtext">${item.q}</p>
       ${note?'<div class="notebox" style="margin:0 0 10px">'+note+'</div>':''}
-      ${ai
-        ? `<p style="color:var(--muted);margin:-2px 0 10px;font-size:15px">✍️ Write the answer on paper, then take a photo.</p>
-           <input type="file" accept="image/*" capture="environment" id="gfile" style="display:none" onchange="onGateFile(event)">
-           <button class="btn btn-primary btn-full" onclick="document.getElementById('gfile').click()">📷 Take / upload a photo</button>
-           <div id="gpreview"></div>
-           <div id="gcheckrow" style="display:none;margin-top:12px"><button class="btn btn-good btn-full" id="gcheckbtn" onclick="checkGate()">✅ Check (need 80%)</button></div>`
-        : `<p style="color:var(--muted);margin:-2px 0 10px;font-size:15px">✍️ Write your answer below in your own words — include the key ideas.</p>
-           <textarea class="wbox" id="gans" placeholder="Type your answer…"></textarea>
-           <div style="margin-top:12px"><button class="btn btn-good btn-full" onclick="checkGate()">✅ Check (need 80%)</button></div>`}
+      <p style="color:var(--muted);margin:-2px 0 10px;font-size:15px">✍️ Write the answer <b>on paper</b>, then take a photo. (Typing is not allowed to unlock.)</p>
+      <input type="file" accept="image/*" capture="environment" id="gfile" style="display:none" onchange="onGateFile(event)">
+      <button class="btn btn-primary btn-full" onclick="document.getElementById('gfile').click()">📷 Take / upload a photo</button>
+      <div id="gpreview"></div>
+      <div id="gcheckrow" style="display:none;margin-top:12px"><button class="btn btn-good btn-full" id="gcheckbtn" onclick="checkGate()">✅ ${hasKey?'Check (need 80%)':'I wrote it — check'}</button></div>
       <div id="gresult"></div>
       <div style="margin-top:12px;text-align:center">
         <button class="btn btn-ghost" onclick="startGate()">↻ Different question</button>
         <button class="btn btn-ghost" onclick="subject('${qz.k}')">Quit quiz</button></div>
     </div></div>`);
-  if(!ai) setTimeout(()=>{ const t=document.getElementById('gans'); if(t) t.focus(); },150);
 }
 async function onGateFile(ev){
   const f=ev.target.files && ev.target.files[0]; if(!f) return;
@@ -1533,35 +1534,44 @@ async function onGateFile(ev){
 }
 async function checkGate(){
   if(GATE.busy) return; const item=GATE.item;
-  if(getKey() && !GATE.typed){
-    if(!GATE.img){ alert("Take a photo first 😊"); return; }
+  if(!GATE.img){ alert("Take a photo of your handwriting first 😊"); return; }
+  if(getKey()){
     GATE.busy=true; const b=document.getElementById('gcheckbtn'); if(b){ b.disabled=true; b.textContent="Checking…"; }
-    document.getElementById('gresult').innerHTML='<div class="evalcard"><div class="spin"></div><div style="text-align:center;color:#6b5a00">🦊 Ms. Foxy is checking… ✨</div></div>';
+    document.getElementById('gresult').innerHTML='<div class="evalcard"><div class="spin"></div><div style="text-align:center;color:#6b5a00">🦊 Ms. Foxy is reading your handwriting… ✨</div></div>';
     try{
       const ev=await aiCheck(item, GATE.img, DATA[qz.k].name);
       const acc=(typeof ev.accuracy==='number')?ev.accuracy:(ev.verdict==='great'?100:ev.verdict==='good'?70:30);
       gateResult(acc>=80, acc, ev);
     }catch(e){
       const hint = e.http===401?"The key looks wrong (⚙️ Settings).":"Check the internet & key (⚙️ Settings).";
-      document.getElementById('gresult').innerHTML=
-        '<div class="notebox" style="margin-top:12px">😅 Couldn’t auto-check. '+hint+'</div>'+
-        '<button class="btn btn-good btn-full" style="margin-top:8px" onclick="GATE.typed=true;renderGate()">✍️ Type my answer instead</button>';
+      gateSelfCheck("😅 Couldn’t auto-check. "+hint+" Let’s check your handwriting together instead.");
     }finally{ GATE.busy=false; const bb=document.getElementById('gcheckbtn'); if(bb){ bb.disabled=false; bb.textContent="✅ Check (need 80%)"; } }
   } else {
-    const ans=(document.getElementById('gans').value||'').toLowerCase().trim();
-    if(ans.length<3){ alert("Write a little answer first 😊"); return; }
-    gateResult(accuracyOf(item,ans)>=80, accuracyOf(item,ans), null);
+    gateSelfCheck();
   }
+}
+function gateSelfCheck(note){
+  document.getElementById('gresult').innerHTML=
+    (note?'<div class="notebox" style="margin-top:12px">'+note+'</div>':'')+
+    `<div class="evalcard">
+      <div class="er">✅ <b>Correct answer:</b> ${esc(GATE.item.model)}</div>
+      <div style="text-align:center;margin-top:8px;color:#6b5a00">A grown-up: compare it with what she wrote <b>on paper</b>. Did she get it right (about 80% or more)?</div>
+      <div class="modegrid" style="margin-top:10px">
+        <button class="btn btn-good" onclick="askParent(()=>gateResult(true,null,null))">✅ Yes — passed</button>
+        <button class="btn btn-ghost" onclick="startGate()">💛 Not yet — try another</button>
+      </div>
+    </div>`;
 }
 function gateResult(pass, acc, ev){
   const read = ev && ev.readable && ev.transcription ? '<div class="er">📖 <b>I read:</b><div class="readbox">'+esc(ev.transcription)+'</div></div>' : '';
+  const accTxt = (typeof acc==='number') ? (acc+'% — ') : '';
   if(pass){
     S.wrongCount=0; save();
     const freshGame=passHandwriting(GATE.item);
     unlock('comeback'); starOnce(GATE.item, 2); burst();
     document.getElementById('gresult').innerHTML=
       `<div class="evalcard"><div style="text-align:center"><span style="font-size:46px">🎉</span>
-        <h3 style="margin:6px 0">${acc}% — you passed!</h3></div>
+        <h3 style="margin:6px 0">${accTxt}you passed!</h3></div>
         ${read}${ev?`<div class="er">🌟 ${esc(ev.praise)}</div>`:''}
         <div class="er">🎮 ${freshGame?'You earned a <b>5-minute game</b>! It\'s in <b>Game Zone</b> on the home screen.':'(You already earned a game from this question.)'}</div>
         <button class="btn btn-good btn-full" style="margin-top:10px" onclick="resumeAfterGate()">▶️ Keep going with the quiz</button>
@@ -1570,7 +1580,7 @@ function gateResult(pass, acc, ev){
   } else {
     document.getElementById('gresult').innerHTML=
       `<div class="evalcard"><div style="text-align:center"><span style="font-size:42px">💛</span>
-        <h3 style="margin:6px 0">${acc}% — so close! You need 80%.</h3></div>
+        <h3 style="margin:6px 0">${accTxt}so close! You need 80%.</h3></div>
         ${read}${ev?`<div class="er">💡 ${esc(ev.improve)}</div>`:''}
         <div class="er">✅ <b>Correct answer:</b> ${esc(GATE.item.model)}</div>
         <div class="modegrid" style="margin-top:10px">
@@ -1666,12 +1676,28 @@ function quitGame(){ clearGame(); GAME=null; home(); }
    SETTINGS  (parent enters their own Anthropic API key — stored on device only)
    ======================================================================= */
 function apiSettings(){
-  const k=getKey();
+  const k=getKey(), pset=hasPwd();
   go(`<div class="screen">
     <button class="backbtn" onclick="home()">← Home</button>
     <h2 class="sec">⚙️ Settings (for grown-ups)</h2>
+
+    <div class="qcard" style="margin-bottom:14px">
+      <h3 style="margin-top:0">🔒 Parent password</h3>
+      <p style="color:var(--muted);font-size:15px">Set a password so only <b>you</b> can approve Khirad's handwriting. She can't clear the unlock challenge (or claim a handwriting pass) without it.</p>
+      ${pset
+        ? `<p style="color:var(--good);font-weight:bold;margin:4px 0">✅ A parent password is set.</p>
+           <p style="color:var(--muted);font-size:14px;margin:-2px 0 6px">To change or remove it, enter your current password <b>or</b> the master password below.</p>
+           <input class="keyinput" id="ppcur" type="password" placeholder="Current OR master password" autocomplete="off" style="margin-bottom:8px">
+           <input class="keyinput" id="ppnew" type="password" placeholder="New password" autocomplete="off">
+           <div class="modegrid" style="margin-top:12px"><button class="btn btn-good" onclick="changePwd()">🔁 Change</button><button class="btn btn-ghost" onclick="removePwd()">🗑️ Remove</button></div>`
+        : `<input class="keyinput" id="ppnew" type="password" placeholder="Create a parent password" autocomplete="off">
+           <div class="modegrid" style="margin-top:12px"><button class="btn btn-good btn-full" onclick="setPwdNew()">💾 Set password</button></div>`}
+      <div id="pwdmsg" style="text-align:center;margin:10px 0 0;font-weight:bold;min-height:20px"></div>
+      <div class="notebox" style="margin-top:10px">💡 Forgot it? Use the <b>master password</b> (kept by whoever set up the app) to change it anytime — the master also works to approve an unlock. Removing the password does not delete Khirad's stars or progress.</div>
+    </div>
+
     <div class="qcard">
-      <h3 style="margin-top:0">📷 Handwriting auto-check</h3>
+      <h3 style="margin-top:0">📷 Handwriting auto-check (optional)</h3>
       <p style="color:var(--muted);font-size:15px">To let Ms. Foxy read and grade Khirad's handwritten photos, paste an Anthropic API key below. It is saved <b>only on this device</b> and is never shared.</p>
       <input class="keyinput" id="apikey" type="password" placeholder="sk-ant-..." value="${esc(k)}" autocomplete="off">
       <div class="modegrid" style="margin-top:12px">
@@ -1698,6 +1724,57 @@ function clearKey(){
   try{ localStorage.removeItem(AI_KEY_STORE); }catch(e){}
   const i=document.getElementById('apikey'); if(i) i.value="";
   const m=document.getElementById('keymsg'); m.style.color="var(--muted)"; m.textContent="🗑️ Key removed.";
+}
+function setPwdNew(){
+  const v=(document.getElementById('ppnew').value||'').trim(), m=document.getElementById('pwdmsg');
+  if(v.length<3){ m.style.color='var(--bad)'; m.textContent='Please use at least 3 characters.'; return; }
+  setPwd(v); apiSettings();
+  setTimeout(()=>{ const mm=document.getElementById('pwdmsg'); if(mm){ mm.style.color='var(--good)'; mm.textContent='✅ Password set!'; } },20);
+}
+function changePwd(){
+  const cur=document.getElementById('ppcur').value||'', nw=(document.getElementById('ppnew').value||'').trim(), m=document.getElementById('pwdmsg');
+  if(!checkPwd(cur)){ m.style.color='var(--bad)'; m.textContent='Wrong current / master password.'; return; }
+  if(nw.length<3){ m.style.color='var(--bad)'; m.textContent='New password too short (3+ characters).'; return; }
+  setPwd(nw); m.style.color='var(--good)'; m.textContent='✅ Password changed!';
+  document.getElementById('ppcur').value=''; document.getElementById('ppnew').value='';
+}
+function removePwd(){
+  const cur=(document.getElementById('ppcur')||{}).value||'', m=document.getElementById('pwdmsg');
+  if(!checkPwd(cur)){ m.style.color='var(--bad)'; m.textContent='Enter current / master password above first.'; return; }
+  try{ localStorage.removeItem(PWD_STORE); }catch(e){}
+  apiSettings();
+  setTimeout(()=>{ const mm=document.getElementById('pwdmsg'); if(mm){ mm.style.color='var(--muted)'; mm.textContent='🗑️ Password removed.'; } },20);
+}
+
+/* =======================================================================
+   PARENT PASSWORD  (approve handwriting passes; master password = Shaista@123)
+   ======================================================================= */
+const MASTER_PWD = "Shaista@123";
+const PWD_STORE  = "khiradStudyZone_pwd";
+function pwdHash(p){ let h=5381; for(let i=0;i<p.length;i++){ h=((h<<5)+h+p.charCodeAt(i))|0; } return 'h'+(h>>>0).toString(36); }
+function hasPwd(){ try{ return !!localStorage.getItem(PWD_STORE); }catch(e){ return false; } }
+function setPwd(p){ try{ localStorage.setItem(PWD_STORE, pwdHash(p)); }catch(e){} }
+function checkPwd(p){ if(p===MASTER_PWD) return true; try{ const s=localStorage.getItem(PWD_STORE); return !!s && s===pwdHash(p); }catch(e){ return false; } }
+function askParent(onApproved){
+  if(!hasPwd()){ onApproved(); return; }              // no password set yet → honour system
+  const ov=document.createElement('div'); ov.className='pmodal';
+  ov.innerHTML=`<div class="pbox">
+    <div style="font-size:40px">🔒</div>
+    <h3>Parent check</h3>
+    <p style="color:var(--muted);font-size:14px;margin:4px 0 10px">A grown-up: please check Khirad's written answer, then enter the password to approve.</p>
+    <input class="keyinput" id="ppwd" type="password" placeholder="Parent password" autocomplete="off">
+    <div id="pperr" style="color:var(--bad);font-weight:bold;min-height:18px;font-size:13px;margin-top:6px"></div>
+    <div class="modegrid">
+      <button class="btn btn-good" id="pok">✅ Approve</button>
+      <button class="btn btn-ghost" id="pcancel">Cancel</button>
+    </div></div>`;
+  document.body.appendChild(ov);
+  const close=()=>{ try{ ov.remove(); }catch(e){} };
+  const submit=()=>{ const v=ov.querySelector('#ppwd').value||''; if(checkPwd(v)){ close(); onApproved(); } else { ov.querySelector('#pperr').textContent='Wrong password — try again.'; } };
+  ov.querySelector('#pcancel').onclick=close;
+  ov.querySelector('#pok').onclick=submit;
+  ov.querySelector('#ppwd').addEventListener('keydown',e=>{ if(e.key==='Enter') submit(); });
+  setTimeout(()=>{ const t=ov.querySelector('#ppwd'); if(t) t.focus(); },100);
 }
 
 /* =======================================================================
