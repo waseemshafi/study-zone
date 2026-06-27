@@ -206,6 +206,8 @@
   .gpill{background:#fff;border-radius:14px;padding:8px 14px;font-weight:bold;box-shadow:var(--shadow);font-size:16px}
   .gbar{height:14px;background:rgba(255,255,255,.5);border-radius:99px;overflow:hidden;margin-bottom:12px;border:2px solid rgba(255,255,255,.6)}
   .gbar>div{height:100%;width:100%;background:linear-gradient(90deg,#27d07f,#ffcf3f,#ff5b7a);transition:width 1s linear}
+  .balloonwrap{position:relative;height:58vh;min-height:360px;background:linear-gradient(#cdeeff,#eaf7ff);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);touch-action:none}
+  .balloonwrap canvas{width:100%;height:100%;display:block;cursor:pointer}
 
   /* parent-password approval modal */
   .pmodal{position:fixed;inset:0;z-index:80;background:rgba(40,20,90,.45);display:flex;align-items:center;justify-content:center;padding:20px}
@@ -1162,7 +1164,7 @@ function accuracyOf(item, ans){ const a=(ans||'').toLowerCase();
    ROUTER
    ======================================================================= */
 const app=document.getElementById('app');
-function go(html){ if(gameTimer){ clearInterval(gameTimer); gameTimer=null; } app.innerHTML=html; window.scrollTo({top:0,behavior:'smooth'}); }
+function go(html){ if(gameTimer){ clearInterval(gameTimer); gameTimer=null; } if(gameRAF){ cancelAnimationFrame(gameRAF); gameRAF=null; } app.innerHTML=html; window.scrollTo({top:0,behavior:'smooth'}); }
 
 function home(){
   refreshTop();
@@ -1779,82 +1781,114 @@ function resumeAfterGate(){ nextQ(); }
 /* =======================================================================
    GAME ZONE  (each handwriting pass = one 5-minute learning game)
    ======================================================================= */
-let GAME=null, gameTimer=null;
+let GAME=null, gameTimer=null, gameRAF=null;
 function gameZone(){
   const t=S.gameTokens||0;
   go(`<div class="screen">
     <button class="backbtn" onclick="home()">← Home</button>
     <h2 class="sec">🎮 Game Zone</h2>
     <div class="qcard" style="text-align:center">
-      <div style="font-size:54px">${t>0?'🎟️':'🔒'}</div>
-      <h3 style="margin:6px 0">${t} game session${t===1?'':'s'} ready</h3>
-      <p style="color:var(--muted)">Best score: ${S.bestGame||0} ⭐</p>
+      <div style="font-size:54px">${t>0?'🎈':'🔒'}</div>
+      <h3 style="margin:6px 0">${t} game${t===1?'':'s'} ready</h3>
+      <p style="color:var(--muted)">Best score: ${S.bestGame||0} 🎈</p>
       ${t>0
-        ? `<p>Each session is a fast <b>5-minute Quiz Blast</b> — answer as many as you can and build big combo streaks! 🚀</p>
-           <button class="btn btn-good btn-full" onclick="startGame()">▶️ Play (5 minutes)</button>`
-        : `<div class="notebox" style="margin-top:8px;text-align:left">🔑 To earn a game, pass a <b>Write on Paper</b> (handwriting) question — or beat the <b>3-mistake unlock challenge</b> in a quiz. Each one you pass gives one 5-minute game! 💛</div>`}
+        ? `<p>Your reward: <b>Balloon Pop</b>! 🎈 Tap the balloons to pop them — gold ⭐ and rainbow 🌈 ones give bonus points. Just relax and have fun!</p>
+           <button class="btn btn-good btn-full" onclick="startGame()">▶️ Play Balloon Pop 🎈</button>`
+        : `<div class="notebox" style="margin-top:8px;text-align:left">🔑 To earn a game, pass a <b>Write on Paper</b> (handwriting) question — or beat the <b>3-mistake unlock challenge</b> in a quiz. Each one you pass gives one game! 💛</div>`}
     </div></div>`);
 }
 function startGame(){
   if((S.gameTokens||0)<1) return gameZone();
   S.gameTokens--; S.gamesPlayed=(S.gamesPlayed||0)+1; save(); unlock('gamer');
-  let pool=[];
-  Object.keys(DATA).forEach(k=>{ (DATA[k].allquiz||DATA[k].quiz||[]).forEach(q=>{ if(q&&q.o&&typeof q.a==='number') pool.push({q:q.q,o:q.o,a:q.a,subj:DATA[k].emoji}); }); });
-  pool=shuffle(pool);
-  GAME={ pool, i:0, score:0, streak:0, left:300, answered:false };
   go(`<div class="screen">
-    <button class="backbtn" onclick="quitGame()">← Quit game</button>
-    <h2 class="sec">⚡ Quiz Blast</h2>
-    <div class="gametop"><span class="gpill" id="gtime">5:00</span><span class="gpill" id="gscore">⭐ 0</span><span class="gpill" id="gcombo">🔥 x1</span></div>
-    <div class="gbar"><div id="gbarfill"></div></div>
-    <div class="qcard" id="gameQ"></div>
+    <button class="backbtn" onclick="finishGame()">← Done</button>
+    <h2 class="sec">🎈 Balloon Pop</h2>
+    <div class="gametop"><span class="gpill" id="gscore">🎈 0</span><span class="gpill">👆 Tap to pop!</span></div>
+    <div class="balloonwrap"><canvas id="balloons"></canvas></div>
+    <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="finishGame()">🏁 I'm done</button>
   </div>`);
-  renderGameQ();
-  gameTimer=setInterval(gameTick,1000);
+  initBalloons();
 }
-function gmult(s){ return s>=6?3:s>=3?2:1; }
-function renderGameQ(){
-  if(GAME.i>=GAME.pool.length){ GAME.pool=shuffle(GAME.pool); GAME.i=0; }
-  const item=GAME.pool[GAME.i]; GAME.answered=false; const keys=['A','B','C','D'];
-  document.getElementById('gameQ').innerHTML=
-    `<p class="qtext">${item.subj||''} ${item.q}</p>
-     <div class="opts">${item.o.map((t,idx)=>`<button class="opt" id="g${idx}" onclick="gameAnswer(${idx})"><span class="key">${keys[idx]}</span><span>${t}</span></button>`).join('')}</div>
-     <div class="feedback" id="gfb"></div>`;
+function initBalloons(){
+  const canvas=document.getElementById('balloons'); if(!canvas) return;
+  const wrap=canvas.parentElement, W=wrap.clientWidth||340, H=wrap.clientHeight||420;
+  canvas.width=W; canvas.height=H;
+  GAME={ balloons:[], particles:[], score:0, w:W, h:H, ctx:canvas.getContext('2d'), canvas, last:0, spawnAcc:0, t:0 };
+  for(let i=0;i<7;i++) spawnBalloon(true);
+  canvas.addEventListener('pointerdown', balloonTap);
+  gameRAF=requestAnimationFrame(balloonLoop);
 }
-function gameAnswer(idx){
-  if(!GAME || GAME.answered || GAME.left<=0) return; GAME.answered=true;
-  const item=GAME.pool[GAME.i], correct=item.a;
-  document.querySelectorAll('#gameQ .opt').forEach((b,i)=>{ b.classList.add('done'); if(i===correct)b.classList.add('correct'); else if(i===idx)b.classList.add('wrong'); else b.classList.add('dim'); });
-  const fb=document.getElementById('gfb');
-  if(idx===correct){ GAME.streak++; const m=gmult(GAME.streak), pts=10*m; GAME.score+=pts;
-    fb.innerHTML="✅ +"+pts+(m>1?" (🔥 x"+m+")":""); fb.style.color="var(--good)"; miniBurst(); }
-  else { GAME.streak=0; fb.innerHTML="❌ "+["A","B","C","D"][correct]; fb.style.color="var(--bad)"; }
-  const gs=document.getElementById('gscore'); if(gs) gs.textContent="⭐ "+GAME.score;
-  const gc=document.getElementById('gcombo'); if(gc) gc.textContent="🔥 x"+gmult(GAME.streak);
-  setTimeout(()=>{ if(GAME && GAME.left>0){ GAME.i++; renderGameQ(); } }, 650);
+function balloonTap(e){
+  if(!GAME) return; e.preventDefault(); const rect=GAME.canvas.getBoundingClientRect();
+  const cx=(e.clientX!=null?e.clientX:(e.touches&&e.touches[0].clientX))-rect.left;
+  const cy=(e.clientY!=null?e.clientY:(e.touches&&e.touches[0].clientY))-rect.top;
+  for(let i=GAME.balloons.length-1;i>=0;i--){ const b=GAME.balloons[i], rw=b.r*0.82, rh=b.r, dx=(cx-b.x)/rw, dy=(cy-b.y)/rh;
+    if(dx*dx+dy*dy<=1.15){ popBalloon(i); return; } }
 }
-function gameTick(){
-  if(!GAME){ clearGame(); return; }
-  GAME.left--;
-  const mm=Math.floor(GAME.left/60), ss=GAME.left%60, el=document.getElementById('gtime');
-  if(el) el.textContent=mm+":"+(ss<10?'0':'')+ss;
-  const bf=document.getElementById('gbarfill'); if(bf) bf.style.width=(100*Math.max(0,GAME.left)/300)+"%";
-  if(GAME.left<=0) endGame();
+function spawnBalloon(seed){
+  if(!GAME) return; const r=26+Math.random()*22;
+  const hues=[0,28,50,150,200,265,320];
+  const roll=Math.random(), kind = roll<0.07?'gold' : roll<0.12?'rainbow':'normal';
+  GAME.balloons.push({ x:r+Math.random()*(GAME.w-2*r), y: seed? GAME.h*0.35+Math.random()*GAME.h*0.55 : GAME.h+r+12,
+    r, vy:24+Math.random()*34, hue:hues[Math.floor(Math.random()*hues.length)], phase:Math.random()*6.28, sway:0.5+Math.random()*0.7, kind });
 }
-function endGame(){
+function balloonLoop(ts){
+  if(!GAME) return;
+  if(!GAME.last) GAME.last=ts; let dt=(ts-GAME.last)/1000; GAME.last=ts; if(dt>0.05) dt=0.05;
+  GAME.t+=dt; GAME.spawnAcc+=dt;
+  const interval=Math.max(0.4, 0.85 - GAME.score*0.004);
+  if(GAME.spawnAcc>interval && GAME.balloons.length<22){ GAME.spawnAcc=0; spawnBalloon(false); }
+  for(const b of GAME.balloons){ b.y-=b.vy*dt; b.x+=Math.sin(GAME.t*b.sway+b.phase)*0.4; }
+  GAME.balloons=GAME.balloons.filter(b=> b.y > -b.r-24);
+  for(const p of GAME.particles){ p.vy+=320*dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.life-=dt; }
+  GAME.particles=GAME.particles.filter(p=>p.life>0);
+  drawGame();
+  gameRAF=requestAnimationFrame(balloonLoop);
+}
+function drawGame(){
+  const ctx=GAME.ctx; ctx.clearRect(0,0,GAME.w,GAME.h);
+  for(const b of GAME.balloons) drawBalloon(ctx,b);
+  for(const p of GAME.particles){ ctx.globalAlpha=Math.max(0,Math.min(1,p.life*2)); ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,6.29); ctx.fill(); }
+  ctx.globalAlpha=1;
+}
+function drawBalloon(ctx,b){
+  const rw=b.r*0.82, rh=b.r;
+  ctx.strokeStyle='rgba(120,120,140,.45)'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(b.x,b.y+rh); ctx.quadraticCurveTo(b.x+7,b.y+rh+15,b.x,b.y+rh+28); ctx.stroke();
+  let fill;
+  if(b.kind==='gold'){ const g=ctx.createLinearGradient(b.x-rw,b.y-rh,b.x+rw,b.y+rh); g.addColorStop(0,'#ffe98a'); g.addColorStop(1,'#f5b301'); fill=g; }
+  else if(b.kind==='rainbow'){ const g=ctx.createLinearGradient(b.x-rw,b.y-rh,b.x+rw,b.y+rh); g.addColorStop(0,'#ff6ec7'); g.addColorStop(.5,'#ffd23f'); g.addColorStop(1,'#36d1dc'); fill=g; }
+  else fill='hsl('+b.hue+',75%,62%)';
+  ctx.fillStyle=fill; ctx.beginPath(); ctx.ellipse(b.x,b.y,rw,rh,0,0,6.29); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(b.x-4,b.y+rh-2); ctx.lineTo(b.x+4,b.y+rh-2); ctx.lineTo(b.x,b.y+rh+7); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.45)'; ctx.beginPath(); ctx.ellipse(b.x-rw*0.34,b.y-rh*0.42,rw*0.22,rh*0.3,-0.4,0,6.29); ctx.fill();
+  if(b.kind!=='normal'){ ctx.font=(b.r*0.95)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(b.kind==='gold'?'⭐':'🌈', b.x, b.y+1); }
+}
+function burstParticles(x,y,col,n){
+  for(let k=0;k<n;k++){ const a=Math.random()*6.29, sp=70+Math.random()*130; GAME.particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-50,life:0.5+Math.random()*0.35,size:3+Math.random()*3,color:col}); }
+}
+function popBalloon(i){
+  const b=GAME.balloons[i]; if(!b) return;
+  const pts=b.kind==='gold'?5 : b.kind==='rainbow'?3 : 1; GAME.score+=pts;
+  const col=b.kind==='gold'?'#f5b301':b.kind==='rainbow'?'#ff6ec7':'hsl('+b.hue+',75%,60%)';
+  burstParticles(b.x,b.y,col,12);
+  GAME.balloons.splice(i,1);
+  if(b.kind==='rainbow'){ for(let j=GAME.balloons.length-1;j>=0;j--){ const o=GAME.balloons[j]; if(Math.hypot(o.x-b.x,o.y-b.y)<b.r*3.2){ GAME.score++; burstParticles(o.x,o.y,'hsl('+o.hue+',75%,60%)',7); GAME.balloons.splice(j,1); } } }
+  const gs=document.getElementById('gscore'); if(gs) gs.textContent='🎈 '+GAME.score;
+  if(pts>=3) miniBurst();
+}
+function finishGame(){
   clearGame();
   const sc=GAME?GAME.score:0, prevBest=S.bestGame||0, isBest=sc>prevBest;
-  if(isBest) S.bestGame=sc; save();
-  GAME=null;
-  go(`<div class="screen"><div class="result"><span class="mascot">🎉</span><h1>Time's up!</h1>
+  if(isBest) S.bestGame=sc; save(); GAME=null;
+  go(`<div class="screen"><div class="result"><span class="mascot">🎈</span><h1>Great popping!</h1>
     <div class="score">${sc}</div>
-    <p>${isBest?'New best score! 🏆':'Your best is '+(S.bestGame||0)+' ⭐'}</p>
+    <p>${isBest?'New best score! 🏆':'Your best is '+(S.bestGame||0)+' 🎈'}</p>
     <div style="margin-top:16px"><button class="btn btn-good" onclick="gameZone()">🎮 Game Zone</button>
     <button class="btn btn-ghost" onclick="home()">🏠 Home</button></div>
     <p style="color:var(--muted);margin-top:12px">Earn another game by passing a handwriting question! ✍️</p>
   </div></div>`);
 }
-function clearGame(){ if(gameTimer){ clearInterval(gameTimer); gameTimer=null; } }
+function clearGame(){ if(gameTimer){ clearInterval(gameTimer); gameTimer=null; } if(gameRAF){ cancelAnimationFrame(gameRAF); gameRAF=null; } }
 function quitGame(){ clearGame(); GAME=null; home(); }
 
 /* =======================================================================
