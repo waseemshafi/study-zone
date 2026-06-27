@@ -1532,9 +1532,18 @@ function cardsDone(k){
    QUIZ
    ======================================================================= */
 let qz=null;
-function poolFor(k,mode){ const d=DATA[k]; return mode==='all'?d.allquiz:d[mode]; }
+function poolFor(k,mode){ const d=DATA[k];
+  if(mode==='all') return d.allquiz;
+  if(mode==='exam'){ // Exam Special quiz = portion pool + every quiz/grammar MCQ (deduped) so nothing is missed
+    const seen={}, out=[];
+    [].concat(d.exam||[], d.allquiz||[]).forEach(it=>{ if(it&&it.q&&!seen[it.q]){ seen[it.q]=1; out.push(it); } });
+    return out;
+  }
+  return d[mode];
+}
 function startQuiz(k,mode){
-  let pool=shuffle(poolFor(k,mode).slice()).slice(0, Math.min(poolFor(k,mode).length, mode==='all'?18:14));
+  const big=(mode==='all'||mode==='exam');
+  let pool=shuffle(poolFor(k,mode).slice()).slice(0, Math.min(poolFor(k,mode).length, big?18:14));
   qz={k,mode,pool,i:0,score:0,answered:false}; renderQ();
 }
 function renderQ(){
