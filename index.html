@@ -307,20 +307,19 @@ function optGloss(t){ const m=glossMean(t); return m?' <small class="omn">('+m+'
 let CURQTEXT='', CUROPTS=null, HINTSUBJ='', HINTBACK=null, SHOWEN=false;
 function splitQ(q){ const m=(q||'').match(/^([\s\S]*?)\s*(\([^()]*[A-Za-z][^()]*\))\s*[।.]?\s*$/); return m?{hi:m[1].trim(), en:m[2]}:{hi:q, en:''}; }
 function qHidden(q){ if(SHOWEN) return q; return glossHin(q)?splitQ(q).hi:q; }
-function hintCtl(text){ if(!glossHin(text)) return ''; return hintArea(); }
-function hintArea(){
+function ansHintCtl(){
+  if(!CUROPTS || !CUROPTS.some(t=>glossMean(t))) return '';   // only when options are Hindi-only
   const used=S.hintsUsed||0, left=3-used;
-  if(used>=3) return '<div id="hintzone"><button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="startHintGate()">🔒 Hints locked — write by hand to unlock ✍️</button></div>';
-  return '<div id="hintzone"><button class="btn btn-ghost btn-full" id="hintbtn" style="margin-top:8px" onclick="revealHint()">💡 Show English meaning ('+left+' hint'+(left===1?'':'s')+' left)</button><div id="wmreveal"></div></div>';
+  if(used>=3) return '<div id="hintzone"><button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="startHintGate()">🔒 Answer hints locked — write by hand to unlock ✍️</button></div>';
+  return '<div id="hintzone"><button class="btn btn-ghost btn-full" id="hintbtn" style="margin-top:8px" onclick="revealHint()">💡 Show answer meanings ('+left+' hint'+(left===1?'':'s')+' left)</button></div>';
 }
 function revealHint(){
   if((S.hintsUsed||0)>=3) return startHintGate();
   S.hintsUsed=(S.hintsUsed||0)+1; save();
-  const wm=document.getElementById('wmreveal'); if(wm){ const en=splitQ(CURQTEXT).en; wm.innerHTML=(en?'<div class="wmline" style="margin-bottom:6px;color:#1b6b4a"><b>📝 '+en.replace(/^\(/,'').replace(/\)$/,'')+'</b></div>':'')+wmLine(CURQTEXT); }
-  if(CUROPTS){ CUROPTS.forEach((t,idx)=>{ const b=document.getElementById('opt'+idx); if(b){ const sp=b.querySelector('span:last-child'); const g=optGloss(t); if(sp && g) sp.insertAdjacentHTML('beforeend', g); } }); }
+  if(CUROPTS){ CUROPTS.forEach((t,idx)=>{ const b=document.getElementById('opt'+idx); if(b){ const sp=b.querySelector('span:last-child'); const g=optGloss(t); if(sp && g && !sp.querySelector('.omn')) sp.insertAdjacentHTML('beforeend', g); } }); }
   const btn=document.getElementById('hintbtn'); if(btn) btn.style.display='none';
   const z=document.getElementById('hintzone');
-  if(z && (S.hintsUsed||0)>=3) z.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#c98a00;font-weight:bold;margin-top:6px;font-size:14px">That was your last hint — the next one needs a handwriting unlock. ✍️</div>');
+  if(z && (S.hintsUsed||0)>=3) z.insertAdjacentHTML('beforeend','<div style="text-align:center;color:#c98a00;font-weight:bold;margin-top:6px;font-size:14px">That was your last hint — the next needs a handwriting unlock. ✍️</div>');
 }
 function startHintGate(){ startGate('hint'); }
 function resumeHint(){ if(typeof HINTBACK==='function') HINTBACK(); else home(); }
@@ -1301,8 +1300,8 @@ function renderQ(){
       <div class="qtop"><span>${d.emoji} ${d.name}</span><span>⭐ Score: ${qz.score}</span></div>
       <div class="qprog"><div style="width:${pct}%"></div></div>
       <div class="qtop"><span>Question ${qz.i+1} of ${qz.pool.length}</span></div>
-      <p class="qtext">${qHidden(item.q)}</p>
-      ${hintCtl(item.q)}
+      <p class="qtext">${item.q}</p>
+      ${wmLine(item.q)}${ansHintCtl()}
       <div class="opts" id="opts">${item.o.map((t,idx)=>`<button class="opt" id="opt${idx}" onclick="answer(${idx})"><span class="key">${keys[idx]}</span><span>${t}</span></button>`).join('')}</div>
       <div class="feedback" id="fb"></div>
       <div class="explain" id="ex">${item.e||''}</div>
@@ -1369,8 +1368,8 @@ function renderWritten(){
     <div class="qcard">
       <div class="qtop"><span>✍️ ${d.name} · Write the Answer</span><span>${WR.i+1} / ${WR.pool.length}</span></div>
       <div class="qprog"><div style="width:${pct}%"></div></div>
-      <p class="qtext">${qHidden(item.q)}</p>
-      ${hintCtl(item.q)}
+      <p class="qtext">${item.q}</p>
+      ${wmLine(item.q)}${ansHintCtl()}
       <textarea class="wbox" id="wans" placeholder="Type your answer here in your own words…"></textarea>
       <div class="keyrow" id="keyrow"></div>
       <div class="model" id="model"></div>
@@ -1465,8 +1464,8 @@ function renderPaper(){
     <div class="qcard">
       <div class="qtop"><span>✏️ ${d.name} · Write on Paper</span><span>${PR.i+1} / ${PR.pool.length}</span></div>
       <div class="qprog"><div style="width:${pct}%"></div></div>
-      <p class="qtext">${qHidden(item.q)}</p>
-      ${hintCtl(item.q)}
+      <p class="qtext">${item.q}</p>
+      ${wmLine(item.q)}${ansHintCtl()}
       <p style="color:var(--muted);margin:-6px 0 10px;font-size:15px">✍️ Write your answer on paper, then take a photo of it.</p>
       <input type="file" accept="image/*" capture="environment" id="pfile" style="display:none" onchange="onPaperFile(event)">
       <button class="btn btn-primary btn-full" onclick="document.getElementById('pfile').click()">📷 Take / upload a photo</button>
@@ -1664,7 +1663,7 @@ function renderGate(note){
     <p class="subtitle">${GATE.need>1?'Pass '+GATE.need+' easy ones to unlock':'Write this answer by hand to keep going'} — and earn a game! 🎮</p>
     <div class="qcard">
       <div class="qtop"><span>${d.emoji} ${d.name}</span><span>${prog}</span></div>
-      <p class="qtext">${qHidden(item.q)}</p>
+      <p class="qtext">${item.q}</p>
       ${wmLine(item.q)}
       ${note?'<div class="notebox" style="margin:0 0 10px">'+note+'</div>':''}
       <p style="color:var(--muted);margin:-2px 0 10px;font-size:15px">✍️ Write the answer <b>on paper</b>, then take a photo. (Typing is not allowed to unlock.)</p>
